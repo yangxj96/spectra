@@ -150,10 +150,11 @@
           "EV-B02-CORE020-20261011",
           "EV-B02-CORE032-20261011",
           "EV-B02-CORE022-20261011",
-          "EV-B02-CORE023-20261011"
+          "EV-B02-CORE023-20261011",
+          "EV-B02-BASE002-CLOSE-20261011"
         ],
         "state": "in_progress",
-  "progress_summary": "排序专项、BASE-001/003/004/005/006/007/018、CORE-019/020/022/023/032/034 和 Common 14 条 SpotBugs 均有专项证据。CORE-023 已将绑定码绑定发起用户，Redis 原子限制单码尝试次数，并覆盖双连接并发猜测、跨用户拒绝、重放、失效与故障恢复；发送和核验入口增加外层限流，Web 协议不变。CORE-022 固定时钟、失败路径和 401 协作者测试通过；CORE-032 合成 PostgreSQL 成功、失败与竞争测试通过；CORE-020 双连接 Redis 身份桶测试通过。mise test 环境下全后端八模块 verify 退出 0，选定测试 292/292，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过；OA/Workflow 编译与静态检查通过但没有本项测试用例，RegionServiceTest 被显式排除。真实 HTTP/Quartz/Workflow、双应用进程、实际 Redis 停启恢复、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效未验收；其余 B02 问题仍需逐项处理，本批未满足 done_when。"
+  "progress_summary": "BASE-002 当前源码复核与 86 项排序专项通过，后端八模块 verify 退出 0、选定测试 292/292，旧门禁阻断已消除；22 个 SQL 与 10 个固定排序入口保持显式白名单或拒绝，问题标为 resolved。BASE-001/005/006/007/018、CORE-020/022/023/032/034 已有专项证据；BASE-003/004 与 CORE-019 仍需各自真实入口和故障/双进程等验收。Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过；OA/Workflow 公共排序边界由 Launch 专项覆盖，RegionServiceTest 被显式排除。BC-BASE-008 的 ScopeSqlPolicy 候选检查、完整业务 HTTP/schema、真实 Quartz/Workflow、双应用进程、实际 Redis 停启恢复、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效未验收；本批未满足 done_when。"
       },
       {
         "id": "B03",
@@ -63251,18 +63252,19 @@
       "impact": "Core与暂缓OA分页调用可能让客户端指定表达式/敏感列；既有历史探针不可替代本次当前版本验证。",
       "priority": "P1",
       "disposition": "required_fix",
-      "state": "in_progress",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-BASE-001",
         "EV-B02-SORT-20261008",
-        "EV-B02-SORT-GATES-20261008"
+        "EV-B02-SORT-GATES-20261008",
+        "EV-B02-BASE002-CLOSE-20261011"
       ],
       "impact_ids": [
         "IMP-BASE-005"
       ],
-      "resolution": "独立 PageOrderFrom、显式字段/别名映射、固定排序拒绝和请求对象隔离已实现；22 个 SQL + 10 个固定排序入口全部迁移，85 项专项通过，完整门禁未通过，尚未验收关闭。",
-      "verification_record": "docs/开发指南/工程治理/2026-10-08-B02分页排序验证.md"
+      "resolution": "独立 PageOrderFrom、显式字段/别名映射、固定排序拒绝和请求对象隔离已实现；当前源码复核 22 个 SQL + 10 个固定排序入口，2026-10-11 复验 86 项专项及八模块完整 verify 均通过。ScopeSqlPolicy 候选、完整业务 HTTP/schema 属 BC-BASE-008 的剩余边界，不推定已验收。",
+      "verification_record": "docs/开发指南/工程治理/2026-10-11-B02分页排序复验.md"
     },
     {
       "id": "DIAG-BASE-003",
@@ -66955,11 +66957,12 @@
       "evidence_ids": [
         "EV-BASE-001",
         "EV-B02-SORT-20261008",
-        "EV-B02-SORT-GATES-20261008"
+        "EV-B02-SORT-GATES-20261008",
+        "EV-B02-BASE002-CLOSE-20261011"
       ],
       "verification": [
         "Core agent负责各From/version/CAS证据；OA合同/文档/附件与Flowable主体查询只作共享影响验收，资源上限与引用权限需纳入后续必要改造。",
-        "排序 32 个入口已迁移，85 项专项通过；字段清单见 docs/后端/30-规范/06-分页排序契约.md，完整门禁仍失败。"
+        "排序 32 个入口已迁移，2026-10-11 当前版专项 86/86 与八模块 verify 292/292 通过；字段清单见 docs/后端/30-规范/06-分页排序契约.md。"
       ],
       "limits": [
         "本范围不重复认领Core各Mapper实体具体缺陷；ScopeSqlPolicy alias/method-name以及cache key碰撞仍为候选，未断言越权或现网泄漏。",
@@ -69783,6 +69786,30 @@
       "limits": "全后端 verify 使用显式测试选择，RegionServiceTest 未运行；OA/Workflow 没有测试用例；两项 SpotBugs 过滤与十一项 PMD 方法抑制需按登记复评；真实 HTTP、双应用进程、Redis 实际停启和 B08 浏览器身份失效未验证。B02 仍 in_progress。"
     },
     {
+      "id": "EV-B02-BASE002-CLOSE-20261011",
+      "scope": "DIAG-BASE-002 分页排序白名单当前版复验及 IMP-BASE-005 排序影响",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=PageFromSort*Test,PaginationCallerBoundaryTest,FixedPaginationCallerTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 首轮 Workflow 空测试模块因 Surefire 分组配置退出 1；补入 '-Dspectra.test.groups.exclude=' 后退出 0，Framework 30/30、Launch 56/56，合计 86/86",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> 退出 0，八模块成功、选定测试 292/292，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过",
+        "CodeGraph 查询 Framework 分页模型、ScopeSqlPolicy 与 Web 分页调用方；rg 当前源码核对 22 个显式字段映射 SQL 入口、10 个固定排序入口加在线用户内部防线，未见 Web 页面发送自定义 orders"
+      ],
+      "environment": "原生 Windows PowerShell 7.6.6；mise 2026.10.4 test 环境；Temurin 25.0.2+10、Maven Wrapper 3.9.12；专用合成 PostgreSQL devops00_spectra_db_test、Redis DB 5；PostgreSQL 排序测试只执行 VALUES 合成查询，不使用业务数据或读取本机凭据",
+      "tool_versions": {"java": "25.0.2+10", "maven_wrapper": "3.9.12", "surefire": "3.5.6", "spotless": "3.9.0", "pmd": "7.17.0", "spotbugs_plugin": "4.10.3.0"},
+      "checked_at": "2026-10-11",
+      "result": "passed",
+      "exit_code": 0,
+      "summary": "当前后端提交 407b70af 的分页排序实现与完整调用方清单一致；86 项专项和八模块完整门禁通过，消除旧完整门禁阻断，DIAG-BASE-002 直接缺陷关闭。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-11-B02分页排序复验.md",
+        ".temp/b02/base002-current-targeted.log",
+        ".temp/b02/base002-current-targeted-final.log",
+        ".temp/b02/base002-current-full-gate.log",
+        "spectra-admin/spectra-framework/target/surefire-reports/TEST-com.devops00.spectra.framework.persistence.pagination.PageFromSortPostgresTest.xml",
+        "spectra-admin/spectra-launch/target/surefire-reports/TEST-com.devops00.spectra.launch.pagination.PaginationCallerBoundaryTest.xml"
+      ],
+      "limits": "旧 2026-10-08 完整门禁失败记录保留为历史。真实业务 schema 上的 32 个完整 HTTP 端点、浏览器、双应用进程均未运行；BC-BASE-008-SCOPE 的范围关系 SQL 别名和方法名候选仍 not_run，RegionServiceTest 被显式排除；不关闭 IMP-BASE-005 其他问题或 B02。"
+    },
+    {
       "id": "EV-B02-SORT-20261008",
       "scope": "DIAG-BASE-002 / IMP-BASE-005 / BC-BASE-008 排序子场景",
       "command_or_scenario": [
@@ -72441,7 +72468,7 @@
         "name": "排序与范围",
         "status": "partially_executed",
         "necessary_acceptance": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
-        "boundary": "排序已专项验证；范围拦截的 SQL alias 和 insert/create/add 名称匹配仍未执行，整体不可标 passed。",
+        "boundary": "排序当前版 86 项专项与八模块完整门禁通过；范围拦截的 SQL alias 和 insert/create/add 名称匹配仍未执行，整体不可标 passed。",
         "scenario": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
         "state": "inconclusive",
         "issue_ids": [
@@ -72452,7 +72479,8 @@
         ],
         "evidence_ids": [
           "EV-B02-SORT-20261008",
-          "EV-B02-SORT-GATES-20261008"
+          "EV-B02-SORT-GATES-20261008",
+          "EV-B02-BASE002-CLOSE-20261011"
         ],
         "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
         "subchecks": [
@@ -72460,7 +72488,8 @@
             "id": "BC-BASE-008-SORT",
             "state": "passed",
             "evidence_ids": [
-              "EV-B02-SORT-20261008"
+              "EV-B02-SORT-20261008",
+              "EV-B02-BASE002-CLOSE-20261011"
             ]
           },
           {
