@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "standard": "docs/开发指南/04-工作区工程标准.md",
-  "updated_at": "2026-10-11",
+  "updated_at": "2026-10-12",
   "status": "unification_in_progress",
   "remediation_cycle": {
     "id": "CYCLE-20261005",
@@ -21,7 +21,7 @@
       "evidence_ids": ["EV-CYCLE-TEST-ENV-20261010"]
     },
     "unresolved_blockers": [
-      "B00 retains its recorded completion. B02 sorting, BASE-003 revocation and BASE-004 replay fencing have isolated PostgreSQL/Redis evidence within their stated scopes; Redis fault recovery, two application processes and real HTTP/browser scenarios still require batch evidence, without inferring acceptance from fixture availability.",
+      "B00 retains its recorded completion. B02 sorting, BASE-003 revocation, BASE-004 replay fencing and CORE-019 effective-Root writes have isolated PostgreSQL/Redis evidence within their stated scopes; Redis fault recovery, two application processes and real HTTP/browser scenarios still require batch evidence, without inferring acceptance from fixture availability.",
       "Notification external provider result-unknown behavior and historical ciphertext rotation require a concrete recovery/data strategy before irreversible rollout.",
       "mise 2026.10.4 still panics with exit 101 when the faulty global config is loaded. A Git-ignored spectra-admin/.miserc.local.toml now makes direct mise -E test exec -- work in the backend checkout; PostgreSQL devops00_spectra_db_test and Redis DB 5 tests ran. The earlier Session TTL/login-time and effective-Root count failures passed after BASE-005/CORE-019 changes. BASE-006 has shared Redis reservation evidence; current backend eight-module static gates passed, while two application processes, actual Redis restart and full HTTP remain open."
     ],
@@ -153,10 +153,15 @@
           "EV-B02-CORE023-20261011",
           "EV-B02-BASE002-CLOSE-20261011",
           "EV-B02-BASE003-CORE-20261011",
-          "EV-B02-BASE004-CURRENT-20261011"
+          "EV-B02-BASE004-CURRENT-20261011",
+          "EV-B02-CORE019-CURRENT-20261011",
+          "EV-B02-BASE008-SCOPE-20261011",
+          "EV-B02-BASE008-OA-MAPPER-20261011",
+          "EV-B02-BASE008-OA-MEETING-20261011",
+          "EV-B02-BASE008-OA-HTTP-20261012"
         ],
         "state": "in_progress",
-  "progress_summary": "BASE-004 当前源码复核发现三处 Redis Lua 未定义结果未严格拒绝，新增边界测试先复现 3 项失败，修复后围栏专项 15/15、八模块 verify 退出 0、选定测试 301/301，直接问题标为 resolved。BASE-003 Core 改密/管理员撤销经正式端口到真实 Redis 四项通过；BASE-002 的 86 项排序专项及 22 个 SQL、10 个固定排序入口复核通过。BASE-001/005/006/007/018、CORE-020/022/023/032/034 已有专项证据；CORE-019 仍需未覆盖入口。Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过，RegionServiceTest 被显式排除。BC-BASE-001/002、IMP-BASE-003 的两个应用进程、实际 Redis 停启恢复及真实 HTTP/数据库事务未验收；BC-BASE-008 ScopeSqlPolicy 候选检查、真实 Quartz/Workflow、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效也未验收；本批未满足 done_when。"
+  "progress_summary": "BC-BASE-008-SCOPE 已修复范围方法名误跳过及关系 SQL 外层别名，合成 PostgreSQL/单测 10/10；OA 正式会议与采购收货 Mapper 专用 PostgreSQL 查询和会议计数 2/2；会议分页正式 Service/Controller 的 standalone MVC 与 PostgreSQL 2/2。新增专用空库 Flyway V1–V8 和完整应用 HTTP 测试 1/1，覆盖真实 Redis Session、过滤器、方法权限、范围、排序与撤销，但 Core 用户加载和授权快照为合成提供者。固定测试库中的 Root 最小表夹具与正式 schema 不能同轮共存，八模块 verify 与新增应用测试分段执行；首次单轮尝试因外键约束退出 1。BC-BASE-008 整体仍缺其他业务入口、正式 Core 身份装配和浏览器。CORE-019 直接缺陷已解决，Root PostgreSQL 18/18、仓储 2/2；BASE-004 围栏 15/15、BASE-003 Core 撤销四项真实 Redis、BASE-002 排序 86 项及调用方清单通过；BASE-001/005/006/007/018、CORE-020/022/023/032/034 已有专项证据。RegionServiceTest 显式排除。CHECK-CORE-019 的实际 HTTP/正式 MyBatis、Redis Session 侧效应、自然失效和双进程未验收；BC-BASE-001/002、IMP-BASE-003 的两个应用进程、实际 Redis 停启恢复及完整事务未验收。真实 Quartz/Workflow、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效也未验收；本批未满足 done_when。"
       },
       {
         "id": "B03",
@@ -455,6 +460,76 @@
     "shared_change_policy": "Whole-workspace direct and indirect impact analysis first; determine necessary consistency changes and verification, including affected deferred areas."
   },
   "coverage": [
+    {
+      "path": "docs/开发指南/工程治理/2026-10-12-B02会议分页正式HTTP与Schema验证.md",
+      "role": "B02 会议分页正式 Flyway schema 与完整应用 HTTP 验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "cb1c48ae4317ba562a9b70b1e4d876fc257ec0c7de3a3eb641929d773872b21d",
+      "reviewed_rules": ["04 §5 排序输入", "04 §7 授权与数据范围", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-BASE-002"],
+      "evidence_ids": ["EV-B02-BASE008-OA-HTTP-20261012"],
+      "review_summary": "正式 V1–V8、完整应用 HTTP 与真实 Redis Session 的会议分页合成场景；记录固定测试库两段验证边界。",
+      "review_limits": ["Core 用户加载和授权快照由合成夹具提供；其他入口与双进程未运行。"],
+      "review_kind": "documented_oa_meeting_full_http_flyway_dependency_review",
+      "impact_ids": ["IMP-BASE-005"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-11-B02会议分页业务入口验证.md",
+      "role": "B02 会议分页正式 Service 与 MVC 的专用 PostgreSQL 验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "bc549d3895ba8a74aca0baa11a10db91d298339365aca35a5915a6d4b53c74b5",
+      "reviewed_rules": ["04 §5 排序输入", "04 §7 授权与数据范围", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-BASE-002"],
+      "evidence_ids": ["EV-B02-BASE008-OA-MEETING-20261011"],
+      "review_summary": "记录会议分页实际 Service、Controller、Mapper、MVC 与合成 PostgreSQL 范围验证，区分真实执行与未覆盖的完整应用链。",
+      "review_limits": ["standalone MVC 不运行安全过滤器、审计或正式 Flyway schema。"],
+      "review_kind": "documented_oa_meeting_service_mvc_dependency_review",
+      "impact_ids": ["IMP-BASE-005"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-11-B02-OA关系范围真实Mapper验证.md",
+      "role": "B02 OA 正式会议和采购收货 Mapper 的真实 PostgreSQL 范围验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "7b3e47e0fb776f6ecdec876ec82b65db3f03169f5062cc59ae95c5f204a1db0e",
+      "reviewed_rules": ["04 §7 授权与数据范围", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-BASE-002"],
+      "evidence_ids": ["EV-B02-BASE008-OA-MAPPER-20261011"],
+      "review_summary": "记录 OA 正式 Mapper 在专用 PostgreSQL 的合成行查询、计数、拒绝和回滚边界。",
+      "review_limits": ["业务 Service/HTTP/schema、浏览器与双进程未验证。"],
+      "review_kind": "documented_oa_mapper_real_dependency_review",
+      "impact_ids": ["IMP-BASE-005"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-11-B02排序范围候选验证.md",
+      "role": "B02 BC-BASE-008-SCOPE 关系 SQL 别名与方法名候选验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "7534a232952adceb71c4181772705ef97e96fcfdcedf2c9c39e1ac821bb199a2",
+      "reviewed_rules": ["04 §5 排序输入", "04 §7 授权与数据范围", "05 集中治理验收"],
+      "issue_ids": ["DIAG-BASE-002"],
+      "evidence_ids": ["EV-B02-BASE008-SCOPE-20261011"],
+      "review_summary": "记录范围方法名误跳过和关系 SQL 外层别名的复现、修复、真实 PostgreSQL 合成查询与八模块门禁。",
+      "review_limits": ["OA 真实 Mapper、业务 HTTP/schema 和浏览器路径未执行；未证明生产环境曾发生越权。"],
+      "review_kind": "documented_scope_sql_candidate_and_gate_review",
+      "impact_ids": ["IMP-BASE-005"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-11-B02有效Root当前版入口验证.md",
+      "role": "B02 CORE-019 初始化与身份服务、未知结果拒绝及完整门禁证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "10d199f3fe01f50c1538c5ea40058dba84618257b6a35b3f9fb1e8fb766dde89",
+      "reviewed_rules": ["04 §7 有效 Root", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-019"],
+      "evidence_ids": ["EV-B02-CORE019-CURRENT-20261011"],
+      "review_summary": "记录首次初始化 Root 写入、未知仓储结果失败拒绝、合成 PostgreSQL 服务路径及八模块完整门禁。",
+      "review_limits": ["真实 HTTP/正式 MyBatis、Redis Session 侧效应、两个应用进程和自然到期未运行。"],
+      "review_kind": "documented_effective_root_entry_and_gate_review",
+      "impact_ids": ["IMP-CORE-001"]
+    },
     {
       "path": "docs/开发指南/工程治理/2026-10-11-B02重放围栏结果校验验证.md",
       "role": "B02 BASE-004 Lua 返回值失败拒绝、真实 Redis 与门禁证据",
@@ -1181,6 +1256,48 @@
       "impact_ids": [
         "IMP-BASE-005"
       ]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/scope/OaMeetingFullHttpFlywayTest.java",
+      "role": "会议分页完整 Spring Boot HTTP、Redis Session 与 Flyway schema 集成测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "b2f9d02b295f2676a97f9b2b5492cd3b24c840519b690e11829fb40d7cd57b09",
+      "reviewed_rules": ["04 §5 排序输入", "04 §7 授权与数据范围", "04 §8 安全 Redis", "04 §13 真实依赖与门禁"],
+      "issue_ids": ["DIAG-BASE-002"],
+      "evidence_ids": ["EV-B02-BASE008-OA-HTTP-20261012"],
+      "review_summary": "随机 UUID 会议在正式迁移和完整 HTTP 链路验证授权成功、范围收缩、排序拒绝、恢复与 Redis Session 撤销。",
+      "review_limits": ["Core 身份与快照为合成提供者；固定测试库需与 Root 最小表夹具分段运行。"],
+      "review_kind": "isolated_postgres_redis_oa_meeting_full_http_test_review",
+      "impact_ids": ["IMP-BASE-005"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/scope/OaMeetingPageHttpPostgresTest.java",
+      "role": "会议分页正式 Service、Controller 和 Mapper 的专用 PostgreSQL MVC 集成测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "5ae6e615a02f07e1e071b9ae0cb5ac9f8b91fdc0dd69e3db9d2c1d871d909171",
+      "reviewed_rules": ["04 §5 排序输入", "04 §7 授权与数据范围", "04 §13 真实依赖与门禁"],
+      "issue_ids": ["DIAG-BASE-002"],
+      "evidence_ids": ["EV-B02-BASE008-OA-MEETING-20261011"],
+      "review_summary": "随机 UUID 合成会议在实际分页 Service、Mapper 和 MVC 下验证行、计数、撤权归零、恶意排序拒绝及恢复；事务回滚。",
+      "review_limits": ["使用最小合成 OA 表和 standalone MVC；未运行完整应用安全链与正式 Flyway schema。"],
+      "review_kind": "isolated_postgres_oa_meeting_service_http_test_review",
+      "impact_ids": ["IMP-BASE-005"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/scope/OaRelationScopeMapperPostgresTest.java",
+      "role": "OA 正式 Mapper 关系数据范围的专用 PostgreSQL 集成测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "c3c8d28e4b35b6242900b65862eaa6f15d839903f9ab82ea23ca6550110f990d",
+      "reviewed_rules": ["04 §7 授权与数据范围", "04 §13 真实依赖与门禁"],
+      "issue_ids": ["DIAG-BASE-002"],
+      "evidence_ids": ["EV-B02-BASE008-OA-MAPPER-20261011"],
+      "review_summary": "通过会议和采购收货正式 Mapper 的 selectList、会议 selectCount 验证合成授权行和失败拒绝，并回滚测试事务。",
+      "review_limits": ["测试手工装配与正式配置一致的 UUID TypeHandler；未运行业务 Service/HTTP。"],
+      "review_kind": "isolated_postgres_oa_mapper_test_review",
+      "impact_ids": ["IMP-BASE-005"]
     },
     {
       "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/pagination/PaginationCallerBoundaryTest.java",
@@ -3571,7 +3688,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "5fb7853e0241e3291e5a3c46c751bb07e583d12cf8960aef99aea6097da6d4ce",
+      "content_sha256": "7361932a8647bf93b036e9516067c4f2abed8d1718b6359f513c65b6c23882cf",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -3583,6 +3700,7 @@
         "DIAG-BASE-004",
         "DIAG-BASE-005",
         "DIAG-BASE-006",
+        "DIAG-CORE-019",
         "DIAG-CORE-020",
         "DIAG-CORE-032"
       ],
@@ -3597,17 +3715,19 @@
         "EV-B02-CORE020-20261011",
         "EV-B02-CORE032-20261011",
         "EV-B02-BASE003-CORE-20261011",
-        "EV-B02-BASE004-CURRENT-20261011"
+        "EV-B02-BASE004-CURRENT-20261011",
+        "EV-B02-CORE019-CURRENT-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "# 用户与权限；BASE-003/004/005/006 会话语义、BASE-004 Lua 返回值失败拒绝与当前门禁、BASE-003 Core 调用方真实 Redis 证据、CORE-020 身份桶、CORE-022 凭证 Clock 与年龄边界、CORE-032 缩权边界清理和角色行锁已同步；Web 页面级验收仍归 B08。",
+      "review_summary": "# 用户与权限；同步 BASE-003/004/005/006 会话语义、CORE-019 初始化 Root 事务锁与未知结果拒绝、CORE-020 身份桶、CORE-022 凭证年龄、CORE-032 角色缩权及当前门禁；Web 页面级验收仍归 B08。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
       "review_kind": "document_structure_and_high_impact_claim_scan",
       "impact_ids": [
-        "IMP-BASE-003"
+        "IMP-BASE-003",
+        "IMP-CORE-001"
       ]
     },
     {
@@ -3615,26 +3735,30 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "a752386afaa1e14610851d415a4eaf71010b3e58cf2dbc9d4b4d8dfb028b5887",
+      "content_sha256": "b4120a9ef1d8e1a0a5662f29278adb20c817bf628a5d0810d7819dd5edd438c6",
       "reviewed_rules": [
         "04§1",
         "04§4",
         "04§12",
         "04§13"
       ],
-      "issue_ids": [],
+      "issue_ids": ["DIAG-BASE-002"],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-DOC-20261004"
+        "EV-ROOT-DOC-20261004",
+        "EV-B02-BASE008-SCOPE-20261011",
+        "EV-B02-BASE008-OA-MAPPER-20261011",
+        "EV-B02-BASE008-OA-MEETING-20261011",
+        "EV-B02-BASE008-OA-HTTP-20261012"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "# 数据权限设计；全文文档结构/本地引用及高影响事实检索，13个一级至三级标题，0个待核对链接候选。",
+      "review_summary": "# 数据权限设计；同步 BC-BASE-008 关系范围、OA 正式 Mapper、会议分页 Service/MVC 和正式 Flyway/完整应用 HTTP 的验证边界。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
       "review_kind": "document_structure_and_high_impact_claim_scan",
-      "impact_ids": []
+      "impact_ids": ["IMP-BASE-005"]
     },
     {
       "path": "docs/后端/10-后端模块/06-系统管理.md",
@@ -3821,7 +3945,8 @@
         "EV-ROOT-DOC-20261004",
         "EV-B02-BASE005-20261010",
         "EV-B02-BASE001-20261011",
-        "EV-B02-BASE004-CURRENT-20261011"
+        "EV-B02-BASE004-CURRENT-20261011",
+        "EV-B02-CORE019-CURRENT-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -4483,7 +4608,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b8a6e2b1f70524e4887b36cd02ecaab16e054aca32dfb29ba45ec5fbc5735cac",
+      "content_sha256": "4863ff8f9aaa1fd5fc77d69693e51d08ad1ee8ce05c8a9f94ab04051f687d4bd",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4512,11 +4637,16 @@
         "EV-B02-BASE001-GATES-20261011",
         "EV-B02-CORE032-20261011",
         "EV-B02-BASE003-CORE-20261011",
-        "EV-B02-BASE004-CURRENT-20261011"
+        "EV-B02-BASE004-CURRENT-20261011",
+        "EV-B02-CORE019-CURRENT-20261011",
+        "EV-B02-BASE008-SCOPE-20261011",
+        "EV-B02-BASE008-OA-MAPPER-20261011",
+        "EV-B02-BASE008-OA-MEETING-20261011",
+        "EV-B02-BASE008-OA-HTTP-20261012"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "正式台账局部登记 BASE-004 未定义 Lua 结果失败拒绝、15 项围栏专项与八模块 301 项选定测试；B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
+      "review_summary": "正式台账局部登记 OA 会议分页正式 Flyway/完整应用 HTTP 的两段验证及限制；BC-BASE-008 和 B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -4529,7 +4659,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "e090e3117a34582ee00c8ba5ae4885d6864d50970ebc8571f13010e1f5aa349e",
+      "content_sha256": "3178d696d302581dcfbdfe6967574a3ec3050023b01e9e550fe558d2cda2c537",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4562,11 +4692,16 @@
         "EV-B02-BASE001-GATES-20261011",
         "EV-B02-CORE020-20261011",
         "EV-B02-CORE032-20261011",
-        "EV-B02-BASE004-CURRENT-20261011"
+        "EV-B02-BASE004-CURRENT-20261011",
+        "EV-B02-CORE019-CURRENT-20261011",
+        "EV-B02-BASE008-SCOPE-20261011",
+        "EV-B02-BASE008-OA-MAPPER-20261011",
+        "EV-B02-BASE008-OA-MEETING-20261011",
+        "EV-B02-BASE008-OA-HTTP-20261012"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "工程治理台账索引；同步当前 2039 个有限范围文件清单及 BASE-004 Lua 结果拒绝、Redis 专项 15 项、全后端 301 项选定测试证据；全局仍 in_progress。",
+      "review_summary": "工程治理台账索引；同步 OA 会议分页正式 Flyway/HTTP 证据和仍未验收的分段门禁边界；全局仍 in_progress。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -15601,7 +15736,7 @@
       "role": "后端 spectra-framework / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "a507f7ccc2379e1f9ba9cdbc5dfc7eff690638fae225ff1befe91de8a3bafd3c",
+      "content_sha256": "a4b212ab0e9d4b21af1fc3f9dd202fa3467c7e80cae67a7a6db5da715569a41e",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -15609,21 +15744,20 @@
         "04 §7 事务/并发",
         "04 §10 生命周期"
       ],
-      "issue_ids": [],
+      "issue_ids": ["DIAG-BASE-002"],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B02-BASE008-SCOPE-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "MyBatis执行前套用注解与上下文SQL范围，bypass显式分支；不处理Service最终授权。",
+      "review_summary": "MyBatis 数据范围拦截入口不再保留不可达的 null Permission 放行分支；无 Boundary 的查询和更新回归均返回恒假条件。",
       "review_limits": [
-        "静态逐文件审查；未运行应用、数据库迁移或Redis并发行为。",
-        "已阅读声明、注解及全部可执行方法体；展示时省略许可证/重复Javadoc/import，模块import另以rg核查。",
-        "复杂度指标未校准/未实测，候选不等于已超阈值。"
+        "使用受控协作者验证拦截器入口；未运行完整 Spring HTTP 或 OA 真实 Mapper。"
       ],
       "review_kind": "source_responsibility_and_failure_path_review",
-      "impact_ids": []
+      "impact_ids": ["IMP-BASE-005"]
     },
     {
       "path": "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/persistence/scope/authorization/ResourceAuthorizationGuard.java",
@@ -15659,7 +15793,7 @@
       "role": "后端 spectra-framework / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "36ba798e53ac81e134690a29fdd43bd62cfdca03aecd6ff5598697c455a2c8ed",
+      "content_sha256": "93bbf17edeb8b67bfd12156bdf7970ace50a3d9830aad4f43bb3c26526c14e91",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -15667,21 +15801,20 @@
         "04 §7 事务/并发",
         "04 §10 生命周期"
       ],
-      "issue_ids": [],
+      "issue_ids": ["DIAG-BASE-002"],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B02-BASE008-SCOPE-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "构造SELF/部门Rules/关系子查询SQL；方法名insert/create/add跳过过滤、关系主列未限定alias为候选，暂无本范围可利用越权证明。",
+      "review_summary": "修复 Mapper 名称包含 insert/create/add 时误跳过范围和关系主列未带外层别名；合成 PostgreSQL 联表及失败拒绝回归通过。",
       "review_limits": [
-        "静态逐文件审查；未运行应用、数据库迁移或Redis并发行为。",
-        "已阅读声明、注解及全部可执行方法体；展示时省略许可证/重复Javadoc/import，模块import另以rg核查。",
-        "复杂度指标未校准/未实测，候选不等于已超阈值。"
+        "真实 OA 会议/采购 Mapper、业务 HTTP/schema 和浏览器路径未执行；未证明现网存在可利用越权。"
       ],
       "review_kind": "source_responsibility_and_failure_path_review",
-      "impact_ids": []
+      "impact_ids": ["IMP-BASE-005"]
     },
     {
       "path": "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/persistence/scope/context/DataScopeContextFilter.java",
@@ -18122,11 +18255,25 @@
       "impact_ids": []
     },
     {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/persistence/scope/authorization/ScopeSqlPolicyPostgresTest.java",
+      "role": "B02 范围关系 SQL 外层别名专用 PostgreSQL 合成测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "95613fe27bdebed6a248912b398aa8234c83ae376ecae3202773a7b610fb72f7",
+      "reviewed_rules": ["04 §7 授权与数据范围", "04 §13 隔离依赖验证"],
+      "issue_ids": ["DIAG-BASE-002"],
+      "evidence_ids": ["EV-B02-BASE008-SCOPE-20261011"],
+      "review_summary": "专用 PostgreSQL 上用 VALUES/CTE 验证联表同名 id 时仅返回获关系授权的主表行，不访问业务表。",
+      "review_limits": ["仅合成 SQL 与策略表达式，未运行 OA 正式 Mapper 或业务 HTTP。"],
+      "review_kind": "isolated_postgres_scope_sql_review",
+      "impact_ids": ["IMP-BASE-005"]
+    },
+    {
       "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/persistence/scope/authorization/ScopeSqlPolicyTest.java",
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b6c81cade273ed1f86119f0bcb33ed4a4c21af98ecd6da9bbb6def890b36eaa2",
+      "content_sha256": "07b0d303f4eb0e612b0c7571ef0dc6d381debe00278829292ca23305f3552b6e",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -18134,21 +18281,20 @@
         "04 §7 事务/并发",
         "04 §10 生命周期"
       ],
-      "issue_ids": [],
+      "issue_ids": ["DIAG-BASE-002"],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B02-BASE008-SCOPE-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "SQL结构场景覆盖Rules会员条件与relationship差异，未覆盖动态排序/全部别名；未执行。",
+      "review_summary": "原结构范围场景扩展为方法名误跳过与实际拦截器入口失败拒绝；当前 9/9 单测通过。",
       "review_limits": [
-        "静态逐文件审查；未运行应用、数据库迁移或Redis并发行为。",
-        "已阅读声明、注解及全部可执行方法体；展示时省略许可证/重复Javadoc/import，模块import另以rg核查。",
-        "复杂度指标未校准/未实测，候选不等于已超阈值。"
+        "受控 Registry 与授权快照协作者验证，不替代完整 OA Mapper 和 HTTP。"
       ],
       "review_kind": "source_responsibility_and_failure_path_review",
-      "impact_ids": []
+      "impact_ids": ["IMP-BASE-005"]
     },
     {
       "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/security/redis/store/SecurityRedisCounterTest.java",
@@ -18838,7 +18984,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "02afe1253890b540e62236c0b864986f34a19911495f4bf51d9cd28d88615ad1",
+      "content_sha256": "c66ff0ba82b7d5bb192dd4717ee8a90449d21e7b44d3173ed30216ad669b4a90",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -18848,13 +18994,14 @@
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B02-BASE008-OA-HTTP-20261012"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "人工导入测试显式环境旗标/tag，500条批写与父级预加载；test yaml导入dev连线，没有目标DB allow-list，归DIAG-SCRIPT-004。",
+      "review_summary": "人工导入测试显式环境旗标/tag，500条批写与父级预加载；新增 region-import 属性只在手工入口启用专用装配，避免污染完整应用测试。导入目标DB allow-list 仍归 DIAG-SCRIPT-004。",
       "review_limits": [
-        "静态逐文件审查；未运行应用、数据库迁移或Redis并发行为。",
+        "完整应用测试验证导入夹具未误装配；RegionServiceTest 手工导入本身未运行。",
         "已阅读声明、注解及全部可执行方法体；展示时省略许可证/重复Javadoc/import，模块import另以rg核查。",
         "复杂度指标未校准/未实测，候选不等于已超阈值。"
       ],
@@ -18868,7 +19015,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "9983df919c1a10b95a6155358fd6eb5f5e7fe4232f674d7b2aad5ef370519350",
+      "content_sha256": "8022dc6537c4ac3b39e57b46c8b7afc58b4ee22e15dd4bf3fa71c92af439ca6f",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -18876,13 +19023,14 @@
       "issue_ids": [],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B02-BASE008-OA-HTTP-20261012"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "导入测试独立扫描region基础bean与数据源/MyBatis，仍由dev环境参数决定DB；未启动真实基础设施。",
+      "review_summary": "region-import 属性隔离行政区划手工导入配置；完整应用测试不再扫描出第二个 MetaObjectHandler。手工导入入口仍需独立验证。",
       "review_limits": [
-        "静态逐文件审查；未运行应用、数据库迁移或Redis并发行为。",
+        "完整应用测试验证该专用配置未误装配；其自身仅编译，未执行手工导入。",
         "已阅读声明、注解及全部可执行方法体；展示时省略许可证/重复Javadoc/import，模块import另以rg核查。",
         "复杂度指标未校准/未实测，候选不等于已超阈值。"
       ],
@@ -29607,7 +29755,7 @@
       "role": "后端 spectra-core / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "490782f327443c3aa37c3036a187b36a98afd5bda083ca51cfd6de1b7fc2cea5",
+      "content_sha256": "8cc164bd820352e89e39e8486e4f6f2d8f5f1c079f67550bd7339cea98740310",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -29619,19 +29767,20 @@
         "04§10",
         "04§12"
       ],
-      "issue_ids": [],
+      "issue_ids": ["DIAG-CORE-019"],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B02-CORE019-CURRENT-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "32字节token验证、PG advisory事务锁/状态行锁，LOCKED用户+密码身份，complete初始化ID激活Root/default角色/内部密钥/系统状态、清Redis；配置默认时区明确且无效失败；跨域Mapper与Redis提交边界。",
+      "review_summary": "首次初始化保留 PG advisory 事务锁与状态行锁；complete 激活 Root 与写入 Assignment 时另持 Root 策略锁，写后人数复核成功才继续完成步骤；合成 PostgreSQL 的成功和上限回滚通过。",
       "review_limits": [
-        "2026-10-05静态逐文件实现/控制流/调用边界审查；省略许可证、import与机械Javadoc；未运行依赖/HTTP/Provider/并发验证，复杂度未用校准PMD实测。"
+        "合成 PostgreSQL 使用受控 Mapper 适配器；真实 Spring HTTP、正式 MyBatis 装配、Redis Session 侧效应和双应用进程尚未验证。"
       ],
       "review_kind": "source_responsibility_and_failure_path_review",
-      "impact_ids": []
+      "impact_ids": ["IMP-CORE-001"]
     },
     {
       "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/security/initialization/service/impl/SystemInitializationTokenManager.java",
@@ -30085,7 +30234,7 @@
       "role": "后端 spectra-core / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f72e81723a26cc63bd4949259cc76e6e21baf776bdd71f8fb75b561c777cd603",
+      "content_sha256": "302a265d202514abd345e6cc73941b42a57f50917f757be3c8abef0826c4fa3b",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -30103,13 +30252,14 @@
       "evidence_ids": [
         "EV-INVENTORY-20261003",
         "EV-CORE-001",
-        "EV-B02-CORE019-20261010"
+        "EV-B02-CORE019-20261010",
+        "EV-B02-CORE019-CURRENT-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "策略SYSTEM FOR UPDATE与客户版本update、有效DevOps用户SQL计数；计数未过滤deleted/assignment有效期/凭证到期，无法准确表达有效Root且guard未接入。",
+      "review_summary": "策略 SYSTEM FOR UPDATE、版本 update 与有效 Root SQL 计数；当前版拒绝 null 策略和人数结果，专用 PostgreSQL 计数及未知结果单测通过。",
       "review_limits": [
-        "2026-10-05静态逐文件实现/控制流/调用边界审查；省略许可证、import与机械Javadoc；未运行依赖/HTTP/Provider/并发验证，复杂度未用校准PMD实测。"
+        "未知仓储结果为单测故障注入；数据库断连恢复、真实 HTTP 和完整多进程运行态尚未验证。"
       ],
       "review_kind": "source_responsibility_and_failure_path_review",
       "impact_ids": [
@@ -41993,11 +42143,25 @@
       ]
     },
     {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/security/root/JdbcRootPolicyRepositoryTest.java",
+      "role": "B02 有效 Root 策略和人数未知结果失败拒绝单测",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "5d913cca9d3f4bc13611bcb2396264037bf460ce0b09f37622b4f8ad0f60a33f",
+      "reviewed_rules": ["04 §7 有效 Root", "04 §13 失败路径验证"],
+      "issue_ids": ["DIAG-CORE-019"],
+      "evidence_ids": ["EV-B02-CORE019-CURRENT-20261011"],
+      "review_summary": "未知人数先复现被当作零人，修复后连同未知策略锁结果均拒绝；当前八模块门禁 2/2 通过。",
+      "review_limits": ["仓储返回值故障注入，不替代真实数据库断连和恢复。"],
+      "review_kind": "root_repository_failure_path_review",
+      "impact_ids": ["IMP-CORE-001"]
+    },
+    {
       "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/security/root/RootGovernancePostgresTest.java",
       "role": "B02 有效 Root 专用 PostgreSQL 合成测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "6519509528b5bb33eccc1c732bc67beea650f1b565fa6c531e00265a93dc85bb",
+      "content_sha256": "a68ae05c2c17aa66e66c98fe6c5678bee2982a13d19bddcf898db53589e053df",
       "reviewed_rules": [
         "04 §7 有效身份与最后 Root",
         "04 §13 真实依赖验证"
@@ -42008,11 +42172,12 @@
       "evidence_ids": [
         "EV-B02-DEPS-PORTS-20261010",
         "EV-CYCLE-TEST-ENV-20261010",
-        "EV-B02-CORE019-20261010"
+        "EV-B02-CORE019-20261010",
+        "EV-B02-CORE019-CURRENT-20261011"
       ],
-      "review_summary": "test 环境 devops00_spectra_db_test 中有效 Root 两项均失败：软删除用户及未来生效角色未从有效计数排除；过期凭证断言未执行到。",
+      "review_summary": "test 环境专用 PostgreSQL 中 18/18：计数、最后 Root 与上限回滚、两类事务竞争、新增初始化及认证身份 Service 成功/失败路径。",
       "review_limits": [
-        "当前失败不能证明最后有效 Root 保护；未运行真实管理用例和并发事务。"
+        "合成表和受控 Mapper 适配器，不替代完整 HTTP、正式 MyBatis 装配、Redis Session 或双应用进程。"
       ],
       "review_kind": "isolated_postgres_test_review",
       "impact_ids": [
@@ -63310,13 +63475,17 @@
         "EV-BASE-001",
         "EV-B02-SORT-20261008",
         "EV-B02-SORT-GATES-20261008",
-        "EV-B02-BASE002-CLOSE-20261011"
+        "EV-B02-BASE002-CLOSE-20261011",
+        "EV-B02-BASE008-SCOPE-20261011",
+        "EV-B02-BASE008-OA-MAPPER-20261011",
+        "EV-B02-BASE008-OA-MEETING-20261011",
+        "EV-B02-BASE008-OA-HTTP-20261012"
       ],
       "impact_ids": [
         "IMP-BASE-005"
       ],
-      "resolution": "独立 PageOrderFrom、显式字段/别名映射、固定排序拒绝和请求对象隔离已实现；当前源码复核 22 个 SQL + 10 个固定排序入口，2026-10-11 复验 86 项专项及八模块完整 verify 均通过。ScopeSqlPolicy 候选、完整业务 HTTP/schema 属 BC-BASE-008 的剩余边界，不推定已验收。",
-      "verification_record": "docs/开发指南/工程治理/2026-10-11-B02分页排序复验.md"
+      "resolution": "独立 PageOrderFrom、显式字段/别名映射、固定排序拒绝和请求对象隔离已实现；当前源码复核 22 个 SQL + 10 个固定排序入口，排序专项 86/86 通过。BC-BASE-008 范围候选修复方法名误跳过和关系 SQL 别名，合成测试 10/10；OA 正式会议和采购收货 Mapper 专用 PostgreSQL 查询 2/2、会议分页实际 Service/MVC/PostgreSQL 2/2 通过。会议分页在正式 Flyway V1–V8、完整应用 HTTP 过滤器和真实 Redis Session 下 1/1 通过；Core 用户加载与授权快照使用合成提供者。其他业务入口、正式 Core 身份装配和浏览器仍未验收。",
+      "verification_record": "docs/开发指南/工程治理/2026-10-11-B02分页排序复验.md；docs/开发指南/工程治理/2026-10-11-B02排序范围候选验证.md；docs/开发指南/工程治理/2026-10-11-B02-OA关系范围真实Mapper验证.md；docs/开发指南/工程治理/2026-10-11-B02会议分页业务入口验证.md；docs/开发指南/工程治理/2026-10-12-B02会议分页正式HTTP与Schema验证.md"
     },
     {
       "id": "DIAG-BASE-003",
@@ -65560,22 +65729,29 @@
           "line": 72,
           "symbol": "countEffectiveDevOpsUsers",
           "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/security/root/repository/JdbcRootPolicyRepository.java"
+        },
+        {
+          "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/security/initialization/service/impl/SystemInitializationServiceImpl.java",
+          "symbol": "complete"
         }
       ],
       "finding": "LastEffectiveDevOpsGuard仅声明/实现，无调用方；生命周期锁定/停用/离职及授权移除没有接入最小有效Root保护。 JdbcRootPolicyRepository有效计数SQL还未考虑用户deleted、assignment有效起止及凭证到期，不能代表当前可登录有效Root。",
       "impact": "最后可登录DEV_OPS可被停用/撤权而系统正常管理不可恢复；需要所有减少有效Root用例同事务锁与统一有效计数。",
       "priority": "P1",
-      "disposition": "已接入用户状态、授权、登录身份创建/撤销、密码凭据、密码策略及用户编辑的事务锁和前后人数复核，并修复有效计数条件；专用 PostgreSQL 计数、回滚及两类并发 14/14 通过。待实际服务/HTTP 和完整门禁验证。",
-      "state": "in_progress",
+      "disposition": "用户状态、授权、身份、凭据、策略、用户编辑和首次初始化均接入事务锁及有效人数复核；仓储对未知锁定策略和人数结果失败拒绝。直接缺陷已修复；实际 HTTP、正式 Mapper 装配和双进程等行为检查另记未验证。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-CORE-001",
         "EV-B02-DEPS-PORTS-20261010",
-        "EV-B02-CORE019-20261010"
+        "EV-B02-CORE019-20261010",
+        "EV-B02-CORE019-CURRENT-20261011"
       ],
       "impact_ids": [
         "IMP-CORE-001"
-      ]
+      ],
+      "resolution": "首次初始化在 Root 策略行锁下执行激活和 DEV_OPS 授权，并在同一事务中复核人数上下限；仓储不再把 null 锁定策略或 null 有效人数误判为可继续状态。",
+      "verification_record": "docs/开发指南/工程治理/2026-10-11-B02有效Root当前版入口验证.md；合成 PostgreSQL Root 18/18、仓储单测 2/2、八模块完整门禁 307/307 通过；CHECK-CORE-019 保持部分执行。"
     },
     {
       "id": "DIAG-CORE-020",
@@ -67009,22 +67185,27 @@
       "required_changes": [
         "Core agent负责各From/version/CAS证据；OA合同/文档/附件与Flowable主体查询只作共享影响验收，资源上限与引用权限需纳入后续必要改造。"
       ],
-      "deferred_boundary": "本范围不重复认领Core各Mapper实体具体缺陷；ScopeSqlPolicy alias/method-name以及cache key碰撞仍为候选，未断言越权或现网泄漏。",
+      "deferred_boundary": "本范围不重复认领 Core 各 Mapper 实体具体缺陷；ScopeSqlPolicy 的别名与方法名候选已用合成 PostgreSQL、拦截器入口及 OA 正式 Mapper 测试复现、修复与验证，未断言现网泄漏。cache key 碰撞仍属未处理候选。",
       "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
         "EV-BASE-001",
         "EV-B02-SORT-20261008",
         "EV-B02-SORT-GATES-20261008",
-        "EV-B02-BASE002-CLOSE-20261011"
+        "EV-B02-BASE002-CLOSE-20261011",
+        "EV-B02-BASE008-SCOPE-20261011",
+        "EV-B02-BASE008-OA-MAPPER-20261011",
+        "EV-B02-BASE008-OA-MEETING-20261011",
+        "EV-B02-BASE008-OA-HTTP-20261012"
       ],
       "verification": [
         "Core agent负责各From/version/CAS证据；OA合同/文档/附件与Flowable主体查询只作共享影响验收，资源上限与引用权限需纳入后续必要改造。",
-        "排序 32 个入口已迁移，2026-10-11 当前版专项 86/86 与八模块 verify 292/292 通过；字段清单见 docs/后端/30-规范/06-分页排序契约.md。"
+        "排序 32 个入口已迁移，2026-10-11 当前版专项 86/86 通过；字段清单见 docs/后端/30-规范/06-分页排序契约.md。",
+        "范围候选方法名与关系 SQL 别名修复后，专用 PostgreSQL/单测 10/10；OA 会议和采购收货正式 Mapper 合成数据查询 2/2、会议分页正式 Service/MVC/PostgreSQL 2/2、正式 Flyway V1–V8 与完整应用 HTTP/Redis Session 1/1 通过。"
       ],
       "limits": [
-        "本范围不重复认领Core各Mapper实体具体缺陷；ScopeSqlPolicy alias/method-name以及cache key碰撞仍为候选，未断言越权或现网泄漏。",
-        "不关闭 DIAG-BASE-011/019 和 ScopeSqlPolicy 范围候选；未验证全部业务 HTTP/schema、双实例与浏览器。"
+        "本范围不重复认领 Core 各 Mapper 实体具体缺陷；cache key 碰撞仍为候选，未断言现网越权或泄漏。",
+        "不关闭 DIAG-BASE-011/019；正式 Core 身份装配、会议以外业务入口、全部分页入口、双实例与浏览器未验证。"
       ]
     },
     {
@@ -67371,14 +67552,15 @@
         "公开业务操作与必要DTO、最终授权/系统上下文、Mapper SQL、Common端口、所有直接间接仓库调用者、Web编辑及错误展示",
         "Core组织用例与Framework范围策略，历史组织数据语义"
       ],
-      "deferred_boundary": "OA/Workflow独立业务治理暂缓，公共权限/目录/时区/历史部门改变影响的调用方必须一致迁移。CORE-019 当前没有发现 OA/Workflow 直接调用 Root 人数减少入口；其目录与授权读取仍是间接影响。2026-10-10 专用 PostgreSQL Root 计数、回滚与并发测试 14/14 通过，但实际公共服务/HTTP 与 OA/Workflow 间接行为未验收。",
+      "deferred_boundary": "OA/Workflow独立业务治理暂缓，公共权限/目录/时区/历史部门改变影响的调用方必须一致迁移。CORE-019 当前没有发现 OA/Workflow 直接调用 Root 人数减少入口；其目录与授权读取仍是间接影响。2026-10-11 专用 PostgreSQL Root 18/18、仓储单测 2/2、八模块门禁 307/307 通过；实际 HTTP、正式 Mapper 装配、Redis Session 侧效应及 OA/Workflow 间接行为未验收。",
       "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
         "EV-CORE-001",
         "EV-MODEL-004",
         "EV-B02-DEPS-PORTS-20261010",
-        "EV-B02-CORE019-20261010"
+        "EV-B02-CORE019-20261010",
+        "EV-B02-CORE019-CURRENT-20261011"
       ],
       "verification": [
         "隔离DB/Redis权限范围与撤权故障",
@@ -69868,6 +70050,92 @@
       "limits": "旧 2026-10-08 完整门禁失败记录保留为历史。真实业务 schema 上的 32 个完整 HTTP 端点、浏览器、双应用进程均未运行；BC-BASE-008-SCOPE 的范围关系 SQL 别名和方法名候选仍 not_run，RegionServiceTest 被显式排除；不关闭 IMP-BASE-005 其他问题或 B02。"
     },
     {
+      "id": "EV-B02-BASE008-SCOPE-20261011",
+      "scope": "BC-BASE-008-SCOPE / DIAG-BASE-002 / IMP-BASE-005 范围方法名与关系 SQL 别名候选",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-framework -am '-Dtest=ScopeSqlPolicyTest,ScopeSqlPolicyPostgresTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 修复前 exit 1，9 项中 3 项按预期失败；修复后 exit 0、9/9，补拦截器入口后 exit 0、10/10",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> 首次 exit 1，Framework 130 项测试通过后 SpotBugs 指出旧 null Permission 分支不可达；删除后 exit 0，八模块、61 类、311/311 测试，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过",
+        "本地 MyBatis-Plus 3.5.15 DataPermissionInterceptor 字节码复核：beforeQuery 处理查询，beforePrepare 仅处理 UPDATE/DELETE；INSERT 不进入该数据范围拦截器",
+        "CodeGraph 与 rg 复核 Framework 定义和入口、OA 会议/采购关系声明及 Core/Workflow 影响；当前 Mapper 未发现样例式 selectAdditionalRows/updateAddress 名称"
+      ],
+      "environment": "原生 Windows PowerShell 7.6.6、mise 2026.10.4、Temurin 25.0.2+10、Maven Wrapper 3.9.12；后端 mise -E test exec -- 私有 test 环境；专用 PostgreSQL devops00_spectra_db_test，完整门禁 Redis DB 5；合成 VALUES/CTE，无业务表或本机凭据读取输出。",
+      "checked_at": "2026-10-11",
+      "result": "pass_with_declared_limits",
+      "exit_codes": [1, 0, 0, 1, 0, 0],
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-11-B02排序范围候选验证.md",
+        ".temp/b02/base008-scope-red.log",
+        ".temp/b02/base008-scope-target.log",
+        ".temp/b02/base008-scope-target-final.log",
+        ".temp/b02/base008-scope-full-gate.log",
+        ".temp/b02/base008-scope-full-gate-final.log"
+      ],
+      "limits": "真实 PostgreSQL 仅执行合成 CTE/VALUES 与策略生成 SQL；未运行 OA 正式会议/采购 Mapper、全部业务 HTTP/schema、浏览器或双应用进程。RegionServiceTest 显式排除；未证明生产环境存在实际越权，IMP-BASE-005 其他问题及 B02 不因本证据关闭。"
+    },
+    {
+      "id": "EV-B02-BASE008-OA-MAPPER-20261011",
+      "scope": "BC-BASE-008 / DIAG-BASE-002 / IMP-BASE-005 OA 正式会议与采购收货 Mapper 关系范围真实依赖验证",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=OaRelationScopeMapperPostgresTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 首次 exit 1，Workflow Surefire 因未清空测试分组而在目标模块前停止",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=OaRelationScopeMapperPostgresTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 测试夹具诊断版事务工厂与 UUID TypeHandler 配置不全时 exit 1；补齐正式配置后 exit 0，2/2",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> 首次 exit 1，313 项测试通过但新文件两处 Spotless 差异；修正后 exit 0，八模块、313/313 测试及 Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过",
+        "CodeGraph 和 rg 核对 Framework 拦截器、OA MeetingServiceImpl/PurchaseServiceImpl/AssetServiceImpl、Web MeetingApi.page 与会议列表间接调用；Core/Workflow 无本次两张关系表的直接声明"
+      ],
+      "environment": "原生 Windows PowerShell 7.6.6、mise 2026.10.4、Temurin 25.0.2+10、Maven Wrapper 3.9.12；后端私有 test 环境、专用 PostgreSQL devops00_spectra_db_test、完整门禁 Redis DB 5；随机 UUID 合成记录、事务回滚，不读取或输出本机凭据。",
+      "checked_at": "2026-10-11",
+      "result": "pass_with_declared_limits",
+      "exit_codes": [1, 1, 0, 1, 0],
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-11-B02-OA关系范围真实Mapper验证.md",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/scope/OaRelationScopeMapperPostgresTest.java",
+        "spectra-admin/spectra-launch/target/surefire-reports/TEST-com.devops00.spectra.launch.scope.OaRelationScopeMapperPostgresTest.xml"
+      ],
+      "limits": "真实 PostgreSQL 上运行正式 Mapper 的 selectList 和会议 selectCount，未运行 MeetingServiceImpl.page、采购详情/资产入库完整 Service、正式 HTTP/schema、浏览器及双应用进程；RegionServiceTest 显式排除，BC-BASE-008 与 B02 保持未验收。"
+    },
+    {
+      "id": "EV-B02-BASE008-OA-MEETING-20261011",
+      "scope": "BC-BASE-008 / DIAG-BASE-002 / IMP-BASE-005 会议分页正式 Service、Controller、Mapper 与 MVC 真实依赖验证",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=OaMeetingPageHttpPostgresTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 夹具清理、API 版本策略调试各 exit 1，修正后 exit 0，2/2",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch '-Dspotless.ratchetFrom=NONE' '-DspotlessFiles=.*OaMeetingPageHttpPostgresTest\\.java' com.diffplug.spotless:spotless-maven-plugin:3.9.0:check -> 缩进调试 exit 1，修正后 exit 0",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> Spotless 两次、Checkstyle 未使用导入一次 exit 1，修正后 exit 0；八模块 315/315 测试及 Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过",
+        "CodeGraph 和当前源码核对 MeetingController.page、MeetingServiceImpl.page、MeetingMapper.selectPage、Web MeetingApi.page 与会议列表调用；无生产 API 协议变更"
+      ],
+      "environment": "原生 Windows PowerShell 7.6.6、mise 2026.10.4、Temurin 25.0.2+10、Maven Wrapper 3.9.12；后端私有 test 环境、专用 PostgreSQL devops00_spectra_db_test、完整门禁 Redis DB 5；随机 UUID 合成记录、事务回滚，不读取或输出本机凭据。",
+      "checked_at": "2026-10-11",
+      "result": "pass_with_declared_limits",
+      "exit_codes": [1, 1, 0, 1, 0, 1, 1, 1, 0],
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-11-B02会议分页业务入口验证.md",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/scope/OaMeetingPageHttpPostgresTest.java",
+        "spectra-admin/spectra-launch/target/surefire-reports/TEST-com.devops00.spectra.launch.scope.OaMeetingPageHttpPostgresTest.xml"
+      ],
+      "limits": "正式会议 Service、Controller、Mapper、分页插件和数据范围拦截器经 standalone MVC 与合成 PostgreSQL 验证；未运行完整应用安全过滤器、审计、加密链、正式 Flyway schema、采购详情/资产入库、浏览器和双应用进程。RegionServiceTest 显式排除；BC-BASE-008 与 B02 保持未验收。"
+    },
+    {
+      "id": "EV-B02-BASE008-OA-HTTP-20261012",
+      "scope": "BC-BASE-008 / DIAG-BASE-002 / IMP-BASE-005 会议分页正式 Flyway schema、完整应用 HTTP 安全链及 Redis Session",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- java -cp <本机 Maven 缓存 PostgreSQL JDBC jar> ..\\.temp\\b02\\SchemaProbe.java -> exit 0，确认目标测试库有 OA 表但无 Flyway history；RecreateTestDatabase.java -> exit 0，零活动连接检查后重建专用 devops00_spectra_db_test",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=OaMeetingFullHttpFlywayTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 初次编译和夹具隔离各 exit 1，修正后 exit 0；最终版在再次重建的空库 exit 0，1/1，Flyway V1–V8 及随机端口 HTTP 通过",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> exit 1；正式 schema 与 Root 最小表夹具冲突，Core 的 18 项 TRUNCATE 受外键拒绝",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest,!OaMeetingFullHttpFlywayTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> 重建空库后首次 315/315 测试通过但 Spotless exit 1；修正注解格式后 exit 0，八模块 315/315 及 Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch '-Dspotless.ratchetFrom=NONE' '-DspotlessFiles=.*OaMeetingFullHttpFlywayTest\\.java' com.diffplug.spotless:spotless-maven-plugin:3.9.0:check -> 两次格式修正 exit 1，最终 exit 0",
+        "spectra-admin: mise -E test exec -- java -cp <本机 Maven 缓存 PostgreSQL JDBC jar> ..\\.temp\\b02\\PostRunProbe.java -> exit 0，Flyway 成功迁移 8 条且合成会议剩余 0 行",
+        "CodeGraph 和当前源码核对后端会议 Controller/Service/Mapper、Framework Redis Session/范围及 Web MeetingApi.page/会议列表调用方；无生产协议变更"
+      ],
+      "environment": "原生 Windows PowerShell 7.6.6、mise 2026.10.4、Temurin 25.0.2+10、Maven Wrapper 3.9.12；后端私有 test 环境，专用 PostgreSQL devops00_spectra_db_test 与 Redis DB 5；仅随机 UUID 合成行，测试库按用户授权重建，不读取或输出本机凭据。",
+      "checked_at": "2026-10-12",
+      "result": "pass_with_declared_limits",
+      "exit_codes": [0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0],
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-12-B02会议分页正式HTTP与Schema验证.md",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/scope/OaMeetingFullHttpFlywayTest.java",
+        "spectra-admin/spectra-launch/target/surefire-reports/TEST-com.devops00.spectra.launch.scope.OaMeetingFullHttpFlywayTest.xml"
+      ],
+      "limits": "Core 用户加载与授权快照由合成夹具替代；Root 最小表与正式 Flyway schema 在固定测试库上需两段运行，未形成单次全量测试；采购详情/资产入库 Service、其余分页入口、浏览器、双应用进程、真实 Redis 停启恢复及 RegionServiceTest 未运行。BC-BASE-008 与 B02 均未验收。"
+    },
+    {
       "id": "EV-B02-BASE003-CORE-20261011",
       "scope": "DIAG-BASE-003 / IMP-BASE-003 / BC-BASE-002 Core 撤销调用方与当前完整门禁",
       "command_or_scenario": [
@@ -70339,6 +70607,30 @@
         ".temp/b02/core019-core-spotbugs-final-20261010.log"
       ],
       "limits": "PostgreSQL guard/SQL and focused tests pass; actual Service/Controller/HTTP 409 response, Redis Session side effects, OA/Workflow indirect paths and two processes not run. Full verify fails in Framework before Core, with existing Checkstyle/PMD/SpotBugs findings. Direct Core checks have unchanged-file findings; no skipped-check command represents full gate passage."
+    },
+    {
+      "id": "EV-B02-CORE019-CURRENT-20261011",
+      "scope": "DIAG-CORE-019 / IMP-CORE-001 / CHECK-CORE-019 当前版首次初始化 Root 守卫、未知状态拒绝与完整门禁",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-core -am '-Dtest=JdbcRootPolicyRepositoryTest' '-Dsurefire.failIfNoSpecifiedTests=false' test -> 修复前 exit 1，未知人数测试按预期失败",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-core -am '-Dtest=JdbcRootPolicyRepositoryTest,RootGovernancePostgresTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 首次 exit 0、17/17；最终 exit 0、19/19，其中 PostgreSQL 18 项、当时仓储单测 1 项",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> 首次 exit 1，仅初始化类 Spotless 排版；修复后 exit 0，八模块、60 类、307/307 测试及 Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过，仓储单测 2/2",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-core '-Dspotless.ratchetFrom=origin/master' com.diffplug.spotless:spotless-maven-plugin:3.9.0:check -> exit 0"
+      ],
+      "environment": "原生 Windows 11、PowerShell 7.6.6、mise 2026.10.4、Temurin 25.0.2+10、Maven Wrapper 3.9.12；mise -E test exec -- 加载私有测试环境，专用合成 PostgreSQL devops00_spectra_db_test 与 Redis DB 5；未读取或输出凭据、业务数据。",
+      "checked_at": "2026-10-11",
+      "result": "pass_with_declared_limits",
+      "exit_codes": [1, 0, 0, 1, 0, 0],
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-11-B02有效Root当前版入口验证.md",
+        ".temp/b02/core019-unknown-count-red.log",
+        ".temp/b02/core019-current-targeted.log",
+        ".temp/b02/core019-current-targeted-final.log",
+        ".temp/b02/core019-current-full-gate.log",
+        ".temp/b02/core019-current-full-gate-final.log",
+        ".temp/b02/core019-current-format.log"
+      ],
+      "limits": "PostgreSQL 测试使用受控 Mapper 适配器，初始化其他协作者由模拟对象隔离；未运行真实 Spring HTTP、正式 MyBatis Mapper 装配、409/error_code、Root 变更的 Redis Session 侧效应、两个独立应用进程或自然时间流逝失效场景。RegionServiceTest 显式排除。"
     },
     {
       "id": "EV-B02-BASE005-20261010",
@@ -72225,14 +72517,14 @@
       }
     ],
     "scope_counts": {
-      "included": 1547,
+      "included": 1557,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
     },
     "pending_review_filter": "coverage where scope in [included, shared_impact] and state != reviewed",
     "pending_impact_filter": "coverage where scope == deferred_business and impact_state == pending_analysis",
-    "classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. CORE-032 bounded refresh adds the Boundary reconciler, synthetic PostgreSQL test and evidence report, updating changed source and knowledge digests. CORE-022 bounded refresh registers the existing age test, adds write-clock and 401 response tests plus evidence report, and updates changed source and knowledge digests. BASE-003 Core caller refresh adds its real Redis test and evidence report, updating the user-permissions knowledge digest. BASE-004 current refresh adds one evidence report, updates the Lua store, its failure-path test and affected knowledge digests, and records the current full gate. Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
+"classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. CORE-032 bounded refresh adds the Boundary reconciler, synthetic PostgreSQL test and evidence report, updating changed source and knowledge digests. CORE-022 bounded refresh registers the existing age test, adds write-clock and 401 response tests plus evidence report, and updates changed source and knowledge digests. BASE-003 Core caller refresh adds its real Redis test and evidence report, updating the user-permissions knowledge digest. BASE-004 current refresh adds one evidence report, updates the Lua store, its failure-path test and affected knowledge digests, and records the current full gate. CORE-019 current refresh adds one repository unit test and one evidence report, updates initialization and repository source, PostgreSQL tests and knowledge digests, and records the current full gate. BC-BASE-008 scope refresh adds one isolated PostgreSQL test and one evidence report, updates Framework scope sources, tests and knowledge digests, and records the 311-test full gate. OA Mapper bounded refresh adds one Launch PostgreSQL test and one evidence report, updates affected knowledge digests, and records the final 313-test full gate. OA meeting page bounded refresh adds one Launch PostgreSQL MVC test and one evidence report, updates affected knowledge digests, and records the 315-test full gate. Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
     "content_digest_policy": "Actual reviewed content SHA256; deferred impact-only input uses impact_content_sha256; private/excluded input never hashed. Ledger self digest: PowerShell 7.6 ConvertFrom-Json -DateKind String / ConvertTo-Json -Depth 100 -Compress with self content_sha256 null.",
     "phase1_baseline": {
       "enumerated_at": "2026-10-03",
@@ -72582,7 +72874,7 @@
         "name": "排序与范围",
         "status": "partially_executed",
         "necessary_acceptance": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
-        "boundary": "排序当前版 86 项专项与八模块完整门禁通过；范围拦截的 SQL alias 和 insert/create/add 名称匹配仍未执行，整体不可标 passed。",
+        "boundary": "排序当前版 86 项专项通过；范围别名与方法名候选先复现再修复，合成 PostgreSQL/单测 10/10；OA 会议与采购收货正式 Mapper 的专用 PostgreSQL 查询 2/2；会议分页正式 Service/Controller 的 standalone MVC 与 PostgreSQL 2/2。新增会议分页完整应用 HTTP、Redis Session 与正式 Flyway V1–V8 测试 1/1，Core 用户加载和快照使用合成提供者；固定测试库与 Root 最小表夹具需要分段运行。其他业务入口、正式 Core 身份装配和浏览器仍未执行，整体不可标 passed。",
         "scenario": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
         "state": "inconclusive",
         "issue_ids": [
@@ -72594,9 +72886,13 @@
         "evidence_ids": [
           "EV-B02-SORT-20261008",
           "EV-B02-SORT-GATES-20261008",
-          "EV-B02-BASE002-CLOSE-20261011"
+          "EV-B02-BASE002-CLOSE-20261011",
+          "EV-B02-BASE008-SCOPE-20261011",
+          "EV-B02-BASE008-OA-MAPPER-20261011",
+          "EV-B02-BASE008-OA-MEETING-20261011",
+          "EV-B02-BASE008-OA-HTTP-20261012"
         ],
-        "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
+        "required_environment": "范围候选已用受控协作者、专用 PostgreSQL 合成 SQL、OA 正式 Mapper、会议分页 Service/MVC 与正式 Flyway/完整应用 HTTP 验证；Core 身份与快照是合成夹具，仍需其他业务入口、正式 Core 身份装配、全部分页入口和浏览器验证。",
         "subchecks": [
           {
             "id": "BC-BASE-008-SORT",
@@ -72608,8 +72904,18 @@
           },
           {
             "id": "BC-BASE-008-SCOPE",
-            "state": "not_run",
-            "evidence_ids": []
+            "state": "passed",
+            "evidence_ids": ["EV-B02-BASE008-SCOPE-20261011", "EV-B02-BASE008-OA-MAPPER-20261011"]
+          },
+          {
+            "id": "BC-BASE-008-OA-MEETING",
+            "state": "passed",
+            "evidence_ids": ["EV-B02-BASE008-OA-MEETING-20261011"]
+          },
+          {
+            "id": "BC-BASE-008-OA-HTTP-FLYWAY",
+            "state": "passed",
+            "evidence_ids": ["EV-B02-BASE008-OA-HTTP-20261012"]
           }
         ]
       },
@@ -73053,10 +73359,10 @@
         ],
         "state": "partially_executed",
         "scenario": "最后可登录DEV_OPS可被停用/撤权而系统正常管理不可恢复；需要所有减少有效Root用例同事务锁与统一有效计数。",
-        "validation": "周期级 test 环境 devops00_spectra_db_test 中，修复后的有效计数、最后 Root 回滚、角色/身份撤销、身份恢复上限、密码年龄与策略及两类事务竞争共 14/14 通过；相关异常映射与入职回归 5/5 通过。实际服务/HTTP 组合、Redis Session 侧效应和双进程尚未执行；完整 verify 被既有 Framework Checkstyle 阻断。",
+      "validation": "周期级 test 环境 devops00_spectra_db_test 中，当前版 Root PostgreSQL 18/18 覆盖有效计数、最后 Root 回滚、角色/身份撤销、首次初始化成功及超限回滚、身份恢复上限、密码年龄与策略和事务竞争；仓储未知结果单测 2/2。八模块完整 verify 307/307 通过。实际 Spring HTTP、正式 Mapper 装配、Redis Session 侧效应、双进程及自然时间失效尚未执行。",
         "impact_ids": ["IMP-CORE-001"],
-        "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-CORE019-20261010"],
-        "required_environment": "已在专用合成库运行锁、回滚和竞争；后续需实际服务/HTTP、Redis Session 侧效应及双进程。"
+        "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-CORE019-20261010", "EV-B02-CORE019-CURRENT-20261011"],
+        "required_environment": "已在专用合成库运行锁、回滚、初始化及竞争；后续需实际 Spring HTTP 与正式 Mapper 装配、Redis Session 侧效应、双进程及自然时间失效。"
       },
       {
         "id": "CHECK-CORE-020",
