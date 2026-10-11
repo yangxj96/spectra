@@ -148,10 +148,11 @@
           "EV-B02-BASE001-GATES-20261011",
           "EV-B02-STATIC-20261011",
           "EV-B02-CORE020-20261011",
-          "EV-B02-CORE032-20261011"
+          "EV-B02-CORE032-20261011",
+          "EV-B02-CORE022-20261011"
         ],
         "state": "in_progress",
-  "progress_summary": "排序专项、BASE-001/003/004/005/006/007/018、CORE-019/020/032/034 和 Common 14 条 SpotBugs 均有专项证据。CORE-032 在角色变更事务内清理缩权后的 Assignment Boundary 并串行化 Assignment Apply；合成 PostgreSQL 四项成功、失败与竞争测试通过，真实 HTTP 重登录和完整角色变更服务联动未运行。CORE-020 登录及运维清理统一身份摘要桶，真实测试 Redis 双连接并发专项通过，HTTP/双应用进程/实际停启待验证。Core 六条未使用导入和 S3 无用变量已修复；Core 请求容器结构快照和分页选项已收口，11 条 Spring 装配 PMD 与 2 条 Spring 协作者 SpotBugs 按精确例外登记。mise test 环境下全后端八模块 verify 退出 0，选定测试 275/275，Checkstyle/PMD/SpotBugs 均通过；OA/Workflow 编译与静态检查通过但没有测试用例，RegionServiceTest 被显式排除。BASE-001 合成 PostgreSQL 事务/JSONB 与单元测试通过，真实 HTTP 和正式审计表仍未验证。真实 HTTP/Quartz/Workflow、双应用进程、实际 Redis 停启恢复、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效未验收；其余 B02 问题仍需逐项处理，本批未满足 done_when。"
+  "progress_summary": "排序专项、BASE-001/003/004/005/006/007/018、CORE-019/020/022/032/034 和 Common 14 条 SpotBugs 均有专项证据。CORE-022 复核确认当前 Assembler 已检查最长密码年龄，凭证写入改用可注入 Clock；固定时钟、失败路径和 401 提示协作者测试通过，真实 HTTP、专用 PostgreSQL 凭证生命周期与双应用进程仍未运行。CORE-032 合成 PostgreSQL 四项成功、失败与竞争测试通过，真实 HTTP 重登录和完整角色变更服务联动未运行。CORE-020 真实测试 Redis 双连接并发专项通过。mise test 环境下全后端八模块 verify 退出 0，选定测试 280/280，Checkstyle/PMD/SpotBugs 均通过；OA/Workflow 编译与静态检查通过但没有本项测试用例，RegionServiceTest 被显式排除。真实 HTTP/Quartz/Workflow、双应用进程、实际 Redis 停启恢复、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效未验收；其余 B02 问题仍需逐项处理，本批未满足 done_when。"
       },
       {
         "id": "B03",
@@ -3524,7 +3525,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "17b441e8fc53b75ba5ca4630d9fd04fece8db24a69c14330af9c5e66d6dc438b",
+      "content_sha256": "c1b424aa9419b765dfc8dbafcfb34bdd5150067aabbaf96904a743023ee3ce23",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -3552,7 +3553,7 @@
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "# 用户与权限；BASE-003/004/005/006 会话语义、CORE-020 身份桶及 CORE-032 缩权边界清理和角色行锁已同步；当前 Web 刷新失败清理本地会话，页面级验收仍归 B08。",
+      "review_summary": "# 用户与权限；BASE-003/004/005/006 会话语义、CORE-020 身份桶、CORE-022 凭证 Clock 与年龄边界、CORE-032 缩权边界清理和角色行锁已同步；Web 页面级验收仍归 B08。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -4433,7 +4434,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "47cbf944698a32e98796ceb24bbf321f24319aed22758ecfd4df247178ef18bf",
+      "content_sha256": "f59d50bb5387b67c2b3c32133adf3d4940de438b9b615cacbf72c0e18a71fec0",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4464,7 +4465,7 @@
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "正式台账局部登记 CORE-032 角色收缩清理、合成 PostgreSQL 竞争专项和全后端 275 项测试；B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
+      "review_summary": "正式台账局部登记 CORE-022 凭证年龄可控 Clock、固定时钟与 401 协作者测试、全后端 280 项选定测试；B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -4477,7 +4478,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "31ef2091724262f65b1714cc2ffde62ae67ff7db77241733b6866ea313e6205e",
+      "content_sha256": "6d4924c485fd7966c33c8ea0e917f6e91f3a394581c6af7f6090c1946a112a5d",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4513,7 +4514,7 @@
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "工程治理台账索引；2026-10-11 局部登记 CORE-020 身份桶、真实 Redis 双连接专项及全后端 271 项测试；全局仍 in_progress。",
+      "review_summary": "工程治理台账索引；2026-10-11 增补 CORE-022 凭证年龄专项、可控 Clock 与全后端 280 项选定测试；全局仍 in_progress。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -24557,7 +24558,7 @@
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "身份方法/ACTIVE/归属、用户软删/ACTIVE及显式credential expiresAt检查，再快照组装roles/permissions；未读取changedAt或maxAgeDays且强制credentialsNonExpired=true，密码年龄缺口复核成立。",
+      "review_summary": "2026-10-11 现行源码复核：身份方法/ACTIVE/归属、用户软删/ACTIVE、显式 expiresAt 和 changedAt/maxAgeDays 均在快照组装前检查；凭证到期拒绝生成主体，策略不可用拒绝认证。旧静态摘要已过时。",
       "review_limits": [
         "2026-10-05静态逐文件实现/控制流/调用边界审查；省略许可证、import与机械Javadoc；未运行依赖/HTTP/Provider/并发验证，复杂度未用校准PMD实测。"
       ],
@@ -25616,7 +25617,7 @@
       "role": "后端 spectra-core / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1d370f154f2b379633723b8f3ab95a3ca1fe18f212be134c350c867560b970d4",
+      "content_sha256": "228b88e13540f9905ddc8efc056d64899db57b8e5aac72d2fb577c20bcbc3234",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -25633,14 +25634,13 @@
       "evidence_ids": [
         "EV-INVENTORY-20261003",
         "EV-CORE-001",
-        "EV-B02-CORE019-20261010"
+        "EV-B02-CORE019-20261010",
+        "EV-B02-CORE022-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "完整核对本文件可执行控制流或字段/约束/映射声明及直接协作关系，关联本批诊断问题；版本、字段清空、授权边界和任务生命周期按职责分别核对。",
-      "review_limits": [
-        "Java许可证/import/机械Javadoc省略；仅静态审查，未实际DB/Redis/HTTP、多实例或协议序列化验证。"
-      ],
+      "review_summary": "凭证首次创建、替换、重置和改密统一使用注入 Clock 写入 changedAt；更新时清空旧到期、失败次数和锁定，按操作设置 mustChange。固定时钟与失败写入单测通过；专用 PostgreSQL 写入端到端待验。",
+      "review_limits": ["未执行实际 HTTP、专用 PostgreSQL 凭证写入或多实例 Session 重载。"],
       "review_kind": "source_responsibility_and_failure_path_review",
       "impact_ids": [
         "IMP-CORE-005"
@@ -62842,6 +62842,62 @@
       "review_limits": ["未运行实际 HTTP 加密响应或 Web 浏览器调用。"],
       "review_kind": "response_encryption_boundary_review",
       "impact_ids": ["IMP-BASE-001"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-11-B02凭证年龄验证.md",
+      "role": "B02 CORE-022 凭证年龄专项证据与验证边界",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "e21d490381c79e9e7dc961ee7846ce088fbb38fba47bd1f3103e86b61c839302",
+      "reviewed_rules": ["04 §7 凭证到期", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-CORE-022"],
+      "evidence_ids": ["EV-B02-CORE022-20261011"],
+      "review_summary": "以当前源码纠正旧诊断，记录可控时间写入、边界测试、八模块门禁与未运行场景。",
+      "review_limits": ["报告只证明列出的命令和断言；实际 HTTP、多进程与专用 PostgreSQL 凭证生命周期未执行。"],
+      "review_kind": "governance_evidence_review",
+      "impact_ids": ["IMP-CORE-005"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/security/authentication/application/PasswordCredentialAgeTest.java",
+      "role": "Core 固定时钟凭证年龄与策略边界测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "eca53dc34930fa1b01c403175354c1b75b0b1dce79f2fd769eac15de85066f85",
+      "reviewed_rules": ["04 §7 凭证到期", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-CORE-022"],
+      "evidence_ids": ["EV-B02-CORE022-20261011"],
+      "review_summary": "全部登录类型的最长年龄边界、显式到期、异常时间、动态策略收紧与不可用拒绝。",
+      "review_limits": ["固定时钟和模拟策略协作者，不代表真实 HTTP 或数据库写入。"],
+      "review_kind": "credential_age_behavior_test_review",
+      "impact_ids": ["IMP-CORE-005"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/security/authentication/service/impl/PasswordCredentialServiceClockTest.java",
+      "role": "Core 固定时钟凭证创建、重置与改密测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "da1996d2222e21dd58898d3e5605a8224d7b873bc1c3643cdd4829620d5adf18",
+      "reviewed_rules": ["04 §7 凭证写入", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-CORE-022"],
+      "evidence_ids": ["EV-B02-CORE022-20261011"],
+      "review_summary": "验证创建、重置、改密、旧到期和锁定清理、失败写入和 Root 守卫调用顺序。",
+      "review_limits": ["Mapper 和 Root 守卫为模拟协作者，专用 PostgreSQL 写入未执行。"],
+      "review_kind": "credential_write_behavior_test_review",
+      "impact_ids": ["IMP-CORE-005"]
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/security/advice/LoginExceptionAdviceCredentialAgeTest.java",
+      "role": "Framework 登录到期 401 响应协作者测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "3138be7f8060911a7efbb725d8de5ce056dd4bfcab92ff9752c70ffc0c61cfe3",
+      "reviewed_rules": ["04 §5 接口契约", "04 §7 凭证到期", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-CORE-022"],
+      "evidence_ids": ["EV-B02-CORE022-20261011"],
+      "review_summary": "到期异常映射为 HTTP 401、code 401 和明确 msg。",
+      "review_limits": ["直接调用 Advice，未运行实际 HTTP Controller 或 Web 页面。"],
+      "review_kind": "credential_expiry_response_test_review",
+      "impact_ids": ["IMP-CORE-005"]
     }
   ],
   "issues": [
@@ -65543,15 +65599,16 @@
           "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/security/authentication/application/SecurityUserAssembler.java"
         }
       ],
-      "finding": "已全文复核SecurityUserAssembler：只检查显式expiresAt，credentialsNonExpired始终true；未读取changedAt与maxAgeDays。当前策略读写maxAgeDays，但创建/重置/改密没有显式到期值时最长密码年龄不参与登录校验。",
-      "impact": "若仅检查显式expiresAt，最长密码年龄配置不生效；不声称真实时间边界测试通过。",
+      "finding": "2026-10-05 的静态发现指出 Assembler 未读取 changedAt/maxAgeDays；2026-10-11 以当前源码复核，Assembler 已同时执行显式到期和最长年龄校验，旧发现描述已过时。剩余缺口为凭证创建、重置和改密使用 Instant.now()，无法与注入的认证 Clock 一起控制时间。",
+      "impact": "凭证写入与认证时间源不一致会使年龄边界难以可靠验证；旧台账关于最长年龄完全不生效的结论不适用于当前源码。",
       "priority": "P2",
-      "disposition": "集中整改并验证可控时间的密码年龄边界",
-      "state": "pending",
+      "disposition": "已复核当前 Assembler 的年龄校验，将凭证写入改为注入 Clock 并验证固定时间的成功、到期、策略变化、失败写入与明确 401 反馈；端到端场景保留在行为检查",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-CORE-001",
-        "EV-CORE-005"
+        "EV-CORE-005",
+        "EV-B02-CORE022-20261011"
       ],
       "impact_ids": [
         "IMP-CORE-005"
@@ -67501,7 +67558,8 @@
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
         "EV-CORE-001",
-        "EV-B02-CORE020-20261011"
+        "EV-B02-CORE020-20261011",
+        "EV-B02-CORE022-20261011"
       ],
       "verification": [
         "身份空格大小写桶一致",
@@ -67511,7 +67569,7 @@
         "任务跨实例下载",
         "Quartz finish/abandon竞争"
       ],
-      "limits": ["CORE-020 的真实 Redis 双连接及全后端门禁已通过；HTTP、双应用进程和 Redis 实际停启未运行，其余 IMP-CORE-005 关联问题及行为场景仍待逐项治理。"]
+      "limits": ["CORE-020 真实 Redis 双连接、CORE-022 固定时钟/401 协作者测试及全后端门禁已通过；凭证写入的专用 PostgreSQL 端到端、实际 HTTP、双应用进程和 Redis 实际停启未运行，其余 IMP-CORE-005 关联问题及行为场景仍待逐项治理。"]
     },
     {
       "id": "IMP-CORE-006",
@@ -69590,6 +69648,32 @@
     }
   ],
   "evidence": [
+    {
+      "id": "EV-B02-CORE022-20261011",
+      "scope": "DIAG-CORE-022 凭证最长年龄、写入时钟和到期反馈",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-core -am '-Dtest=PasswordCredentialAgeTest,PasswordCredentialServiceClockTest' '-Dsurefire.failIfNoSpecifiedTests=false' test -> 退出 0，Core 6/6",
+        "固定 UTC Clock：密码/邮箱/短信边界、显式到期、缺失/未来 changedAt、策略收紧和不可用、创建/重置/改密与失败写入 -> 预期成功或拒绝均通过",
+        "Framework LoginExceptionAdviceCredentialAgeTest -> HTTP 401/code 401 与明确到期 msg 协作者断言通过",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> 退出 0，八模块 280/280 选定测试与 Spotless/Checkstyle/PMD/SpotBugs 通过",
+        "spectra-admin 与 spectra-ui: codegraph explore 凭证写入、Assembler 与登录错误调用链；以当前源码和 rg 复核陈旧索引",
+        "workspace: pwsh -NoProfile -File scripts/check-governance-exceptions.ps1 -RootPath . -LedgerPath docs/开发指南/工程治理/ledger.json -SourceRoot spectra-admin -SuppressionFile spectra-admin/config/spotbugs/exclude.xml -> 退出 0，99 项例外、1589 个文件扫描"
+      ],
+      "environment": "原生 Windows PowerShell 7.6；mise test 环境；JDK 25、Maven Wrapper 3.9.12；全量门禁使用专用 PostgreSQL devops00_spectra_db_test 与 Redis DB 5；不读取或输出本机凭据，不使用业务数据",
+      "tool_versions": {"java": "25", "maven_wrapper": "3.9.12", "surefire": "3.5.6", "spotless": "3.9.0", "checkstyle": "14.0.0", "pmd": "7.17.0", "spotbugs_plugin": "4.10.3.0"},
+      "checked_at": "2026-10-11",
+      "result": "passed",
+      "exit_codes": [0, 0, 0],
+      "summary": "当前 Assembler 已有最长年龄拒绝能力，凭证写入改用注入 Clock；固定时间的成功、失败、边界、策略变化、重置/改密和 401 协作者验证通过，全后端质量门禁通过。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-11-B02凭证年龄验证.md",
+        "spectra-admin/spectra-modules/spectra-core/target/surefire-reports/TEST-com.devops00.spectra.core.security.authentication.application.PasswordCredentialAgeTest.xml",
+        "spectra-admin/spectra-modules/spectra-core/target/surefire-reports/TEST-com.devops00.spectra.core.security.authentication.service.impl.PasswordCredentialServiceClockTest.xml",
+        "spectra-admin/spectra-framework/target/surefire-reports/TEST-com.devops00.spectra.framework.security.advice.LoginExceptionAdviceCredentialAgeTest.xml",
+        ".temp/b02/core022-full-gate.log"
+      ],
+      "limits": "未执行实际 HTTP、凭证写入专用 PostgreSQL 端到端、双应用进程 Session 重载或故障恢复；RegionServiceTest 显式排除，OA/Workflow 无本项专用测试，CHECK-CORE-022 仅部分执行，B02 仍 in_progress。"
+    },
     {
       "id": "EV-B02-CORE032-20261011",
       "scope": "DIAG-CORE-032 角色权限收缩、Assignment Boundary 清理及角色行锁竞争",
@@ -71973,14 +72057,14 @@
       }
     ],
     "scope_counts": {
-      "included": 1540,
+      "included": 1544,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
     },
     "pending_review_filter": "coverage where scope in [included, shared_impact] and state != reviewed",
     "pending_impact_filter": "coverage where scope == deferred_business and impact_state == pending_analysis",
-    "classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. CORE-032 bounded refresh adds the Boundary reconciler, synthetic PostgreSQL test and evidence report, updating changed source and knowledge digests. Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
+    "classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. CORE-032 bounded refresh adds the Boundary reconciler, synthetic PostgreSQL test and evidence report, updating changed source and knowledge digests. CORE-022 bounded refresh registers the existing age test, adds write-clock and 401 response tests plus evidence report, and updates changed source and knowledge digests. Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
     "content_digest_policy": "Actual reviewed content SHA256; deferred impact-only input uses impact_content_sha256; private/excluded input never hashed. Ledger self digest: PowerShell 7.6 ConvertFrom-Json -DateKind String / ConvertTo-Json -Depth 100 -Compress with self content_sha256 null.",
     "phase1_baseline": {
       "enumerated_at": "2026-10-03",
@@ -72830,12 +72914,12 @@
         "issue_ids": [
           "DIAG-CORE-022"
         ],
-        "state": "not_run",
-        "scenario": "已确认maxAgeDays不参与Assembler登录判断；需可控Clock验证changedAt、到期边界、重置/改密及明确过期反馈。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "state": "partially_executed",
+        "scenario": "当前 Assembler 已检查 maxAgeDays；以可控 Clock 验证 changedAt、到期边界、策略变化、创建/重置/改密及明确过期反馈。",
+        "validation": "固定时钟 Core 6 项与 Framework 401 响应协作者 1 项通过；mise test 全后端 280 项选定测试与静态门禁通过。实际 HTTP、专用 PostgreSQL 凭证写入、双应用进程 Session 重载及故障恢复未运行。",
+        "impact_ids": ["IMP-CORE-005"],
+        "evidence_ids": ["EV-B02-CORE022-20261011"],
+        "required_environment": "已使用 mise test 的专用 PostgreSQL/Redis 门禁环境；仍需专用凭证写入 PostgreSQL 端到端、实际 HTTP 登录与双进程 Session 重载"
       },
       {
         "id": "CHECK-CORE-023",
