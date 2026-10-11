@@ -147,10 +147,11 @@
           "EV-B02-BASE001-20261011",
           "EV-B02-BASE001-GATES-20261011",
           "EV-B02-STATIC-20261011",
-          "EV-B02-CORE020-20261011"
+          "EV-B02-CORE020-20261011",
+          "EV-B02-CORE032-20261011"
         ],
         "state": "in_progress",
-  "progress_summary": "排序专项、BASE-001/003/004/005/006/007/018、CORE-019/020/034 和 Common 14 条 SpotBugs 均有专项证据。CORE-020 登录及运维清理统一身份摘要桶，真实测试 Redis 双连接并发专项通过，HTTP/双应用进程/实际停启待验证。Core 六条未使用导入和 S3 无用变量已修复；Core 请求容器结构快照和分页选项已收口，11 条 Spring 装配 PMD 与 2 条 Spring 协作者 SpotBugs 按精确例外登记。mise test 环境下全后端八模块 verify 退出 0，选定测试 271/271，Checkstyle/PMD/SpotBugs 均通过；OA/Workflow 编译与静态检查通过但没有测试用例，RegionServiceTest 被显式排除。BASE-001 合成 PostgreSQL 事务/JSONB 与单元测试通过，真实 HTTP 和正式审计表仍未验证。真实 HTTP/Quartz/Workflow、双应用进程、实际 Redis 停启恢复、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效未验收；其余 B02 问题仍需逐项处理，本批未满足 done_when。"
+  "progress_summary": "排序专项、BASE-001/003/004/005/006/007/018、CORE-019/020/032/034 和 Common 14 条 SpotBugs 均有专项证据。CORE-032 在角色变更事务内清理缩权后的 Assignment Boundary 并串行化 Assignment Apply；合成 PostgreSQL 四项成功、失败与竞争测试通过，真实 HTTP 重登录和完整角色变更服务联动未运行。CORE-020 登录及运维清理统一身份摘要桶，真实测试 Redis 双连接并发专项通过，HTTP/双应用进程/实际停启待验证。Core 六条未使用导入和 S3 无用变量已修复；Core 请求容器结构快照和分页选项已收口，11 条 Spring 装配 PMD 与 2 条 Spring 协作者 SpotBugs 按精确例外登记。mise test 环境下全后端八模块 verify 退出 0，选定测试 275/275，Checkstyle/PMD/SpotBugs 均通过；OA/Workflow 编译与静态检查通过但没有测试用例，RegionServiceTest 被显式排除。BASE-001 合成 PostgreSQL 事务/JSONB 与单元测试通过，真实 HTTP 和正式审计表仍未验证。真实 HTTP/Quartz/Workflow、双应用进程、实际 Redis 停启恢复、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效未验收；其余 B02 问题仍需逐项处理，本批未满足 done_when。"
       },
       {
         "id": "B03",
@@ -449,6 +450,48 @@
     "shared_change_policy": "Whole-workspace direct and indirect impact analysis first; determine necessary consistency changes and verification, including affected deferred areas."
   },
   "coverage": [
+    {
+      "path": "docs/开发指南/工程治理/2026-10-11-B02角色权限快照一致性验证.md",
+      "role": "B02 CORE-032 实现、真实 PostgreSQL 与门禁证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "91dc17ac92b9169ff831bc04434e5172d325178f33974a6d4f4c35e2fa7a68ee",
+      "reviewed_rules": ["04 §7 授权快照", "04 §9 原子状态迁移", "04 §13 验证", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-032"],
+      "evidence_ids": ["EV-B02-CORE032-20261011"],
+      "review_summary": "记录角色收缩边界清理、事务回滚、角色行锁竞争和八模块门禁结果。",
+      "review_limits": ["真实 HTTP 重登录、完整 Role Authorization Apply 和双应用进程未运行。"],
+      "review_kind": "documented_real_postgresql_behavior_and_gate_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/security/authorization/service/impl/JdbcRoleAssignmentBoundaryReconciler.java",
+      "role": "Core 角色收缩后 Assignment Boundary 与 Scope 清理器",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "a1b0b7244130a970f752ac255fbfbdf3ba4cc6bf71200f14c85654cf4158a65f",
+      "reviewed_rules": ["04 §7 授权快照", "04 §9 原子状态迁移", "04 §13 验证"],
+      "issue_ids": ["DIAG-CORE-032"],
+      "evidence_ids": ["EV-B02-CORE032-20261011"],
+      "review_summary": "事务内通过固定预编译 SQL 清理角色已移除能力对应边界及孤立范围；SQL 失败传播并回滚。",
+      "review_limits": ["直接依赖角色变更服务事务；完整 HTTP 联动另待验证。"],
+      "review_kind": "implementation_and_real_postgresql_test_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/security/authorization/service/impl/JdbcRoleAssignmentBoundaryReconcilerPostgresTest.java",
+      "role": "Core 角色收缩真实 PostgreSQL 成功、失败和竞争测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "8631c8a398fdeab83d7aa171e3cb3b635b76021fa74b0587e44a53536352dd7a",
+      "reviewed_rules": ["04 §7 授权快照", "04 §9 原子状态迁移", "04 §13 验证"],
+      "issue_ids": ["DIAG-CORE-032"],
+      "evidence_ids": ["EV-B02-CORE032-20261011"],
+      "review_summary": "专用测试库随机 schema 验证失效边界、已撤销实例、重新扩权、事务外拒绝、SQL 回滚和行锁竞争。",
+      "review_limits": ["合成 schema 直接执行清理器，不替代完整服务及登录链路。"],
+      "review_kind": "real_postgresql_behavior_test_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
     {
       "path": "docs/开发指南/工程治理/2026-10-11-B02登录失败身份桶验证.md",
       "role": "B02 CORE-020 实现与验证证据",
@@ -3481,7 +3524,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ed84352cc6eb97e6a097c0abc1634f36c9bd7f5776510480e17bffdead586942",
+      "content_sha256": "17b441e8fc53b75ba5ca4630d9fd04fece8db24a69c14330af9c5e66d6dc438b",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -3493,7 +3536,8 @@
         "DIAG-BASE-004",
         "DIAG-BASE-005",
         "DIAG-BASE-006",
-        "DIAG-CORE-020"
+        "DIAG-CORE-020",
+        "DIAG-CORE-032"
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
@@ -3503,11 +3547,12 @@
         "EV-B02-CORE019-20261010",
         "EV-B02-BASE005-20261010",
         "EV-B02-BASE006-20261010",
-        "EV-B02-CORE020-20261011"
+        "EV-B02-CORE020-20261011",
+        "EV-B02-CORE032-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "# 用户与权限；BASE-003 撤销、BASE-004 重放围栏、BASE-005 会话期限及 BASE-006 原子配额语义已同步；CORE-020 登录失败身份桶及运维清理契约已同步；当前 Web 刷新失败清理本地会话，页面级验收仍归 B08。",
+      "review_summary": "# 用户与权限；BASE-003/004/005/006 会话语义、CORE-020 身份桶及 CORE-032 缩权边界清理和角色行锁已同步；当前 Web 刷新失败清理本地会话，页面级验收仍归 B08。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -4388,7 +4433,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ec795d0504bd4c7c954a05fdb338af3d9369e356e0d4bfaee85f2f6abbf4733b",
+      "content_sha256": "47cbf944698a32e98796ceb24bbf321f24319aed22758ecfd4df247178ef18bf",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4410,15 +4455,16 @@
         "EV-B02-COMMON14-20261010",
         "EV-B02-COMMON14-GATES-20261010",
         "EV-B02-DEPS-PORTS-20261010",
-    "EV-CYCLE-TEST-ENV-20261010",
-    "EV-B02-FRAMEWORK-SPOTBUGS-20261010",
-    "EV-B02-FRAMEWORK-SPOTBUGS-GATES-20261010",
-    "EV-B02-BASE001-20261011",
-    "EV-B02-BASE001-GATES-20261011"
+        "EV-CYCLE-TEST-ENV-20261010",
+        "EV-B02-FRAMEWORK-SPOTBUGS-20261010",
+        "EV-B02-FRAMEWORK-SPOTBUGS-GATES-20261010",
+        "EV-B02-BASE001-20261011",
+        "EV-B02-BASE001-GATES-20261011",
+        "EV-B02-CORE032-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-  "review_summary": "正式台账局部登记 CORE-020 登录失败身份桶、双连接真实测试 Redis 专项和全后端 271 项测试；B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
+      "review_summary": "正式台账局部登记 CORE-032 角色收缩清理、合成 PostgreSQL 竞争专项和全后端 275 项测试；B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -4431,7 +4477,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "79a6b3c0db85c0174b5b8b1e265b7c8245888e3a5dfd5d6736e299c403fd0828",
+      "content_sha256": "31ef2091724262f65b1714cc2ffde62ae67ff7db77241733b6866ea313e6205e",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4462,7 +4508,8 @@
         "EV-B02-BASE006-GATES-20261010",
         "EV-B02-BASE001-20261011",
         "EV-B02-BASE001-GATES-20261011",
-        "EV-B02-CORE020-20261011"
+        "EV-B02-CORE020-20261011",
+        "EV-B02-CORE032-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -28338,7 +28385,7 @@
       "role": "后端 spectra-core / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "3b53a30df17066fe383b082adf6ad5bfc3a8f7e361e4cfd55cdbd2dcaa79c36c",
+      "content_sha256": "b9d119f48145c96e567f6abcb0ce01ae0f8a6317fe660e3230592867b4011c97",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -28352,12 +28399,14 @@
       "issue_ids": [
         "DIAG-CORE-002",
         "DIAG-CORE-018",
-        "DIAG-CORE-019"
+        "DIAG-CORE-019",
+        "DIAG-CORE-032"
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
         "EV-CORE-001",
-        "EV-B02-CORE019-20261010"
+        "EV-B02-CORE019-20261010",
+        "EV-B02-CORE032-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -28729,7 +28778,7 @@
       "role": "后端 spectra-core / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "410b9a742d3a772a0bfb231f2250aaf8f1d99e6b7e783911e846ff63a4ba740d",
+      "content_sha256": "0376f13ba78700b150cfa420909d53fd8099547dbba6c3cde2972513cc2e70f3",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -28746,11 +28795,12 @@
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B02-CORE032-20261011"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "角色业务状态/版本/token/hash/追加能力GrantBoundary及可选审批，事务CAS角色并重建permission/grantable、epoch推进和Redis撤权；未清旧assignment boundary，ID03当前成立。",
+      "review_summary": "角色业务状态/版本/token/hash/追加能力GrantBoundary及可选审批，事务CAS角色并重建permission/grantable；现于同一事务清理缩权后的旧 Assignment Boundary，随后推进 epoch 并撤销 Session。",
       "review_limits": [
         "2026-10-05静态逐文件实现/控制流/调用边界审查；省略许可证、import与机械Javadoc；未运行依赖/HTTP/Provider/并发验证，复杂度未用校准PMD实测。"
       ],
@@ -65784,7 +65834,7 @@
       "rule": "04§7授权快照一致性/§9原子状态迁移",
       "locations": [
         {
-          "line": 325,
+          "line": 340,
           "symbol": "persist",
           "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/security/authorization/service/impl/RoleAuthorizationChangeServiceImpl.java"
         },
@@ -65797,11 +65847,12 @@
       "finding": "角色permission收缩CAS并删除重建角色权限、提升epoch及撤销Session，但未删除/重映射既有assignment的access/grant boundary；loader对角色不再声明的permission抛异常，完整快照加载失败。",
       "impact": "具有该角色assignment的用户可能无法登录或加载权限；公共授权、部门合并重组、OA/Workflow受众及权限检查受影响。需真实DB验证事务、撤权及重登录。",
       "priority": "P1",
-      "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "disposition": "角色版本 CAS 后同事务清理失效 Assignment Access/Grant Boundary 与孤立 Scope，Assignment Apply 加 Role 行共享锁；四项合成 PostgreSQL 测试及八模块 verify 通过。真实 HTTP 重登录、完整角色变更服务与多进程联动仍归 CHECK-CORE-032 部分执行。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-005"
+        "EV-CORE-005",
+        "EV-B02-CORE032-20261011"
       ],
       "impact_ids": [
         "IMP-CORE-007"
@@ -67550,13 +67601,14 @@
       "required_changes": [
         "Launch+Framework+所有业务端口/任务+Web反馈；保留暂缓域独立重构边界"
       ],
-      "deferred_boundary": "CORE-034 通知目录的匿名放行已消除，Workflow、OA 流程/合同及监控通知调用方已迁移显式运行身份，定点单测和编译通过；实际 HTTP、Quartz、Workflow、数据库投递事务仍未验收。OA合同Quartz→ContractService读DataScope表在无用户上下文时被Framework拒绝，属同影响图其他待办；角色权限、基础设施恢复和后台任务整体仍待治理。",
+      "deferred_boundary": "CORE-034 通知目录的匿名放行已消除，Workflow、OA 流程/合同及监控通知调用方已迁移显式运行身份，定点单测和编译通过；实际 HTTP、Quartz、Workflow、数据库投递事务仍未验收。CORE-032 缩权清理和并发角色行锁已接入公共授权写入，OA/Workflow 无直接角色变更调用，仍通过公共安全上下文间接受影响；完整服务重登录与多进程未运行。OA合同Quartz→ContractService读DataScope表在无用户上下文时被Framework拒绝，属同影响图其他待办；基础设施恢复和后台任务整体仍待治理。",
       "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
         "EV-CORE-001",
         "EV-B02-CORE034-20261009",
-        "EV-B02-CORE034-GATES-20261009"
+        "EV-B02-CORE034-GATES-20261009",
+        "EV-B02-CORE032-20261011"
       ],
       "verification": [
         "DB/Redis启动故障矩阵，保留Flyway既有失败保护",
@@ -67565,7 +67617,7 @@
         "角色权限删减后登录/重组",
         "无身份后台拒绝及可信身份最小范围"
       ],
-      "limits": []
+      "limits": ["CORE-032 合成 PostgreSQL 清理器专项与静态门禁通过，实际 HTTP 重登录和两应用进程联动未执行；CORE-033 仍待治理。"]
     },
     {
       "id": "IMP-CORE-008",
@@ -69538,6 +69590,30 @@
     }
   ],
   "evidence": [
+    {
+      "id": "EV-B02-CORE032-20261011",
+      "scope": "DIAG-CORE-032 角色权限收缩、Assignment Boundary 清理及角色行锁竞争",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-core -am '-Dtest=JdbcRoleAssignmentBoundaryReconcilerPostgresTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 服务停止时退出 1；恢复后退出 0，4/4 合成 PostgreSQL 测试通过",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-DskipTests' '-Dspotless.ratchetFrom=origin/master' verify -> 首轮 Checkstyle 未使用导入退出 1，次轮 SpotBugs 8 条退出 1；修复后退出 0，八模块编译与静态门禁通过",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> 退出 0，八模块，275/275 选定测试，Spotless/Checkstyle/PMD/SpotBugs 通过",
+        "spectra-admin and spectra-ui: codegraph explore 角色授权服务、快照、OA/Workflow 公共安全上下文与 Web 授权调用方；以 rg 和当前源码复核索引陈旧提示",
+        "workspace: pwsh -NoProfile -File scripts/check-governance-exceptions.ps1 -RootPath . -LedgerPath docs/开发指南/工程治理/ledger.json -SourceRoot spectra-admin -SuppressionFile spectra-admin/config/spotbugs/exclude.xml -> 退出 0，99 项例外、1585 个文件扫描"
+      ],
+      "environment": "原生 Windows PowerShell 7.6；mise test 环境；JDK 25、Maven Wrapper 3.9.12；专用合成 PostgreSQL devops00_spectra_db_test、Redis DB 5；测试随机 schema，只清理自身资源；未读取或输出本机凭据、不使用业务数据",
+      "tool_versions": {"java": "25", "maven_wrapper": "3.9.12", "surefire": "3.5.6", "spotless": "3.9.0", "checkstyle": "14.0.0", "pmd": "7.17.0", "spotbugs_plugin": "4.10.3.0"},
+      "checked_at": "2026-10-11",
+      "result": "passed",
+      "exit_code": 0,
+      "summary": "角色权限收缩后 Access/Grant Boundary 原子清理、事务外拒绝、失败回滚、角色行锁竞争及重新扩权不恢复旧边界均有合成 PostgreSQL 证据；全后端质量门禁通过。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-11-B02角色权限快照一致性验证.md",
+        "spectra-admin/spectra-modules/spectra-core/target/surefire-reports/TEST-com.devops00.spectra.core.security.authorization.service.impl.JdbcRoleAssignmentBoundaryReconcilerPostgresTest.xml",
+        ".temp/b02/core032-targeted-final.log",
+        ".temp/b02/core032-full-gate.log"
+      ],
+      "limits": "定向测试直接运行清理器与事务，并未执行真实 HTTP、完整 Role Authorization Apply、重新登录或两个应用进程；RegionServiceTest 排除，OA/Workflow 无本项专用测试；CHECK-CORE-032 部分执行，B02 保持 in_progress。"
+    },
     {
       "id": "EV-B02-CORE020-20261011",
       "scope": "DIAG-CORE-020 登录失败身份桶与运维定向清理",
@@ -71897,14 +71973,14 @@
       }
     ],
     "scope_counts": {
-      "included": 1537,
+      "included": 1540,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
     },
     "pending_review_filter": "coverage where scope in [included, shared_impact] and state != reviewed",
     "pending_impact_filter": "coverage where scope == deferred_business and impact_state == pending_analysis",
-    "classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
+    "classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. CORE-032 bounded refresh adds the Boundary reconciler, synthetic PostgreSQL test and evidence report, updating changed source and knowledge digests. Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
     "content_digest_policy": "Actual reviewed content SHA256; deferred impact-only input uses impact_content_sha256; private/excluded input never hashed. Ledger self digest: PowerShell 7.6 ConvertFrom-Json -DateKind String / ConvertTo-Json -Depth 100 -Compress with self content_sha256 null.",
     "phase1_baseline": {
       "enumerated_at": "2026-10-03",
@@ -72874,12 +72950,12 @@
         "issue_ids": [
           "DIAG-CORE-032"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "scenario": "具有该角色assignment的用户可能无法登录或加载权限；公共授权、部门合并重组、OA/Workflow受众及权限检查受影响。需真实DB验证事务、撤权及重登录。",
-        "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证"
+        "validation": "专用 PostgreSQL 随机 schema 的四项清理、回滚与行锁竞争测试通过；八模块 275 项选定测试和静态门禁通过。真实 HTTP 重登录、完整角色变更服务与两应用进程未运行。",
+        "impact_ids": ["IMP-CORE-007"],
+        "evidence_ids": ["EV-B02-CORE032-20261011"],
+        "required_environment": "已使用 mise test 的 devops00_spectra_db_test；仍需真实 HTTP 登录/角色变更与两个应用进程的联动环境"
       },
       {
         "id": "CHECK-CORE-033",
