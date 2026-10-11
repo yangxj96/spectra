@@ -149,10 +149,11 @@
           "EV-B02-STATIC-20261011",
           "EV-B02-CORE020-20261011",
           "EV-B02-CORE032-20261011",
-          "EV-B02-CORE022-20261011"
+          "EV-B02-CORE022-20261011",
+          "EV-B02-CORE023-20261011"
         ],
         "state": "in_progress",
-  "progress_summary": "排序专项、BASE-001/003/004/005/006/007/018、CORE-019/020/022/032/034 和 Common 14 条 SpotBugs 均有专项证据。CORE-022 复核确认当前 Assembler 已检查最长密码年龄，凭证写入改用可注入 Clock；固定时钟、失败路径和 401 提示协作者测试通过，真实 HTTP、专用 PostgreSQL 凭证生命周期与双应用进程仍未运行。CORE-032 合成 PostgreSQL 四项成功、失败与竞争测试通过，真实 HTTP 重登录和完整角色变更服务联动未运行。CORE-020 真实测试 Redis 双连接并发专项通过。mise test 环境下全后端八模块 verify 退出 0，选定测试 280/280，Checkstyle/PMD/SpotBugs 均通过；OA/Workflow 编译与静态检查通过但没有本项测试用例，RegionServiceTest 被显式排除。真实 HTTP/Quartz/Workflow、双应用进程、实际 Redis 停启恢复、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效未验收；其余 B02 问题仍需逐项处理，本批未满足 done_when。"
+  "progress_summary": "排序专项、BASE-001/003/004/005/006/007/018、CORE-019/020/022/023/032/034 和 Common 14 条 SpotBugs 均有专项证据。CORE-023 已将绑定码绑定发起用户，Redis 原子限制单码尝试次数，并覆盖双连接并发猜测、跨用户拒绝、重放、失效与故障恢复；发送和核验入口增加外层限流，Web 协议不变。CORE-022 固定时钟、失败路径和 401 协作者测试通过；CORE-032 合成 PostgreSQL 成功、失败与竞争测试通过；CORE-020 双连接 Redis 身份桶测试通过。mise test 环境下全后端八模块 verify 退出 0，选定测试 292/292，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过；OA/Workflow 编译与静态检查通过但没有本项测试用例，RegionServiceTest 被显式排除。真实 HTTP/Quartz/Workflow、双应用进程、实际 Redis 停启恢复、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效未验收；其余 B02 问题仍需逐项处理，本批未满足 done_when。"
       },
       {
         "id": "B03",
@@ -65628,10 +65629,11 @@
       "impact": "已登录账号可并行猜短验证码，需用户/用途/地址绑定及原子耗尽失效；外层限流需共同核对。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B02-CORE023-20261011"
       ],
       "impact_ids": [
         "IMP-CORE-005"
@@ -67559,7 +67561,8 @@
       "evidence_ids": [
         "EV-CORE-001",
         "EV-B02-CORE020-20261011",
-        "EV-B02-CORE022-20261011"
+        "EV-B02-CORE022-20261011",
+        "EV-B02-CORE023-20261011"
       ],
       "verification": [
         "身份空格大小写桶一致",
@@ -67569,7 +67572,7 @@
         "任务跨实例下载",
         "Quartz finish/abandon竞争"
       ],
-      "limits": ["CORE-020 真实 Redis 双连接、CORE-022 固定时钟/401 协作者测试及全后端门禁已通过；凭证写入的专用 PostgreSQL 端到端、实际 HTTP、双应用进程和 Redis 实际停启未运行，其余 IMP-CORE-005 关联问题及行为场景仍待逐项治理。"]
+      "limits": ["CORE-020 真实 Redis 双连接、CORE-022 固定时钟/401 协作者、CORE-023 绑定码双连接并发/故障专项及全后端门禁已通过；凭证写入的专用 PostgreSQL 端到端、实际 HTTP、双应用进程、真实通知投递和 Redis 实际停启未运行，其余 IMP-CORE-005 关联问题及行为场景仍待逐项治理。"]
     },
     {
       "id": "IMP-CORE-006",
@@ -69648,6 +69651,33 @@
     }
   ],
   "evidence": [
+    {
+      "id": "EV-B02-CORE023-20261011",
+      "scope": "DIAG-CORE-023 绑定验证码用户绑定、原子尝试预算与外层限流",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-core -am '-Dtest=BindingVerificationCodeTest,SecurityBindingCodeRedisTest,BindingRateLimitPolicyTest,CacheManagementBindingCodeTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 首轮 Lua 数值参数序列化错误退出 1；修正后最终退出 0，Framework 5/5、Core 7/7",
+        "真实 Redis DB 5 两条独立连接：32 个并发猜测唯一耗尽、跨用户反复提交正确数字拒绝且不占预算、成功消费后重放拒绝、耗尽后重新签发、无 TTL/绑定值损坏/命令失败/消费后回复丢失拒绝与健康连接恢复 -> 全部通过",
+        "Core 合成用例：短信及邮箱用户绑定、入队失败按摘要清理、新通知幂等键和数据库字段长度、无效/耗尽不写身份、运维按受控键清理；Framework 外层限流路径与额度 -> 全部通过",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> 前两轮分别在 Spotless 与 PMD 退出 1，修正格式和参数结构后最终退出 0；八模块、选定测试 292/292，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过",
+        "spectra-admin 与 spectra-ui: codegraph explore 绑定码服务、Common Redis 端口、Framework 限流、Web 个人绑定和缓存管理；rg 当前源码复核调用方、OA/Workflow 无直接绑定码调用"
+      ],
+      "environment": "原生 Windows PowerShell 7.6；mise test 环境；JDK 25、Maven Wrapper 3.9.12；专用合成 PostgreSQL devops00_spectra_db_test、Redis DB 5；Redis 用随机物理键前缀且只清理自身键；未读取或输出本机凭据、不使用业务数据",
+      "tool_versions": {"java": "25", "maven_wrapper": "3.9.12", "surefire": "3.5.6", "spotless": "3.9.0", "checkstyle": "14.0.0", "pmd": "7.17.0", "spotbugs_plugin": "4.10.3.0"},
+      "checked_at": "2026-10-11",
+      "result": "passed",
+      "exit_code": 0,
+      "summary": "绑定码受发起用户约束，单码预算在 Redis 中原子耗尽；并发、跨用户、重放、异常状态及故障恢复的定向测试 12/12 通过，全后端八模块 verify 及选定测试 292/292 通过。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-11-B02绑定验证码尝试预算验证.md",
+        "spectra-admin/spectra-framework/target/surefire-reports/TEST-com.devops00.spectra.framework.security.session.SecurityBindingCodeRedisTest.xml",
+        "spectra-admin/spectra-framework/target/surefire-reports/TEST-com.devops00.spectra.framework.security.ratelimit.BindingRateLimitPolicyTest.xml",
+        "spectra-admin/spectra-modules/spectra-core/target/surefire-reports/TEST-com.devops00.spectra.core.security.authentication.service.impl.BindingVerificationCodeTest.xml",
+        "spectra-admin/spectra-modules/spectra-core/target/surefire-reports/TEST-com.devops00.spectra.core.system.service.impl.CacheManagementBindingCodeTest.xml",
+        ".temp/b02/core023-targeted-final.log",
+        ".temp/b02/core023-full-gate.log"
+      ],
+      "limits": "真实 HTTP、两个应用进程、实际 Redis 停启、外部短信/邮件 Provider 和完整通知数据库事务未验证；RegionServiceTest 排除，OA/Workflow 无本项专用行为测试。CHECK-CORE-023 和 IMP-CORE-005 耗尽场景仅部分执行；B02 仍 in_progress。"
+    },
     {
       "id": "EV-B02-CORE022-20261011",
       "scope": "DIAG-CORE-022 凭证最长年龄、写入时钟和到期反馈",
@@ -72926,12 +72956,12 @@
         "issue_ids": [
           "DIAG-CORE-023"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "scenario": "已登录账号可并行猜短验证码，需用户/用途/地址绑定及原子耗尽失效；外层限流需共同核对。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "validation": "Core 绑定用例与通知失败测试、Framework 限流策略和真实 Redis DB 5 双连接并发/跨用户/重放/耗尽/无 TTL/命令失败/丢回复测试通过；完整后端 verify 通过。未执行真实 HTTP、双应用进程、实际 Redis 停启或外部通知投递。",
+        "impact_ids": ["IMP-CORE-005"],
+        "evidence_ids": ["EV-B02-CORE023-20261011"],
+        "required_environment": "已使用 mise test 的专用 Redis DB 5 与 PostgreSQL 测试库；仍需实际 HTTP、双应用进程、真实 Redis 停启及通知投递联动。"
       },
       {
         "id": "CHECK-CORE-024",
@@ -74500,9 +74530,9 @@
         "impact_ids": [
           "IMP-CORE-005"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "partially_executed",
+        "evidence_ids": ["EV-B02-CORE023-20261011"],
+        "required_environment": "CORE-023 绑定码真实 Redis 双连接耗尽、状态异常和丢回复拒绝通过；登录验证码及其他关联问题、实际 HTTP、双应用进程和 Redis 停启仍待验证。"
       },
       {
         "id": "BC-IMPACT-IMP-CORE-005-3",
