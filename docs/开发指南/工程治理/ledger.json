@@ -158,10 +158,11 @@
           "EV-B02-BASE008-SCOPE-20261011",
           "EV-B02-BASE008-OA-MAPPER-20261011",
           "EV-B02-BASE008-OA-MEETING-20261011",
-          "EV-B02-BASE008-OA-HTTP-20261012"
+          "EV-B02-BASE008-OA-HTTP-20261012",
+          "EV-B02-BASE003-TWO-PROCESS-20261012"
         ],
         "state": "in_progress",
-  "progress_summary": "BC-BASE-008-SCOPE 已修复范围方法名误跳过及关系 SQL 外层别名，合成 PostgreSQL/单测 10/10；OA 正式会议与采购收货 Mapper 专用 PostgreSQL 查询和会议计数 2/2；会议分页正式 Service/Controller 的 standalone MVC 与 PostgreSQL 2/2。新增专用空库 Flyway V1–V8 和完整应用 HTTP 测试 1/1，覆盖真实 Redis Session、过滤器、方法权限、范围、排序与撤销，但 Core 用户加载和授权快照为合成提供者。固定测试库中的 Root 最小表夹具与正式 schema 不能同轮共存，八模块 verify 与新增应用测试分段执行；首次单轮尝试因外键约束退出 1。BC-BASE-008 整体仍缺其他业务入口、正式 Core 身份装配和浏览器。CORE-019 直接缺陷已解决，Root PostgreSQL 18/18、仓储 2/2；BASE-004 围栏 15/15、BASE-003 Core 撤销四项真实 Redis、BASE-002 排序 86 项及调用方清单通过；BASE-001/005/006/007/018、CORE-020/022/023/032/034 已有专项证据。RegionServiceTest 显式排除。CHECK-CORE-019 的实际 HTTP/正式 MyBatis、Redis Session 侧效应、自然失效和双进程未验收；BC-BASE-001/002、IMP-BASE-003 的两个应用进程、实际 Redis 停启恢复及完整事务未验收。真实 Quartz/Workflow、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效也未验收；本批未满足 done_when。"
+  "progress_summary": "BC-BASE-008 的范围方法名与关系 SQL 别名修复、OA 正式 Mapper/会议 Service/Controller 及完整应用 HTTP Flyway 专项分别有证据；完整应用身份与授权快照为合成提供者，其他业务入口和浏览器仍待验证。CORE-019 Root PostgreSQL 18/18、仓储 2/2；BASE-004 围栏 15/15、BASE-003 Core 撤销四项真实 Redis、BASE-002 排序 86 项及调用方清单通过；BASE-001/005/006/007/018、CORE-020/022/023/032/034 均有专项证据。2026-10-12 BASE-003 新增两个独立应用进程的正式 HTTP 登出和公共按用户撤销旧 Access 专项 1/1；PostgreSQL/Redis 恢复后八模块 clean verify 315/315 和全部静态门禁通过。固定测试库的 Root 最小表与正式 Flyway schema 分段验证，完整门禁显式排除已单独通过的两个完整应用 HTTP 专项及 RegionServiceTest。CHECK-CORE-019 的实际 HTTP/正式 MyBatis、Redis Session 侧效应和自然失效未验收；BC-BASE-001/002、IMP-BASE-003 仍缺正式 Core HTTP 登录/角色事务、Refresh 自然失效跨进程、实际 Redis 停启恢复。真实 Quartz/Workflow、测试 S3 操作、旧格式会话上线处置及 B08 浏览器身份失效也未验收；本批未满足 done_when。"
       },
       {
         "id": "B03",
@@ -460,6 +461,20 @@
     "shared_change_policy": "Whole-workspace direct and indirect impact analysis first; determine necessary consistency changes and verification, including affected deferred areas."
   },
   "coverage": [
+    {
+      "path": "docs/开发指南/工程治理/2026-10-12-B02双进程HTTP会话撤销验证.md",
+      "role": "B02 双进程 HTTP 会话撤销与分段完整门禁证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "05bdf59b9633665efe61aea10ac2b6b6bfdeb796b8832f931b2004c9c66772a0",
+      "reviewed_rules": ["04 §8 安全 Redis", "04 §10 会话生命周期", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-BASE-003"],
+      "evidence_ids": ["EV-B02-BASE003-TWO-PROCESS-20261012"],
+      "review_summary": "两个独立应用 JVM 共用 Redis DB 5，验证正式 HTTP 登出与按用户撤销后旧 Access 在两端拒绝，并记录干净构建完整门禁。",
+      "review_limits": ["Core 身份与快照为合成提供者；正式角色事务、Redis 停启与浏览器未验证。"],
+      "review_kind": "isolated_two_process_http_session_revocation_evidence_review",
+      "impact_ids": ["IMP-BASE-003"]
+    },
     {
       "path": "docs/开发指南/工程治理/2026-10-12-B02会议分页正式HTTP与Schema验证.md",
       "role": "B02 会议分页正式 Flyway schema 与完整应用 HTTP 验证证据",
@@ -1270,6 +1285,20 @@
       "review_limits": ["Core 身份与快照为合成提供者；固定测试库需与 Root 最小表夹具分段运行。"],
       "review_kind": "isolated_postgres_redis_oa_meeting_full_http_test_review",
       "impact_ids": ["IMP-BASE-005"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/SessionTwoProcessHttpTest.java",
+      "role": "两个独立应用 JVM 的正式 HTTP Session 撤销集成测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "0b33eb0491144ec9bbb4cca2f4ae860b4ec1d9e64a8a9537d56b08f2acffccf9",
+      "reviewed_rules": ["04 §8 安全 Redis", "04 §10 会话生命周期", "04 §13 真实依赖与门禁"],
+      "issue_ids": ["DIAG-BASE-003"],
+      "evidence_ids": ["EV-B02-BASE003-TWO-PROCESS-20261012"],
+      "review_summary": "测试分别启动两份完整 Spring Boot 应用，核对共享 Redis 的 Access 接受、正式 HTTP 登出和公共撤销传播及重新签发恢复。",
+      "review_limits": ["Core 身份与授权快照为随机 UUID 合成夹具；不覆盖正式 Core 登录和角色事务。"],
+      "review_kind": "isolated_postgres_redis_two_process_http_test_review",
+      "impact_ids": ["IMP-BASE-003"]
     },
     {
       "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/scope/OaMeetingPageHttpPostgresTest.java",
@@ -3688,7 +3717,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "7361932a8647bf93b036e9516067c4f2abed8d1718b6359f513c65b6c23882cf",
+      "content_sha256": "c2a8734c3ec9b5be99dbbd7471e7256b8c6091e74506bfa13652dbfbc43043a1",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -3716,11 +3745,12 @@
         "EV-B02-CORE032-20261011",
         "EV-B02-BASE003-CORE-20261011",
         "EV-B02-BASE004-CURRENT-20261011",
-        "EV-B02-CORE019-CURRENT-20261011"
+        "EV-B02-CORE019-CURRENT-20261011",
+        "EV-B02-BASE003-TWO-PROCESS-20261012"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "# 用户与权限；同步 BASE-003/004/005/006 会话语义、CORE-019 初始化 Root 事务锁与未知结果拒绝、CORE-020 身份桶、CORE-022 凭证年龄、CORE-032 角色缩权及当前门禁；Web 页面级验收仍归 B08。",
+      "review_summary": "# 用户与权限；同步 BASE-003/004/005/006 会话语义、双进程 HTTP 撤销边界、CORE-019 初始化 Root 事务锁与未知结果拒绝、CORE-020 身份桶、CORE-022 凭证年龄、CORE-032 角色缩权及当前门禁；Web 页面级验收仍归 B08。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -4608,7 +4638,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4863ff8f9aaa1fd5fc77d69693e51d08ad1ee8ce05c8a9f94ab04051f687d4bd",
+      "content_sha256": "8acf538c9390079d20ee525c19055313fff5130c3fa31fad00a1b2b7f65903a4",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4646,7 +4676,7 @@
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "正式台账局部登记 OA 会议分页正式 Flyway/完整应用 HTTP 的两段验证及限制；BC-BASE-008 和 B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
+      "review_summary": "正式台账局部登记双进程 HTTP Session 撤销与当前八模块门禁的分段验证及限制；BC-BASE-002 和 B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -4659,7 +4689,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "3178d696d302581dcfbdfe6967574a3ec3050023b01e9e550fe558d2cda2c537",
+      "content_sha256": "87479131d3a29e8c85844377cd15541fd9a33226722ff9a0c248479f75776394",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4697,11 +4727,12 @@
         "EV-B02-BASE008-SCOPE-20261011",
         "EV-B02-BASE008-OA-MAPPER-20261011",
         "EV-B02-BASE008-OA-MEETING-20261011",
-        "EV-B02-BASE008-OA-HTTP-20261012"
+        "EV-B02-BASE008-OA-HTTP-20261012",
+        "EV-B02-BASE003-TWO-PROCESS-20261012"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "工程治理台账索引；同步 OA 会议分页正式 Flyway/HTTP 证据和仍未验收的分段门禁边界；全局仍 in_progress。",
+      "review_summary": "工程治理台账索引；同步双进程 HTTP Session 撤销和当前八模块门禁证据及仍未验收边界；全局仍 in_progress。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -63517,13 +63548,14 @@
         "EV-BASE-001",
         "EV-B02-BASE003-20261009",
         "EV-B02-BASE003-GATES-20261009",
-        "EV-B02-BASE003-CORE-20261011"
+        "EV-B02-BASE003-CORE-20261011",
+        "EV-B02-BASE003-TWO-PROCESS-20261012"
       ],
       "impact_ids": [
         "IMP-BASE-003"
       ],
-      "resolution": "用户索引保留有效 Refresh，TTL 只延长；用户、客户端、句柄和踢旧撤销覆盖过期 Access，拒绝无用户索引的孤儿 Refresh。Framework 隔离 Redis 19 项、Core 真实服务方法至 Redis 4 项通过，当前八模块完整 verify 296/296 通过。真实 HTTP/数据库事务、两个应用进程和 Redis 停启恢复留在 BC-BASE-002 与 IMP-BASE-003，不推定行为整体验收。",
-      "verification_record": "docs/开发指南/工程治理/2026-10-11-B02会话撤销Core调用方验证.md"
+      "resolution": "用户索引保留有效 Refresh，TTL 只延长；用户、客户端、句柄和踢旧撤销覆盖过期 Access，拒绝无用户索引的孤儿 Refresh。Framework 隔离 Redis 19 项、Core 真实服务方法至 Redis 4 项通过；两个独立应用进程的正式 HTTP 登出和公共按用户撤销 Access 专项 1/1、当前八模块分段完整门禁 315/315 通过。正式 Core HTTP/数据库事务、Refresh 自然失效跨进程、Redis 停启恢复留在 BC-BASE-002 与 IMP-BASE-003，不推定行为整体验收。",
+      "verification_record": "docs/开发指南/工程治理/2026-10-11-B02会话撤销Core调用方验证.md；docs/开发指南/工程治理/2026-10-12-B02双进程HTTP会话撤销验证.md"
     },
     {
       "id": "DIAG-BASE-004",
@@ -67082,7 +67114,7 @@
         "安全计数首次写入与 TTL 原子化；拒绝无 TTL、异常脚本返回和结果未知，验证竞争递增及窗口保持。",
         "Session 签发、读取和刷新遵守绝对/空闲与原始令牌期限，活动时间原子更新，验证双连接、撤销竞争及旧格式会话处置。"
       ],
-  "deferred_boundary": "BASE-003/004 已在隔离 Redis 验证撤销与双连接重放交错；BASE-004 又严格拒绝 Lua 未定义结果并在当前 test 环境重验，BASE-003 另验证 Core 改密及管理员撤销真实服务方法经正式端口到 Redis。BASE-007 集合 null/empty、BASE-018 计数 TTL 已有专项；BASE-005 在 test 环境 Redis DB 5 验证期限与活动；BASE-006 验证双连接原子配额、踢旧、租约/围栏及模拟连接失败后的恢复。两个应用进程、实际 Redis 停启恢复、旧格式会话上线处置和真实 Core HTTP/数据库事务及 Web 浏览器入口仍未验收；没有凭据输出。",
+  "deferred_boundary": "BASE-003/004 已在隔离 Redis 验证撤销与双连接重放交错；BASE-004 又严格拒绝 Lua 未定义结果并在当前 test 环境重验，BASE-003 另验证 Core 改密及管理员撤销真实服务方法经正式端口到 Redis。BASE-007 集合 null/empty、BASE-018 计数 TTL 已有专项；BASE-005 在 test 环境 Redis DB 5 验证期限与活动；BASE-006 验证双连接原子配额、踢旧、租约/围栏及模拟连接失败后的恢复。两个独立应用进程的正式 HTTP 登出及公共按用户撤销 Access 专项 1/1、当前八模块分段完整门禁 315/315 通过。实际 Redis 停启恢复、旧格式会话上线处置、正式 Core HTTP/角色事务及 Web 浏览器入口仍未验收；没有凭据输出。",
       "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
@@ -67101,16 +67133,18 @@
     "EV-B02-BASE006-20261010",
     "EV-B02-BASE006-GATES-20261010",
     "EV-B02-BASE003-CORE-20261011",
+    "EV-B02-BASE003-TWO-PROCESS-20261012",
     "EV-B02-BASE004-CURRENT-20261011"
       ],
       "verification": [
         "真实隔离Redis测试并发重放、Access过期Refresh有效、ALLOW多客户端、多实例登录限制、Redis异常/null与正常empty。",
         "隔离 Redis DB12 的 BASE-018 计数专项 10 项通过；首次写入中断的前后结果和旧无 TTL 状态由合成故障注入验证。",
         "BASE-003 Core 改密和管理员撤销经正式服务方法、撤销端口及两个真实 Redis 连接的四项测试通过。",
+        "BASE-003 两个独立应用进程共享 Redis DB 5，正式 HTTP 登出和公共按用户撤销后旧 Access 在两端拒绝；重新签发恢复，专项 1/1、当前分段完整门禁 315/315。",
         "BASE-004 当前版严格核对 Refresh claim、围栏安装及映射清理的 Lua 返回值；异常结果 3 项先失败后通过，隔离 Redis 围栏专项 15/15，八模块 verify 选定测试 301/301 通过。"
       ],
       "limits": [
-    "BASE-003/004/005/006/007/018 已有当前源码和隔离 Redis 专项；BASE-003 Core 服务方法经真实 Redis 验证，八模块完整门禁通过。两个独立应用进程、真实 Redis 停启恢复、真实 Core HTTP/数据库事务和 Web 浏览器入口仍待完成。"
+    "BASE-003/004/005/006/007/018 已有当前源码和隔离 Redis 专项；BASE-003 Core 服务方法经真实 Redis 验证，双进程正式 HTTP Access 撤销专项与八模块分段门禁通过。正式 Core HTTP 登录/角色事务、Refresh 自然失效跨进程、真实 Redis 停启恢复和 Web 浏览器入口仍待完成。"
       ]
     },
     {
@@ -70136,6 +70170,34 @@
       "limits": "Core 用户加载与授权快照由合成夹具替代；Root 最小表与正式 Flyway schema 在固定测试库上需两段运行，未形成单次全量测试；采购详情/资产入库 Service、其余分页入口、浏览器、双应用进程、真实 Redis 停启恢复及 RegionServiceTest 未运行。BC-BASE-008 与 B02 均未验收。"
     },
     {
+      "id": "EV-B02-BASE003-TWO-PROCESS-20261012",
+      "scope": "DIAG-BASE-003 / IMP-BASE-003 / BC-BASE-002 两个独立应用进程的正式 HTTP Session 撤销",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=SessionTwoProcessHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 首轮 Windows 用户临时目录清理退出 1，业务断言无失败",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=SessionTwoProcessHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 将日志移入项目 target 后退出 0，1/1",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch '-Dspotless.ratchetFrom=NONE' '-DspotlessFiles=.*SessionTwoProcessHttpTest\\.java' com.diffplug.spotless:spotless-maven-plugin:3.9.0:check -> 退出 0",
+        "spectra-admin: mise -E test exec -- java -cp <本机 Maven 缓存 PostgreSQL JDBC jar> ..\\.temp\\b02\\RecreateTestDatabase.java -> 退出 0，仅重建经用户授权的 devops00_spectra_db_test",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest,!OaMeetingFullHttpFlywayTest,!SessionTwoProcessHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' verify -> 首轮 PostgreSQL 停机和增量编译产物缺失退出 1",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-DskipTests' '-Dspotless.ratchetFrom=origin/master' clean verify -> 退出 0，八模块干净构建及全部静态门禁；没有执行测试",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-core -am '-Dspectra.test.groups.exclude=' '-Dtest=BindingVerificationCodeTest' '-Dsurefire.failIfNoSpecifiedTests=false' test -> 退出 0，5/5",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest,!OaMeetingFullHttpFlywayTest,!SessionTwoProcessHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-Dspectra.test.real-deps=true' clean verify -> PostgreSQL 与 Redis 恢复后退出 0；八模块、63 份 Surefire 报告共 315/315，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过",
+        "workspace: pwsh -NoProfile -File scripts/check-governance-exceptions.ps1 -RootPath . -LedgerPath docs/开发指南/工程治理/ledger.json -SourceRoot spectra-admin -SuppressionFile spectra-admin/config/spotbugs/exclude.xml -> 退出 0；99 项例外、1609 个文件扫描通过"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test 环境、项目 Maven Wrapper 与 Java 25；仅专用 PostgreSQL devops00_spectra_db_test 与 Redis DB 5；两个独立 JVM、各自 Spring 容器及随机 UUID 合成身份，HTTP 仅本机地址；不读取或输出本机凭据。",
+      "checked_at": "2026-10-12",
+      "result": "pass_with_declared_limits",
+      "exit_codes": [1, 0, 0, 0, 1, 0, 0, 0, 0],
+      "summary": "双进程共享会话、正式 HTTP 登出和公共按用户撤销后旧 Access 在两个进程均拒绝；重新签发恢复。专项 1/1、恢复后当前八模块分段完整门禁 315/315。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-12-B02双进程HTTP会话撤销验证.md",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/SessionTwoProcessHttpTest.java",
+        ".temp/b02/session-two-process-target-final.log",
+        ".temp/b02/session-two-process-full-gate.log",
+        ".temp/b02/session-two-process-full-verify-retry.log"
+      ],
+      "limits": "Core 身份/快照为合成夹具；正式 Core HTTP 登录、角色事务、Refresh 自然失效跨进程、真实 Redis 停启恢复和 Web 浏览器身份失效未验证。固定库的 Root 最小表与正式 Flyway schema 分段运行；完整门禁显式排除已单独通过的两个完整应用 HTTP 专项及既有 RegionServiceTest。"
+    },
+    {
       "id": "EV-B02-BASE003-CORE-20261011",
       "scope": "DIAG-BASE-003 / IMP-BASE-003 / BC-BASE-002 Core 撤销调用方与当前完整门禁",
       "command_or_scenario": [
@@ -72517,14 +72579,14 @@
       }
     ],
     "scope_counts": {
-      "included": 1557,
+      "included": 1559,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
     },
     "pending_review_filter": "coverage where scope in [included, shared_impact] and state != reviewed",
     "pending_impact_filter": "coverage where scope == deferred_business and impact_state == pending_analysis",
-"classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. CORE-032 bounded refresh adds the Boundary reconciler, synthetic PostgreSQL test and evidence report, updating changed source and knowledge digests. CORE-022 bounded refresh registers the existing age test, adds write-clock and 401 response tests plus evidence report, and updates changed source and knowledge digests. BASE-003 Core caller refresh adds its real Redis test and evidence report, updating the user-permissions knowledge digest. BASE-004 current refresh adds one evidence report, updates the Lua store, its failure-path test and affected knowledge digests, and records the current full gate. CORE-019 current refresh adds one repository unit test and one evidence report, updates initialization and repository source, PostgreSQL tests and knowledge digests, and records the current full gate. BC-BASE-008 scope refresh adds one isolated PostgreSQL test and one evidence report, updates Framework scope sources, tests and knowledge digests, and records the 311-test full gate. OA Mapper bounded refresh adds one Launch PostgreSQL test and one evidence report, updates affected knowledge digests, and records the final 313-test full gate. OA meeting page bounded refresh adds one Launch PostgreSQL MVC test and one evidence report, updates affected knowledge digests, and records the 315-test full gate. Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
+"classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. CORE-032 bounded refresh adds the Boundary reconciler, synthetic PostgreSQL test and evidence report, updating changed source and knowledge digests. CORE-022 bounded refresh registers the existing age test, adds write-clock and 401 response tests plus evidence report, and updates changed source and knowledge digests. BASE-003 Core caller refresh adds its real Redis test and evidence report, updating the user-permissions knowledge digest. BASE-004 current refresh adds one evidence report, updates the Lua store, its failure-path test and affected knowledge digests, and records the current full gate. CORE-019 current refresh adds one repository unit test and one evidence report, updates initialization and repository source, PostgreSQL tests and knowledge digests, and records the current full gate. BC-BASE-008 scope refresh adds one isolated PostgreSQL test and one evidence report, updates Framework scope sources, tests and knowledge digests, and records the 311-test full gate. OA Mapper bounded refresh adds one Launch PostgreSQL test and one evidence report, updates affected knowledge digests, and records the final 313-test full gate. OA meeting page bounded refresh adds one Launch PostgreSQL MVC test and one evidence report, updates affected knowledge digests, and records the 315-test full gate. 2026-10-12 BASE-003 two-process refresh adds one Launch HTTP test and one evidence report, updates affected knowledge digests and records the current 315-test segmented full gate. Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
     "content_digest_policy": "Actual reviewed content SHA256; deferred impact-only input uses impact_content_sha256; private/excluded input never hashed. Ledger self digest: PowerShell 7.6 ConvertFrom-Json -DateKind String / ConvertTo-Json -Depth 100 -Compress with self content_sha256 null.",
     "phase1_baseline": {
       "enumerated_at": "2026-10-03",
@@ -72534,7 +72596,7 @@
       "deferred_business": 438,
       "excluded": 22
     },
-    "refreshed_at": "2026-10-11"
+    "refreshed_at": "2026-10-12"
   },
   "diagnosis": {
     "phase": 2,
@@ -72738,7 +72800,7 @@
         "name": "撤销生命周期",
         "status": "partially_executed",
         "necessary_acceptance": "Access自然到期/从索引剔除但Refresh仍有效时，按用户/客户端/改密/踢旧后Refresh必须拒绝；ALLOW同客户端多会话全覆盖。",
-        "boundary": "隔离 Redis 已验证按用户/客户端/句柄、KICK_OLD、ALLOW 多会话和旧孤儿 Refresh；Core 改密与管理员撤销真实服务方法经正式端口到 Redis 的四项测试、八模块完整门禁已通过。真实 HTTP/数据库事务及两个应用进程未运行，不标整项 passed。",
+        "boundary": "隔离 Redis 已验证按用户/客户端/句柄、KICK_OLD、ALLOW 多会话和旧孤儿 Refresh；Core 改密与管理员撤销真实服务方法经正式端口到 Redis 的四项测试通过。两个独立应用进程的正式 HTTP 登出和公共按用户撤销旧 Access 专项 1/1、当前八模块分段门禁 315/315 通过。正式 Core HTTP 登录/角色事务、Refresh 自然失效跨进程及实际 Redis 停启恢复未验证，不标整项 passed。",
         "scenario": "Access自然到期/从索引剔除但Refresh仍有效时，按用户/客户端/改密/踢旧后Refresh必须拒绝；ALLOW同客户端多会话全覆盖。",
         "state": "inconclusive",
         "issue_ids": [
@@ -72750,9 +72812,10 @@
         "evidence_ids": [
           "EV-B02-BASE003-20261009",
           "EV-B02-BASE003-GATES-20261009",
-          "EV-B02-BASE003-CORE-20261011"
+          "EV-B02-BASE003-CORE-20261011",
+          "EV-B02-BASE003-TWO-PROCESS-20261012"
         ],
-        "required_environment": "隔离 Redis 与 Core 服务方法测试已运行；剩余真实 Core HTTP/数据库事务、独立应用进程及 Redis 停启恢复需继续验证。",
+        "required_environment": "隔离 Redis、Core 服务方法及独立应用进程的 HTTP Access 撤销已运行；剩余正式 Core HTTP/数据库事务、Refresh 自然失效跨进程及 Redis 停启恢复需继续验证。",
         "subchecks": [
           {
             "id": "BC-BASE-002-REDIS-REVOCATION",
@@ -72768,8 +72831,8 @@
           },
           {
             "id": "BC-BASE-002-TWO-PROCESSES",
-            "state": "not_run",
-            "evidence_ids": []
+            "state": "partially_executed",
+            "evidence_ids": ["EV-B02-BASE003-TWO-PROCESS-20261012"]
           }
         ]
       },
@@ -74105,8 +74168,8 @@
           "IMP-BASE-003"
         ],
         "state": "partially_executed",
-        "evidence_ids": ["EV-B02-BASE003-CORE-20261011", "EV-B02-BASE004-CURRENT-20261011", "EV-B02-BASE006-20261010", "EV-B02-BASE007-20261009", "EV-B02-BASE018-20261009"],
-        "required_environment": "隔离 Redis DB 5 的重放、撤销、配额、null/empty 与失败计数专项已有证据；两个应用进程和实际 Redis 停启恢复未执行。"
+        "evidence_ids": ["EV-B02-BASE003-CORE-20261011", "EV-B02-BASE003-TWO-PROCESS-20261012", "EV-B02-BASE004-CURRENT-20261011", "EV-B02-BASE006-20261010", "EV-B02-BASE007-20261009", "EV-B02-BASE018-20261009"],
+        "required_environment": "隔离 Redis DB 5 的重放、撤销、配额、null/empty 与失败计数专项已有证据；两个独立应用进程的 HTTP Access 撤销已通过，正式 Core 角色事务、Refresh 自然失效跨进程和实际 Redis 停启恢复未执行。"
       },
       {
         "id": "BC-IMPACT-IMP-BASE-004-1",
