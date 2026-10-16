@@ -34,6 +34,34 @@ GOV-007 已完成后端/Web Skill 的入口、受影响示例、修改前后场�
 
 同日的 [[开发指南/工程治理/2026-10-16-B02双进程会话自然失效验证|BASE-005 双进程自然失效专项]]在两个独立应用 JVM、专用 PostgreSQL 与 Redis DB 5 上验证：Access Redis Key 自然到期后两端拒绝，第二进程仍可使用有效 Web Refresh 轮换并使首进程接受新 Access；收紧绝对期限后两端拒绝同一 Family，Refresh Key 自然到期后跨进程刷新返回 401。双进程整组 2/2，八模块 `clean verify` 317/317 与静态门禁通过，专用库最后恢复正式 Flyway schema。该用例使用合成身份，真实 Core 角色/凭据自然失效、实际 Redis 停启、浏览器与 OA/Workflow 间接行为仍待验证；B02 保持 `in_progress`。
 
+同日的 [[开发指南/工程治理/2026-10-16-B02两进程重放与配额竞争验证|BC-BASE-001/002 两进程重放、配额与到期后撤销专项]]在 `SessionTwoProcessHttpTest` 增加四个完整应用用例，并新增仅在测试类路径装载的合成签发夹具：跨进程重放旧 Refresh 即撤销整个 Token Family、轮换新 Access 两端拒绝；同一 Refresh 并发消费只成功一次，任意交错下无可用的新 Access；`REJECT_NEW` `max_sessions=1` 时第二进程签发返回 409 且共享 `USER_TOKENS` 仅一个成员；Access 自然到期但 Refresh 仍有效时，按用户与排除令牌撤销在另一进程拒绝刷新。双进程整组 6/6、Spotless 通过。`BC-BASE-001` 的两个子项（两进程重放、多实例配额）已有证据，`BC-BASE-002` 的按用户/排除令牌入口补齐 Access 到期后两进程证据；真实 Redis 停启恢复、按客户端/句柄/改密/踢旧入口、角色变更跨进程与 B02 整体仍保持进行中。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02登录失败身份桶正式HTTP验证|CORE-020 登录失败身份桶专项]]用正式 `/api/security/authentication/login` 补齐：大小写/空白变体错误密码归并到同一 `AuthenticationIdentifierHash.digest` 身份桶、达 `lockoutMaxAttempts` 后正确密码也被锁定拒绝（日志出现「账号已锁定，请稍后再试」）、另一账号成功登录清理同一桶；正式 HTTP 2/2、Spotless 通过。运维/缓存管理端口的身份桶定向清理 HTTP、双独立应用进程与真实 Redis 停启恢复仍未验证；`CHECK-CORE-020` 维持部分执行，B02 保持 `in_progress`。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02改密审计正式HTTP验证|BASE-005 改密审计专项]]用正式 `/api/user/password` 补齐正式审计表证据：改密 200 后按 `X-Correlation-ID` 在 `spectra_core.sys_audit_event` 查到同事务 `#changePassword` `SUCCEEDED` 行，`before_snapshot` 已脱敏为 `***` 且明文旧/新口令不出现在任何审计文本列，旧口令 401、新口令 200；正式 HTTP 1/1、Spotless 通过。OA/Workflow 逐入口与审计写入失败故障仍未验证；`BC-BASE-005` 维持部分执行，B02 保持 `in_progress`。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02绑定验证码预算正式HTTP验证|CORE-023 绑定验证码预算专项]]用正式 `/api/security/identities/email` 补齐：绑定验证码按地址键与用户绑定，预算内正确码绑定成功并落库 EMAIL 身份，错误码达 `verificationCodeMaxAttempts` 后验证码原子失效且随后正确码也被拒（日志「绑定验证码尝试次数过多」），跨地址提交不消耗本地址预算；正式 HTTP 1/1、Spotless 通过。双应用进程、真实 Redis 停启与通知投递联动仍未验证；`CHECK-CORE-023` 维持部分执行，B02 保持 `in_progress`。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02会议以外分页入口正式HTTP验证|BASE-008 会议以外分页入口专项]]用正式 Core 身份补齐 `/api/user/page` 与 `/api/audit/page`：用户分页接受已注册排序字段、拒绝恶意表达式与未注册字段，审计固定排序入口拒绝客户端排序；正式 HTTP 1/1、Spotless 通过。会议以外的其余业务入口与 B08 浏览器路径仍未验证；`BC-BASE-008` 维持部分执行，B02 保持 `in_progress`。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02双进程Core凭据重载验证|CORE-022 双进程凭据重载专项]]新建两进程真实 Core HTTP 套件 `CoreTwoProcessHttpTest`：两个独立 JVM 共享 PostgreSQL/Redis，首进程正式登录的 Access 在第二进程可用，改密后旧 Access 两端 401、旧 Refresh 第二进程 401、新口令第二进程登录 200；并补 Access Redis Key 自然到期后两端 401、仍有效的 Web Refresh 跨进程轮换出新 Access。整组 4/4、Spotless 通过。管理员重置与真实 Redis 停启恢复仍未验证；`CHECK-CORE-022` 保持进行中。该套件是 `CHECK-CORE-019/032`、`BC-BASE-002` 两进程专项的共同前置。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02角色变更两进程联动验证|CORE-032 角色变更两进程联动专项]]在 `RoleAuthorizationFullHttpTest` 内复用夹具与授权变更 token 配置新增两进程用例：目标用户在第二进程登录的 Access 在首进程可用，首进程 impact-preview/apply 缩权后第二进程旧 Access 401、重新登录快照收缩（含 `role:read`、不含 `role:grant`）；整组（单进程并发缩权 + 两进程联动）2/2、Spotless 通过。部门合并重组与 OA/Workflow 受众业务入口仍未验证；`CHECK-CORE-032` 维持部分执行，B02 保持 `in_progress`。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02双进程客户端与踢旧撤销验证|BASE-002 双进程客户端与踢旧撤销专项]]在 `CoreTwoProcessHttpTest` 增加用例：第二进程登录的目标用户在首进程经 `/api/cache/admin/security/session/revoke`（按客户端）、`revoke-all`（按用户）与 `revoke-one`（经 `/api/user/online` 取句柄）撤销后，其 Access 在第二进程 401；Web 策略 `KICK_OLD` 时目标用户在首进程重新登录跨进程踢掉第二进程同端旧会话（旧 401、新 200）；再把 Web `access_ttl` 收紧到 3 秒，验证 Access 自然到期后按客户端撤销使 Refresh 第二进程 401、KICK_OLD 跨进程踢掉同端旧 Refresh。含凭据重载、会话策略收紧与 Access 到期撤销整组 5/5、Spotless 通过。`BC-BASE-002` 的 necessary_acceptance 已具备证据、置为 `passed`；B02 保持 `in_progress`。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02双进程会话策略收紧验证|CORE-019 双进程会话策略收紧专项]]在 `CoreTwoProcessHttpTest` 增加第三个用例：首进程运维用户经 `/api/security/policy/session/{clientId}` 把 Web 会话绝对期限收紧为 1 秒后，第二进程旧 Access 返回 401，证明策略经共享数据库跨进程生效；整组 4/4、Spotless 通过。真实自然时间失效、初始化/策略故障恢复、独立 `error_code` 与 OA/Workflow 间接入口仍未验证；`CHECK-CORE-019` 维持部分执行，B02 保持 `in_progress`。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02隔离Redis停启恢复验证|BASE-003 隔离 Redis 停启恢复专项]]自启隔离 `redis-server` 并以 `--spring.data.redis.url` 指向：停用后受保护请求不再返回 200、登录返回 503（`SecurityRedisUnavailableException`），重启后登录恢复 200；`BC-BASE-003-FAULT-RECOVERY` 通过、`BC-BASE-003` 置为 `passed`，`CHECK-CORE-022` 因双进程自然失效重载与真实故障恢复均已具备而置为 `passed`。旧格式会话上线处置、显式就绪门（`BC-BASE-009` 未实现）与双实例交错故障窗口仍未验证；B02 保持 `in_progress`。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02登录桶与验证码预算双进程验证|CORE-020/023 双进程共享专项]]新建 `CoreSharedStateTwoProcessHttpTest`：两个独立应用 JVM 共享 Redis，首进程与第二进程的登录失败累计到同一身份桶并锁定；绑定验证码跨进程累计尝试并在达上限时原子删除、耗尽后正确码被拒；专项 1/1、Spotless 通过。`CHECK-CORE-023` 的通知投递联动仍未验证、维持部分执行。
+
+同日的 [[开发指南/工程治理/2026-10-16-B02登录失败身份桶正式HTTP验证|CORE-020 运维端口定向清理专项]]在 `LoginFailureBucketFullHttpTest` 增加用例：目标账号锁定后，运维用户经 `/api/cache/admin/security/login-failure/clear` 清理同一身份桶（计数回 0），随后该账号用正确密码登录 200；正式 HTTP 整组 3/3、Spotless 通过。`CHECK-CORE-020` 的 necessary_acceptance 已具备证据、置为 `passed`；B02 保持 `in_progress`。
+
+## 本轮收口
+
+2026-10-16 本轮将 `BC-BASE-001`、`BC-BASE-002`、`BC-BASE-003`、`CHECK-CORE-020`、`CHECK-CORE-022` 置为 `passed`；新增两进程真实 Core HTTP 套件与单进程正式 HTTP 用例（见上列各专项）。重建空白专用测试库后八模块真实依赖 `clean verify` 退出 0：**common 5 + framework 130 + core 119 + launch 63 = 317/317**，Spotless、Checkstyle、PMD、SpotBugs、Enforcer 全部通过（证据 `EV-B02-FULL-GATE-20261016`）。B02 仍为 `in_progress`：剩余为需产品决策或外部依赖的方向——独立 `error_code`、旧格式会话上线处置、显式就绪门、通知投递、部门重组与 OA/Workflow 业务入口、B08 浏览器、启用调度器的通知/Quartz/Workflow。
+
 ## 结构与字段
 
 ### 第一阶段枚举基线与复核方法
