@@ -64,6 +64,8 @@ GOV-007 已完成后端/Web Skill 的入口、受影响示例、修改前后场�
 
 同日收口 **B01 脚本删除与导入隔离**：`sync-website-docs` 入口固定根 `.venv`、构建经 `mise exec -- pnpm`，旧同步清单删除候选解析为绝对路径并核对受控生成根，越界/博客/非法结构一律 fail-closed；`import-regions` 入口要求 `SPECTRA_REGION_IMPORT_ALLOWED_DATABASES` 并在连接前拒绝，新增 `RegionImportDatabaseGuard` 按实际数据源库名在导入上下文启动时校验。`BEH-IMP-SCRIPTS-001-1..5` 全部 `passed`，`DIAG-SCRIPT-001/002/004` 与 `IMP-SCRIPTS-001` 置为 `resolved`，`BC-BASE-013` 为 `partially_executed`（allow-list 已具备证据，完整 66.5 万行真实导入未执行）。证据 `EV-SCRIPT-B01-20261016`。
 
+同日推进 **B03 必需基础设施与启动运行门**（进行中）：完成基础修复并单元/启动验证——Dockerfile `EXPOSE` 统一 4004、compose PostgreSQL 18 卷改挂 `/var/lib/postgresql`、模块开关严格布尔解析、Flowable schema 更新只跟随 `flowable.database-schema-update`（缺省 false）、启用加解密但密钥未就绪时启动失败、缓存损坏/未知值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。`DIAG-BASE-011/014/015/016/017` 与 `DIAG-ADDITIONAL-003` 置 `resolved`，`DIAG-CORE-033` 为 `in_progress`；`BC-BASE-009/014/015`、`BC-ADDITIONAL-003` 部分/通过。运行期统一就绪门（业务 unready、任务暂停、有界退避与一致性恢复）与隔离库 V1–V8、V7→V8 迁移尚未执行。证据 `EV-B03-BASELINE-20261016`。
+
 ## 结构与字段
 
 ### 第一阶段枚举基线与复核方法

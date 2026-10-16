@@ -219,7 +219,9 @@
         "change_scope": "Launch/Framework readiness gate, DB/Redis outage/recovery and task pause, cache corruption semantics, typed configuration, Flowable schema setting, Docker/runtime startup and upload settings",
         "prerequisites": "Isolated DB/Redis and known empty/V7 database snapshots; analyze OA/Workflow assembly and background tasks",
         "checks": "BC-BASE-009/010/014/015, BC-ADDITIONAL-003, CHECK-CORE-033; startup nonzero, running process unready, recovery validation, module combinations and no runtime DDL",
-        "done_when": "Required dependency failure rejects business consistently, startup fails when required, running faults preserve process and recover only after validation."
+        "done_when": "Required dependency failure rejects business consistently, startup fails when required, running faults preserve process and recover only after validation.",
+        "state": "in_progress",
+        "progress_summary": "2026-10-16 已完成 B03 基础修复并单元/启动验证：Dockerfile EXPOSE 4004、模块开关严格布尔、Flowable schema 更新只跟随配置、启用加密密钥未就绪启动失败、缓存损坏值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。尚未实现运行期统一就绪门、任务暂停与一致性恢复；隔离空库 V1–V8 与 V7→V8 升级迁移、Docker 实际映射未运行。证据 EV-B03-BASELINE-20261016。"
       },
       {
         "id": "B04",
@@ -5021,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4bc90df50d02caafbebaf65da671df6e7293d8cc3b2c95f954ddec4193330862",
+      "content_sha256": "963651771b38db6d544b947f1e5632165a0d24df902620eba32e6e8ce8f0cb12",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5121,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "9946922740550d411d31c7227d0420b6431011c04acce7c90c5bdd8e4c8d30d2",
+      "content_sha256": "7922e2d41fe167865e31ba1382cd1850749df9e4d1a80e6061a26f8ffbe7d56d",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5181,7 +5183,8 @@
         "EV-B02-BASE003-FAULT-RECOVERY-20261016",
         "EV-B02-CORE020-023-TWO-PROCESS-20261016",
         "EV-B02-CORE020-OPS-CLEAR-20261016",
-        "EV-SCRIPT-B01-20261016"
+        "EV-SCRIPT-B01-20261016",
+        "EV-B03-BASELINE-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11457,7 +11460,7 @@
       "role": "构建、依赖、工具链、部署或质量入口",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1b3c52bd63d3aa5544facfa3074fbf58c8af1862d8420e909f7e7610f2bcb745",
+      "content_sha256": "cb6729750a32a075ec5a231cc17b011cc2203200bd0d5672783ebb982dcd2d73",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -11478,6 +11481,150 @@
       ],
       "review_kind": "source_responsibility_and_failure_path_review",
       "impact_ids": []
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/security/redis/startup/SecurityRedisStartupCheck.java",
+      "role": "框架安全 Redis 启动连通门",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "255abe56a75ad2443c71d9ab460f6d1709dcbd24d13341e8c6ca0220d8a99e0a",
+      "reviewed_rules": ["04 §8 安全 Redis", "04 §9 启动退出与运行恢复", "04 §13 验证"],
+      "issue_ids": ["DIAG-CORE-033"],
+      "evidence_ids": ["EV-B03-BASELINE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "启动 @PostConstruct 阶段对安全 Redis 做 ping；连接工厂缺失、连接失败或命令异常一律抛 SecurityRedisUnavailableException 拒绝启动。",
+      "review_limits": ["只覆盖启动连通门；运行期全业务 unready、任务暂停与恢复校验仍未实现。"],
+      "review_kind": "source_failure_path_review",
+      "impact_ids": ["IMP-BASE-004", "IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/configure/FileUploadStorageConfigurationValidator.java",
+      "role": "上传存储配置启动校验",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "bd3d190eb7982dbae6f60dcf1354493c36755bb2952e6dd6ae0735c491f000be",
+      "reviewed_rules": ["04 §9 静态配置强类型", "04 §10 资源预算", "04 §13 验证"],
+      "issue_ids": ["DIAG-ADDITIONAL-003"],
+      "evidence_ids": ["EV-B03-BASELINE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "默认存储为 S3 时校验 endpoint/access-key/secret-key/region/bucket 与 preview-minutes，缺失或非法即时启动失败。",
+      "review_limits": ["仅在默认存储为 S3 时强制；LOCAL 场景允许空 S3 配置。"],
+      "review_kind": "source_failure_path_review",
+      "impact_ids": ["IMP-ADDITIONAL-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/configuration/ModuleAssemblyTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "fc46539eb85f0114398a28ea0a91c65dedf32d140160e953891ad133426db74f",
+      "reviewed_rules": ["04 §9 静态配置强类型", "04 §13 验证"],
+      "issue_ids": ["DIAG-BASE-014"],
+      "evidence_ids": ["EV-B03-BASELINE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "模块开关非法文本（tru）拒绝、显式 true/false 接受、缺省启用。",
+      "review_limits": ["纯单元测试。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-004"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/workflow/configuration/WorkflowConfigurationTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "164afe6b2b5f4e44e872aca0a019f73202579820a66d70438a5cf1b2af6b6c06",
+      "reviewed_rules": ["04 §9 迁移统一与最小权限", "04 §13 验证"],
+      "issue_ids": ["DIAG-BASE-015"],
+      "evidence_ids": ["EV-B03-BASELINE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "流程引擎 schema 更新只跟随 flowable.database-schema-update，true/false/缺省分别生效（缺省 false）。",
+      "review_limits": ["单元级；未真实启动 Flowable 引擎与数据库。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-004"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/RedisStartupFailClosedTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "63c285d77a78af0c813d9e920176546114a30407c9632a77c9e3e4d389d7da56",
+      "reviewed_rules": ["04 §8 安全 Redis", "04 §9 启动退出", "04 §13 验证"],
+      "issue_ids": ["DIAG-CORE-033"],
+      "evidence_ids": ["EV-B03-BASELINE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "安全 Redis 不可达时应用启动抛出异常（缺缓存启动非零退出）。",
+      "review_limits": ["真实依赖测试；需要数据库可用以使 Flyway 先行通过。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-004", "IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/web/crypto/CryptoKeyManagerStartupTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "128463ae857503c222e74278b94973b34667168a0cebf0c7dd87e6e1adfa5d31",
+      "reviewed_rules": ["04 §9 启动退出", "04 §13 验证"],
+      "issue_ids": ["DIAG-BASE-016"],
+      "evidence_ids": ["EV-B03-BASELINE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "启用加解密但密钥缺失时启动抛 CryptoConfigurationException；明确关闭时启动成功且状态 DISABLED。",
+      "review_limits": ["协作者以 mock 注入。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-004"]
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/cache/serialization/CacheValueRedisSerializerTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "a92b3a5c28560b693530ed92bd0abd59a6372c199c3cf8293855ee81ebae7dcb",
+      "reviewed_rules": ["04 §8 缓存失败显式语义", "04 §13 验证"],
+      "issue_ids": ["DIAG-BASE-011"],
+      "evidence_ids": ["EV-B03-BASELINE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "支持类型回环；null/空为正常 miss；损坏字节、未知 envelope 类型、结构不一致均显式抛 SerializationException。",
+      "review_limits": ["单元级；未做真实 Redis 读写。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-005"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/properties/FileUploadPropertiesValidationTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "b120cc0deaa973fd7e6a6e27b2664d61b4b60792e6a454f5a217e066c5e54afb",
+      "reviewed_rules": ["04 §9 静态配置强类型", "04 §13 验证"],
+      "issue_ids": ["DIAG-ADDITIONAL-003"],
+      "evidence_ids": ["EV-B03-BASELINE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "默认值通过校验；负分片、越界分片、非正 TTL、非正并行度被拒绝。",
+      "review_limits": ["使用 jakarta Bean Validation 直接校验属性对象。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-ADDITIONAL-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/configure/FileUploadStorageConfigurationValidatorTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "c0d5715a63495adfc4c047ab110709655f473f2b109117c1cac0ad4bfd334b30",
+      "reviewed_rules": ["04 §9 静态配置强类型", "04 §13 验证"],
+      "issue_ids": ["DIAG-ADDITIONAL-003"],
+      "evidence_ids": ["EV-B03-BASELINE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "LOCAL 默认允许空 S3；S3 默认缺字段或非正 preview-minutes 抛 IllegalStateException；完整配置通过。",
+      "review_limits": ["纯单元测试。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-ADDITIONAL-003"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -15657,7 +15804,7 @@
       "role": "后端 spectra-framework / cache",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "baf0981895585d2c25c8d8f6bfedb8883df944b568a0f86f9eea0e183dc3c645",
+      "content_sha256": "c9e79304128b3f6ec86fee062bab7566568427c119201bce266d642bc031c339",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -18472,7 +18619,7 @@
       "role": "后端 spectra-framework / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "da01f5ccb4534db81258b4b0e5c9f7d6c822913120752bb47376a792c673ba3e",
+      "content_sha256": "06f002d8ea0ebd14c7deb9436a19d2a98028a93c8a1c94163829ea38bd66cff4",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -19025,7 +19172,7 @@
       "role": "构建、依赖、工具链、部署或质量入口",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "d3c7b9e4ea4f8c3096a17cb8f7ec13d79a3e162f44c8a7c7cb8e62194ec9b5e2",
+      "content_sha256": "0e3a60519a55045da430a579b66d7ebb2a0fc3a48be1996aa930a3bae0287c84",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -19083,7 +19230,7 @@
       "role": "后端 spectra-launch / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4ae21b707e9ebbe2773e4b95e24286468eba4dcdd6463d5009f2ebcc9e44caf6",
+      "content_sha256": "c32578628cbd777edb9d70d1c27fe17486e5f83c0af5e90b9b509f8eda8819d7",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -36552,7 +36699,7 @@
       "role": "后端 spectra-core / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "57d3f5e8179c0ddbc3da9ccf274e000c741437584424ff26815cadbcfda3dadb",
+      "content_sha256": "a3496d3e744db1870560b3380ecbb6143dc17cf39978fafa0cbc00657222b6fb",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -37928,7 +38075,7 @@
       "role": "后端 spectra-core / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "77d81c7dca38da8bb625cef2c351494d93843529cc23c5e1072b3733f33f030e",
+      "content_sha256": "98261fbbbe339d16b5efe7b5ca784e372e28f63c8e0c2d5733775ea84785fd19",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -54151,13 +54298,13 @@
       ],
       "scope_reason": null,
       "impact_state": "public_boundary_reviewed",
-      "impact_content_sha256": "b35466566a693d7bae56f633a1434cc2c9cfbfe36eac1521b7c6f81fea829762",
+      "impact_content_sha256": "09bcacc613df6325b8e91ff6111f22dc3c7219fd8d8fe376e57ca303408da2df",
       "impact_review_kind": "shared_boundary_source_review",
       "shared_dependency_refs": [],
       "behavior_candidates": [
         "version"
       ],
-      "impact_review_summary": "公共Flowable装配实际Configurer覆写生产DDL设置，归并BASE015",
+      "impact_review_summary": "公共 Flowable 装配的 Configurer 原先无条件 setDatabaseSchemaUpdate(\"true\")，覆写生产 DDL 设置（BASE-015）；2026-10-16 改为只跟随 flowable.database-schema-update 配置，缺省 false。",
       "impact_review_limits": [
         "完整读取供导入/公共符号及风险候选机械核对；未独立审查暂缓业务语义，不以未命中证明无间接影响。关键调用结合CodeGraph及人工职责审查另记。",
         "独立业务语义与复杂度治理暂缓；机械未命中不表示无间接影响。",
@@ -64482,10 +64629,11 @@
       "impact": "损坏缓存被掩盖，无法明确可确认的正常miss与状态错误；本发现不声称Redis连接异常在serializer被吞。",
       "priority": "P2",
       "disposition": "required_fix",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "impact_ids": [
         "IMP-BASE-005"
@@ -64591,10 +64739,11 @@
       "impact": "误拼装配可关闭Workflow/OA或触发不同组合，未按无效配置明确失败。",
       "priority": "P2",
       "disposition": "required_fix",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "impact_ids": [
         "IMP-BASE-004"
@@ -64619,10 +64768,11 @@
       "impact": "生产启动可能由引擎尝试DDL，绕过Flyway迁移基线并与运行角色无DDL权限冲突；公共配置影响必须纳入，未实际启动验证。",
       "priority": "P1",
       "disposition": "required_fix",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "impact_ids": [
         "IMP-BASE-004"
@@ -64642,10 +64792,11 @@
       "impact": "本范围无法保证必需加密服务启动失败退出；运行状态拒绝加密请求不等于启动门禁，需要与Core初始化许可范围一起验收。",
       "priority": "P2",
       "disposition": "required_fix",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "impact_ids": [
         "IMP-BASE-004"
@@ -64670,10 +64821,11 @@
       "impact": "按镜像元数据发布端口会无法访问；未构建或运行容器。",
       "priority": "P2",
       "disposition": "required_fix",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "impact_ids": [
         "IMP-BASE-004"
@@ -66795,13 +66947,14 @@
         }
       ],
       "finding": "现有Flyway及初始化/默认密码Runner可因DB或自身安全Redis操作失败阻止启动，安全Redis各命令仍fail-closed；统一health仅汇报。未发现对必需DB和Redis统一启动校验、运行期全业务拒绝/后台暂停及一致性校验后恢复gate。Quartz启动异常转NOT_READY并定时重试不抛出；READY后也无数据库运行故障状态迁移。不能把密码key加载校验或单命令关闭当作必需依赖整体就绪机制。",
-      "impact": "DB/Redis运行故障期间业务和后台任务仍可进入各自用例，行为依赖偶然调用失败；恢复也无统一校验。涉及Launch、Framework、全部Core端口、Web就绪反馈及暂缓OA/Workflow后台任务。",
+      "impact": "DB/Redis运行故障期间业务和后台任务仍可进入各自用例，行为依赖偶然调用失败；恢复也无统一校验。涉及Launch、Framework、全部Core端口、Web就绪反馈及暂缓OA/Workflow后台任务。2026-10-16 已补安全 Redis 启动连通门与启用加密启动门；运行期统一 unready/任务暂停/一致性恢复仍待实现。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-005"
+        "EV-CORE-005",
+        "EV-B03-BASELINE-20261016"
       ],
       "impact_ids": [
         "IMP-CORE-007"
@@ -67139,7 +67292,7 @@
       ]
     },
     {
-      "state": "pending",
+      "state": "resolved",
       "id": "DIAG-ADDITIONAL-003",
       "locations": [
         {
@@ -67156,7 +67309,8 @@
       "finding": "上传配置仅@ConfigurationProperties+@Data，FileUploadProperties的chunkSize/min/max、maxParts/maxConcurrentTasks、TTL/retention等无BeanValidation或跨字段约束，S3 endpoint/region/bucket也无启用条件下的完整有效校验。源码未见专用配置validator。负/零chunkSize、负Duration及缺失S3必需字段可进入运行计算或provider构造。",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-ADDITIONAL-001"
+        "EV-ADDITIONAL-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "priority": "P2",
       "disposition": "添加启用条件下可验证约束与分片/TTL跨字段规则，使用隔离绑定测试证明失败启动；不读取本机凭据",
@@ -67788,11 +67942,12 @@
       "required_changes": [
         "Core-only/Core+Workflow/Core+Workflow+OA合法组合与OAwithoutWorkflow失败；空库及V7升级V8在隔离DB，确认Flowable最终false且runtime无DDL。"
       ],
-      "deferred_boundary": "OA/Workflow独立业务暂缓，但公共装配和迁移行为是必要影响；未启动任何组合。",
-      "state": "pending",
+      "deferred_boundary": "OA/Workflow独立业务暂缓，但公共装配和迁移行为是必要影响。2026-10-16：模块开关改为严格布尔解析，Flowable schema 更新改为只跟随 flowable.database-schema-update（缺省 false），Dockerfile EXPOSE 统一 4004；合法/非法模块组合启动与隔离库迁移仍未运行。",
+      "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "verification": [
         "Core-only/Core+Workflow/Core+Workflow+OA合法组合与OAwithoutWorkflow失败；空库及V7升级V8在隔离DB，确认Flowable最终false且runtime无DDL。"
@@ -68713,12 +68868,13 @@
         "静态配置规范、文档配置清单、隔离绑定/启动"
       ],
       "deferred_boundary": [
-        "所有使用公共文件端口业务只在配置有效且存储就绪时运行"
+        "所有使用公共文件端口业务只在配置有效且存储就绪时运行。2026-10-16 已为 FileUploadProperties 增加 Bean Validation 与跨字段分片/TTL 约束，并新增 S3 条件启动校验。"
       ],
-      "state": "pending",
+      "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-ADDITIONAL-001"
+        "EV-ADDITIONAL-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "verification": [
         "chunkSize0/negative、min>max、negative Duration、启用S3缺endpoint/region/bucket的失败启动"
@@ -72320,6 +72476,36 @@
       "limits": "完整 66.5 万行真实行政区划导入、资源规模与写入中断恢复未在隔离库执行（BC-BASE-013 维持 partial）；网站 Apply/构建未对真实网站运行；脚本测试依赖本机存在可运行的 Python 与 pwsh。"
     },
     {
+      "id": "EV-B03-BASELINE-20261016",
+      "scope": "B03 启动/配置/缓存/迁移基础修复与单元验证（DIAG-BASE-011/014/015/016/017、DIAG-ADDITIONAL-003、DIAG-CORE-033 启动门）",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=CryptoKeyManagerStartupTest,CacheValueRedisSerializerTest,FileUploadPropertiesValidationTest,FileUploadStorageConfigurationValidatorTest,ModuleAssemblyTest,WorkflowConfigurationTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.groups.exclude=' test -> 退出 0；framework 7 + core 9 + launch 4 = 20/20",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am clean test '-Dtest=RedisStartupFailClosedTest' ... '-Dspectra.test.real-deps=true' -> 退出 0，不可达 Redis 启动失败 1/1（需先重建空白库使 Flyway 先行通过）",
+        "spectra-admin: 重建空白 devops00_spectra_db_test 后 '-Dtest=LoginFailureBucketFullHttpTest' real-deps -> 退出 0，完整应用在启动 Redis 连通门下正常启动（3/3）",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> 退出 0，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；专用 PostgreSQL devops00_spectra_db_test、Redis DB 5；没有读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "完成 B03 基础修复并单元/正式启动验证：Dockerfile EXPOSE 4004；导入模块开关严格布尔；Flowable schema 更新只跟随配置（缺省 false）；启用加解密但密钥未就绪时启动失败；缓存损坏/未知值显式拒绝；上传/S3 配置约束与 S3 条件校验；安全 Redis 启动连通门（不可达启动非零，正常启动不受影响）。",
+      "artifacts": [
+        "spectra-admin/compose.dev.yml",
+        "spectra-admin/spectra-launch/Dockerfile",
+        "spectra-admin/spectra-launch/src/main/java/com/devops00/spectra/launch/configuration/ModuleAssembly.java",
+        "spectra-admin/spectra-modules/spectra-workflow/src/main/java/com/devops00/spectra/workflow/configuration/WorkflowConfiguration.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/web/crypto/CryptoKeyManager.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/cache/serialization/CacheValueRedisSerializer.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/properties/FileUploadProperties.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/configure/FileUploadConfiguration.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/security/redis/startup/SecurityRedisStartupCheck.java",
+        ".temp/b03/b03-unit-20261016.log",
+        ".temp/b03/b03-redis-startup-20261016.log",
+        ".temp/b03/b03-app-regression-20261016.log",
+        ".temp/b03/b03-static-20261016.log"
+      ],
+      "limits": "运行期统一就绪门（业务 unready、后台任务暂停、有界退避与一致性校验后恢复）、Docker 容器实际 4004 映射、隔离空库 V1–V8 与 V7→V8 升级、缓存键碰撞调用验证仍未执行；BC-BASE-009/010/014/015 维持部分执行。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -73800,7 +73986,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1590,
+      "included": 1599,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -73826,7 +74012,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1604,
+    "reviewed_included": 1613,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -74249,15 +74435,23 @@
       {
         "id": "BC-BASE-009",
         "name": "启动运行故障",
-        "status": "not_executed",
+        "status": "partially_executed",
         "necessary_acceptance": "缺数据库/缓存/开启加密密钥启动非零；运行故障进程保留、所有业务unready并停止领取新任务，有界退避及恢复验证。",
-        "boundary": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
+        "boundary": "2026-10-16 已实现并验证启动门：安全 Redis 不可达时启动失败（RedisStartupFailClosedTest）；启用加密但密钥未就绪时启动失败（CryptoKeyManagerStartupTest）；数据库缺失由 Flyway 启动失败覆盖。运行期故障保持进程、全业务 unready、停止领取新任务、有界退避与一致性校验后恢复仍未实现，需独立就绪门。",
         "scenario": "缺数据库/缓存/开启加密密钥启动非零；运行故障进程保留、所有业务unready并停止领取新任务，有界退避及恢复验证。",
-        "state": "not_run",
-        "issue_ids": [],
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。"
+        "state": "partially_executed",
+        "issue_ids": [
+          "DIAG-CORE-033",
+          "DIAG-BASE-016"
+        ],
+        "impact_ids": [
+          "IMP-BASE-004",
+          "IMP-CORE-007"
+        ],
+        "evidence_ids": [
+          "EV-B03-BASELINE-20261016"
+        ],
+        "required_environment": "启动门已用真实依赖（隔离数据库 + 不可达 Redis）与单元测试验证；运行期统一就绪门尚未实现。"
       },
       {
         "id": "BC-BASE-010",
@@ -74320,28 +74514,40 @@
       {
         "id": "BC-BASE-014",
         "name": "部署资源候选",
-        "status": "not_executed",
+        "status": "partially_executed",
         "necessary_acceptance": "compose PostgreSQL18挂载入口须官方容器来源核验；Redis不持久化重启对failclosed/重放锁定事实源的语义；Docker4004映射实际验证。",
-        "boundary": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
+        "boundary": "2026-10-16 修正 compose 中 PostgreSQL 18 卷挂载：官方 18 镜像 PGDATA 迁到 /var/lib/postgresql，卷改挂该父目录（原 /var/lib/postgresql/data 不持久化数据）；Dockerfile EXPOSE 由 8888 改为 4004，与两 profile 一致。Redis 非持久化按 fail-closed 有意为之并加注释。容器实际映射与 Redis 重启语义未运行。",
         "scenario": "compose PostgreSQL18挂载入口须官方容器来源核验；Redis不持久化重启对failclosed/重放锁定事实源的语义；Docker4004映射实际验证。",
-        "state": "not_run",
-        "issue_ids": [],
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。"
+        "state": "partially_executed",
+        "issue_ids": [
+          "DIAG-BASE-017"
+        ],
+        "impact_ids": [
+          "IMP-BASE-004"
+        ],
+        "evidence_ids": [
+          "EV-B03-BASELINE-20261016"
+        ],
+        "required_environment": "静态与配置修正已登记；Docker 容器实际端口映射与 Redis 停启语义未运行（Docker 不纳入当前验收）。"
       },
       {
         "id": "BC-BASE-015",
         "name": "缓存完整性候选",
-        "status": "not_executed",
+        "status": "partially_executed",
         "necessary_acceptance": "损坏缓存显式拒绝/隔离，与正常miss区分；StandardCacheKeyGenerator参数分界/type/canonical集合key的真实碰撞调用验证。",
-        "boundary": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
+        "boundary": "2026-10-16 缓存值 serializer 改为：仅 null/空字节为正常 miss，损坏内容、未知 envelope 类型、结构与声明类型不一致一律显式抛 SerializationException；已用单元测试覆盖。StandardCacheKeyGenerator 参数分界/type/集合 key 的真实碰撞调用验证未执行。",
         "scenario": "损坏缓存显式拒绝/隔离，与正常miss区分；StandardCacheKeyGenerator参数分界/type/canonical集合key的真实碰撞调用验证。",
-        "state": "not_run",
-        "issue_ids": [],
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。"
+        "state": "partially_executed",
+        "issue_ids": [
+          "DIAG-BASE-011"
+        ],
+        "impact_ids": [
+          "IMP-BASE-005"
+        ],
+        "evidence_ids": [
+          "EV-B03-BASELINE-20261016"
+        ],
+        "required_environment": "serializer 显式拒绝已单元验证；缓存键生成器真实碰撞调用未验证。"
       },
       {
         "scenario": "未执行浏览器loading/同失败一次提示/取消/旧查询覆盖",
@@ -75065,9 +75271,13 @@
         "issue_ids": [
           "DIAG-ADDITIONAL-003"
         ],
-        "state": "not_run",
-        "impact_ids": [],
-        "evidence_ids": []
+        "state": "passed",
+        "impact_ids": [
+          "IMP-ADDITIONAL-003"
+        ],
+        "evidence_ids": [
+          "EV-B03-BASELINE-20261016"
+        ]
       },
       {
         "scenario": "同分片多次target、旧attempt confirm/迟到预签名写入、错误ETag、最终校验失败不产生READY资产",
