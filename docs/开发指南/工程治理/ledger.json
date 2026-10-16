@@ -221,7 +221,7 @@
         "checks": "BC-BASE-009/010/014/015, BC-ADDITIONAL-003, CHECK-CORE-033; startup nonzero, running process unready, recovery validation, module combinations and no runtime DDL",
         "done_when": "Required dependency failure rejects business consistently, startup fails when required, running faults preserve process and recover only after validation.",
         "state": "in_progress",
-        "progress_summary": "2026-10-16 已完成 B03 基础修复并单元/启动验证：Dockerfile EXPOSE 4004、模块开关严格布尔、Flowable schema 更新只跟随配置、启用加密密钥未就绪启动失败、缓存损坏值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。隔离空库 V1–V8（8 个）与 V7→V8 升级、重复 validate 已在一次性库上通过（未断言运行角色无 DDL 与 OA/Workflow 默认 NONE/SELF）。运行期就绪门已实现：依赖故障时业务返回 503、恢复后再服务、进程保留并有界退避（ReadinessGateHttpTest 1/1）；后台调度暂停/恢复已单独断言（DependencyReadinessProbeTest 3/3）；数据库运行故障以真实连接中断验证（DatabaseOutageReadinessTest 1/1）；恢复前一致性校验（ReadinessVerifier/CryptoKeyConsistencyVerifier）与健康端点 OUT_OF_SERVICE 反馈（ReadinessHealthIndicator）已实现并验证。仍待验证：缓存一致性独立校验器、运行角色无 DDL 及 Docker 实际映射。证据 EV-B03-BASELINE-20261016、EV-B03-MIGRATION-20261016、EV-B03-READINESS-20261016、EV-B03-PROBE-20261016、EV-B03-DBOUTAGE-20261016、EV-B03-CONSISTENCY-20261016。"
+        "progress_summary": "2026-10-16 已完成 B03 基础修复并单元/启动验证：Dockerfile EXPOSE 4004、模块开关严格布尔、Flowable schema 更新只跟随配置、启用加密密钥未就绪启动失败、缓存损坏值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。隔离空库 V1–V8（8 个）与 V7→V8 升级、重复 validate 已在一次性库上通过（未断言运行角色无 DDL 与 OA/Workflow 默认 NONE/SELF）。运行期就绪门已实现：依赖故障时业务返回 503、恢复后再服务、进程保留并有界退避（ReadinessGateHttpTest 1/1）；后台调度暂停/恢复已单独断言（DependencyReadinessProbeTest 3/3）；数据库运行故障以真实连接中断验证（DatabaseOutageReadinessTest 1/1）；恢复前一致性校验（ReadinessVerifier/CryptoKeyConsistencyVerifier）与健康端点 OUT_OF_SERVICE 反馈（ReadinessHealthIndicator）已实现并验证；缓存键生成器按长度前缀分界与类型标记修复真实同键（ab+c vs a+bc、null vs \"null\"、1 vs \"1\"）并真实调用验证（StandardCacheKeyGeneratorTest 7/7），BC-BASE-015 置 passed。仍待验证：运行角色无 DDL 权限隔离与 Docker 实际映射。证据 EV-B03-BASELINE-20261016、EV-B03-MIGRATION-20261016、EV-B03-READINESS-20261016、EV-B03-PROBE-20261016、EV-B03-DBOUTAGE-20261016、EV-B03-CONSISTENCY-20261016、EV-B03-KEYGEN-20261016。"
       },
       {
         "id": "B04",
@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "d7616e408c610af3c1c4c17f69197d74a57195cb0eb684457c442d1de7e7e05f",
+      "content_sha256": "c5b006bdf47cc71cd11457d390b8a8fa5bb1032e9b63f32993d3d5e5c0feed0d",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "88bc4a48bc83fa01723063e08abeaae08f938c00539aa2ed4753e45d0a4d976f",
+      "content_sha256": "03da27773c32289549e6ca1867ee1b83b2529733c78e08642b474af12e294eeb",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5189,7 +5189,8 @@
         "EV-B03-READINESS-20261016",
         "EV-B03-PROBE-20261016",
         "EV-B03-DBOUTAGE-20261016",
-        "EV-B03-CONSISTENCY-20261016"
+        "EV-B03-CONSISTENCY-20261016",
+        "EV-B03-KEYGEN-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11840,6 +11841,22 @@
       "impact_ids": ["IMP-BASE-004", "IMP-CORE-007"]
     },
     {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/cache/StandardCacheKeyGeneratorTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "b29aa3138f1424aa7218c2717322a3c27de4a6fd2aa077812e998f14fa4e4d1b",
+      "reviewed_rules": ["04 §3 复杂度/例外边界", "04 §13 验证"],
+      "issue_ids": ["DIAG-BASE-011"],
+      "evidence_ids": ["EV-B03-KEYGEN-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "真实调用生成器验证：参数边界 ab/c 与 a/bc、null 与 \"null\"、1 与 \"1\" 键不同；集合/Map 顺序无关且与标量区分；无参稳定为 noargs。",
+      "review_limits": ["直接调用生成器；未通过被 @CacheConfig 标注的业务方法端到端触发。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-005"]
+    },
+    {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
       "role": "工程说明与规则入口",
       "scope": "included",
@@ -16051,7 +16068,7 @@
       "role": "后端 spectra-framework / cache",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "719928b2e2c599cc9e610260abb3eb2b96430c20bc2e7cda0d843b635bb5ce0b",
+      "content_sha256": "9e010c9306a3b618d860e27b7e208d8e24de806c7cd69a6614ca93ebdb3ede50",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -16059,11 +16076,12 @@
       "issue_ids": [],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B03-KEYGEN-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "方法标识拼接各参数stable字符串；缺类型/长度边界，ab+c与a+bc存在同键候选，未验证实际调用碰撞。",
+      "review_summary": "参数按长度前缀分界并按类型标记区分（null/集合/Map/具体类），消除 ab+c 与 a+bc、null 与 \"null\"、1 与 \"1\" 的同键；集合/Map 仍按规范化排序生成稳定键。",
       "review_limits": [
         "静态逐文件审查；未运行应用、数据库迁移或Redis并发行为。",
         "已阅读声明、注解及全部可执行方法体；展示时省略许可证/重复Javadoc/import，模块import另以rg核查。",
@@ -72840,6 +72858,25 @@
       "limits": "一致性校验器只覆盖密钥配置；缓存一致性尚未定义独立校验器。DIAG-CORE-033 与 BC-BASE-009 维持部分执行。"
     },
     {
+      "id": "EV-B03-KEYGEN-20261016",
+      "scope": "B03 BC-BASE-015 缓存键生成器参数分界/类型/集合规范化真实碰撞验证",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=StandardCacheKeyGeneratorTest' test -> 退出 0，7/7；ab/c≠a/bc、null≠\"null\"、1≠\"1\"、集合顺序无关且≠标量、Map 顺序无关、noargs 稳定",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> 退出 0；Spotless/Checkstyle/PMD/SpotBugs 通过"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；纯单元测试，无外部依赖；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "修复 StandardCacheKeyGenerator 参数拼接歧义：以长度前缀分界、按类型标记区分，消除 ab+c 与 a+bc 等真实同键；用真实调用断言覆盖分界/类型/集合与 Map 规范化。",
+      "artifacts": [
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/cache/StandardCacheKeyGenerator.java",
+        "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/cache/StandardCacheKeyGeneratorTest.java",
+        ".temp/b03/b03-keygen-20261016.log",
+        ".temp/b03/b03-keygen-static-20261016.log"
+      ],
+      "limits": "直接调用生成器，未通过被 @CacheConfig 标注的业务方法端到端触发；键格式变化不承诺外部历史兼容。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74320,7 +74357,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1612,
+      "included": 1613,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74346,7 +74383,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1626,
+    "reviewed_included": 1627,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -74877,21 +74914,22 @@
       {
         "id": "BC-BASE-015",
         "name": "缓存完整性候选",
-        "status": "partially_executed",
-        "necessary_acceptance": "损坏缓存显式拒绝/隔离，与正常miss区分；StandardCacheKeyGenerator参数分界/type/canonical集合key的真实碰撞调用验证。",
-        "boundary": "2026-10-16 缓存值 serializer 改为：仅 null/空字节为正常 miss，损坏内容、未知 envelope 类型、结构与声明类型不一致一律显式抛 SerializationException；已用单元测试覆盖。StandardCacheKeyGenerator 参数分界/type/集合 key 的真实碰撞调用验证未执行。",
-        "scenario": "损坏缓存显式拒绝/隔离，与正常miss区分；StandardCacheKeyGenerator参数分界/type/canonical集合key的真实碰撞调用验证。",
-        "state": "partially_executed",
-        "issue_ids": [
-          "DIAG-BASE-011"
-        ],
-        "impact_ids": [
-          "IMP-BASE-005"
-        ],
-        "evidence_ids": [
-          "EV-B03-BASELINE-20261016"
-        ],
-        "required_environment": "serializer 显式拒绝已单元验证；缓存键生成器真实碰撞调用未验证。"
+      "status": "passed",
+      "necessary_acceptance": "损坏缓存显式拒绝/隔离，与正常miss区分；StandardCacheKeyGenerator参数分界/type/canonical集合key的真实碰撞调用验证。",
+      "boundary": "2026-10-16 缓存值 serializer 改为：仅 null/空字节为正常 miss，损坏内容、未知 envelope 类型、结构与声明类型不一致一律显式抛 SerializationException；已用单元测试覆盖。StandardCacheKeyGenerator 改为长度前缀分界并按类型标记区分（null/集合/Map/具体类），消除 ab+c 与 a+bc、null 与 \"null\"、1 与 \"1\" 的同键，集合/Map 保持规范排序稳定，已真实调用断言（StandardCacheKeyGeneratorTest 7/7）。",
+      "scenario": "损坏缓存显式拒绝/隔离，与正常miss区分；StandardCacheKeyGenerator参数分界/type/canonical集合key的真实碰撞调用验证。",
+      "state": "passed",
+      "issue_ids": [
+        "DIAG-BASE-011"
+      ],
+      "impact_ids": [
+        "IMP-BASE-005"
+      ],
+      "evidence_ids": [
+        "EV-B03-BASELINE-20261016",
+        "EV-B03-KEYGEN-20261016"
+      ],
+      "required_environment": "serializer 显式拒绝与缓存键生成器真实碰撞调用均已单元验证。"
       },
       {
         "scenario": "未执行浏览器loading/同失败一次提示/取消/旧查询覆盖",
