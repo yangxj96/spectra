@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "15888721cdded14fd054d9e16bf9933e1c0e50380e3ee1afcfba72404460396c",
+      "content_sha256": "72e2f213df424e0729c1cf286b68336769b8e18e08cb97a73d28e5c01ba84c1d",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -11521,7 +11521,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "fc46539eb85f0114398a28ea0a91c65dedf32d140160e953891ad133426db74f",
+      "content_sha256": "5b2788e9898f374e489ca72298f043dfe4b5a68f1648ac3b6fd44e1a1863f70f",
       "reviewed_rules": ["04 §9 静态配置强类型", "04 §13 验证"],
       "issue_ids": ["DIAG-BASE-014"],
       "evidence_ids": ["EV-B03-BASELINE-20261016"],
@@ -68041,7 +68041,7 @@
       "required_changes": [
         "Core-only/Core+Workflow/Core+Workflow+OA合法组合与OAwithoutWorkflow失败；空库及V7升级V8在隔离DB，确认Flowable最终false且runtime无DDL。"
       ],
-      "deferred_boundary": "OA/Workflow独立业务暂缓，但公共装配和迁移行为是必要影响。2026-10-16：模块开关改为严格布尔解析，Flowable schema 更新改为只跟随 flowable.database-schema-update（缺省 false），Dockerfile EXPOSE 统一 4004；合法/非法模块组合启动与隔离库迁移仍未运行。",
+      "deferred_boundary": "OA/Workflow独立业务暂缓，但公共装配和迁移行为是必要影响。2026-10-16：模块开关改为严格布尔解析，Flowable schema 更新改为只跟随 flowable.database-schema-update（缺省 false），Dockerfile EXPOSE 统一 4004；模块组合启动校验（OA 无 Workflow 失败、Core-only/Core+Workflow/Core+Workflow+OA 通过）已用 ApplicationContextRunner 验证，隔离库 V1–V8 与 V7→V8 迁移已通过；正式完整应用按各组合启动仍未运行。",
       "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
