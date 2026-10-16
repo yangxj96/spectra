@@ -221,7 +221,7 @@
         "checks": "BC-BASE-009/010/014/015, BC-ADDITIONAL-003, CHECK-CORE-033; startup nonzero, running process unready, recovery validation, module combinations and no runtime DDL",
         "done_when": "Required dependency failure rejects business consistently, startup fails when required, running faults preserve process and recover only after validation.",
         "state": "in_progress",
-        "progress_summary": "2026-10-16 已完成 B03 基础修复并单元/启动验证：Dockerfile EXPOSE 4004、模块开关严格布尔、Flowable schema 更新只跟随配置、启用加密密钥未就绪启动失败、缓存损坏值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。隔离空库 V1–V8（8 个）与 V7→V8 升级、重复 validate 已在一次性库上通过（未断言运行角色无 DDL 与 OA/Workflow 默认 NONE/SELF）。运行期就绪门已实现：依赖故障时业务返回 503、恢复后再服务、进程保留并有界退避（ReadinessGateHttpTest 1/1）；后台调度暂停/恢复已单独断言（DependencyReadinessProbeTest 3/3）。仍待验证：数据库运行故障注入、缓存/密钥一致性后再就绪、运行角色无 DDL 及 Docker 实际映射。证据 EV-B03-BASELINE-20261016、EV-B03-MIGRATION-20261016、EV-B03-READINESS-20261016、EV-B03-PROBE-20261016。"
+        "progress_summary": "2026-10-16 已完成 B03 基础修复并单元/启动验证：Dockerfile EXPOSE 4004、模块开关严格布尔、Flowable schema 更新只跟随配置、启用加密密钥未就绪启动失败、缓存损坏值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。隔离空库 V1–V8（8 个）与 V7→V8 升级、重复 validate 已在一次性库上通过（未断言运行角色无 DDL 与 OA/Workflow 默认 NONE/SELF）。运行期就绪门已实现：依赖故障时业务返回 503、恢复后再服务、进程保留并有界退避（ReadinessGateHttpTest 1/1）；后台调度暂停/恢复已单独断言（DependencyReadinessProbeTest 3/3）；数据库运行故障以真实连接中断验证（DatabaseOutageReadinessTest 1/1）。仍待验证：缓存/密钥一致性后再就绪、运行角色无 DDL 及 Docker 实际映射。证据 EV-B03-BASELINE-20261016、EV-B03-MIGRATION-20261016、EV-B03-READINESS-20261016、EV-B03-PROBE-20261016、EV-B03-DBOUTAGE-20261016。"
       },
       {
         "id": "B04",
@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "bfd46dbd81b3437a68736bf3ee4519a824cf49852947bca9526f85c6425688e9",
+      "content_sha256": "5b13756494d8f9a3ecb637125c1b2e542f4e9707bb0f4191f47b2974a6c2e12c",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "aaa389b9e5fe5b69f7cb27a3022ef13e3db2b1436951c4575869b8d9dd556efb",
+      "content_sha256": "9385b89fdad1f4cd3e3e011a43bc8b461999a8697a323f5412009c2d945b657a",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5187,7 +5187,8 @@
         "EV-B03-BASELINE-20261016",
         "EV-B03-MIGRATION-20261016",
         "EV-B03-READINESS-20261016",
-        "EV-B03-PROBE-20261016"
+        "EV-B03-PROBE-20261016",
+        "EV-B03-DBOUTAGE-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11690,6 +11691,22 @@
       "impact_state": null,
       "review_summary": "单元断言：数据库探测失败置 UNREADY 且暂停调度（pauseAll 一次、resumeAll 零次）、恢复后置 READY 且恢复调度、缺失 Redis 连接工厂同样置 UNREADY 并暂停。",
       "review_limits": ["使用 mock 依赖，非真实数据库/Redis 故障。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-004", "IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/framework/health/readiness/DatabaseOutageReadinessTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "7a7f91c85d8d0c584823effe159c61cde71722a339ea4b5358ddcac103845f8c",
+      "reviewed_rules": ["04 §8 必需基础设施", "04 §9 运行恢复", "04 §13 验证"],
+      "issue_ids": ["DIAG-CORE-033"],
+      "evidence_ids": ["EV-B03-DBOUTAGE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "真实隔离 PostgreSQL 经本地 TCP 代理接入：关闭代理制造真实连接中断→探针转 UNREADY 并 pauseAll；重启代理→回到 READY 并 resumeAll。",
+      "review_limits": ["数据源为每连接新建的 DriverManagerDataSource，且不启动 Web/Quartz/Flyway，聚焦探针与状态切换。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-BASE-004", "IMP-CORE-007"]
     },
@@ -67062,7 +67079,7 @@
         }
       ],
       "finding": "现有Flyway及初始化/默认密码Runner可因DB或自身安全Redis操作失败阻止启动，安全Redis各命令仍fail-closed；统一health仅汇报。未发现对必需DB和Redis统一启动校验、运行期全业务拒绝/后台暂停及一致性校验后恢复gate。Quartz启动异常转NOT_READY并定时重试不抛出；READY后也无数据库运行故障状态迁移。不能把密码key加载校验或单命令关闭当作必需依赖整体就绪机制。",
-      "impact": "DB/Redis运行故障期间业务和后台任务仍可进入各自用例，行为依赖偶然调用失败；恢复也无统一校验。涉及Launch、Framework、全部Core端口、Web就绪反馈及暂缓OA/Workflow后台任务。2026-10-16 已补安全 Redis 启动连通门、启用加密启动门与运行期就绪门（依赖故障业务 503、恢复再服务、有界退避、Quartz 暂停/恢复并有独立断言）；数据库运行故障注入、缓存/密钥一致性校验后再就绪与 Web 就绪反馈仍待实现。",
+      "impact": "DB/Redis运行故障期间业务和后台任务仍可进入各自用例，行为依赖偶然调用失败；恢复也无统一校验。涉及Launch、Framework、全部Core端口、Web就绪反馈及暂缓OA/Workflow后台任务。2026-10-16 已补安全 Redis 启动连通门、启用加密启动门与运行期就绪门（依赖故障业务 503、恢复再服务、有界退避、Quartz 暂停/恢复并有独立断言、数据库真实连接中断）；缓存/密钥一致性校验后再就绪与 Web 就绪反馈仍待实现。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
       "state": "in_progress",
@@ -72699,6 +72716,24 @@
       "limits": "单元层级，非真实数据库/Redis 故障注入；数据库运行故障静默仍未端到端验证。DIAG-CORE-033 与 BC-BASE-009 维持部分执行。"
     },
     {
+      "id": "EV-B03-DBOUTAGE-20261016",
+      "scope": "B03 DIAG-CORE-033 数据库运行故障触发未就绪与恢复（真实连接中断）",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=DatabaseOutageReadinessTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；隔离 PostgreSQL 经本地 TCP 代理接入，正常→就绪、关闭代理→UNREADY+pauseAll、重启代理→READY+resumeAll",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> 退出 0；Checkstyle/PMD/SpotBugs 通过"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；隔离 PostgreSQL devops00_spectra_db_test（经 127.0.0.1 本地 TCP 代理），未启动 Web/Quartz/Flyway；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "用本地 TCP 代理转发到隔离 PostgreSQL，关闭代理制造真实连接中断；探针转 UNREADY 并暂停后台调度，重启代理后恢复就绪并恢复调度。",
+      "artifacts": [
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/framework/health/readiness/DatabaseOutageReadinessTest.java",
+        ".temp/b03/b03-dboutage-20261016.log",
+        ".temp/b03/b03-dboutage-static-20261016.log"
+      ],
+      "limits": "未启动 Web/Quartz/Flyway 的组合；未验证缓存/密钥一致性后再就绪与 Web 就绪反馈。DIAG-CORE-033 与 BC-BASE-009 维持部分执行。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74179,7 +74214,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1606,
+      "included": 1607,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74205,7 +74240,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1620,
+    "reviewed_included": 1621,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -74630,7 +74665,7 @@
         "name": "启动运行故障",
         "status": "partially_executed",
         "necessary_acceptance": "缺数据库/缓存/开启加密密钥启动非零；运行故障进程保留、所有业务unready并停止领取新任务，有界退避及恢复验证。",
-        "boundary": "2026-10-16 已实现并验证：安全 Redis 不可达启动失败（RedisStartupFailClosedTest）；启用加密但密钥未就绪启动失败（CryptoKeyManagerStartupTest）；数据库缺失由 Flyway 启动失败覆盖；运行期就绪门在依赖故障时业务返回 503、恢复后再服务、进程保持存活并有界退避（ReadinessGateHttpTest）；后台调度暂停/恢复已单独断言（DependencyReadinessProbeTest）。数据库运行故障注入及缓存/密钥一致性校验后再就绪未验证。",
+        "boundary": "2026-10-16 已实现并验证：安全 Redis 不可达启动失败（RedisStartupFailClosedTest）；启用加密但密钥未就绪启动失败（CryptoKeyManagerStartupTest）；数据库缺失由 Flyway 启动失败覆盖；运行期就绪门在依赖故障时业务返回 503、恢复后再服务、进程保持存活并有界退避（ReadinessGateHttpTest）；后台调度暂停/恢复已单独断言（DependencyReadinessProbeTest）；数据库运行故障已用真实连接中断验证（DatabaseOutageReadinessTest）。缓存/密钥一致性校验后再就绪与 Web 就绪反馈未验证。",
         "scenario": "缺数据库/缓存/开启加密密钥启动非零；运行故障进程保留、所有业务unready并停止领取新任务，有界退避及恢复验证。",
         "state": "partially_executed",
         "issue_ids": [
@@ -74644,9 +74679,10 @@
         "evidence_ids": [
           "EV-B03-BASELINE-20261016",
           "EV-B03-READINESS-20261016",
-          "EV-B03-PROBE-20261016"
+          "EV-B03-PROBE-20261016",
+          "EV-B03-DBOUTAGE-20261016"
         ],
-        "required_environment": "启动门与运行期就绪门已用真实依赖（隔离数据库/Redis）与单元测试验证；数据库运行故障注入与一致性后再就绪未验证。"
+        "required_environment": "启动门与运行期就绪门已用真实依赖（隔离数据库/Redis、真实连接中断）与单元测试验证；缓存/密钥一致性后再就绪未验证。"
       },
       {
         "id": "BC-BASE-010",
