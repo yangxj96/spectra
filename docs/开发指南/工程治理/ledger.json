@@ -221,7 +221,7 @@
         "checks": "BC-BASE-009/010/014/015, BC-ADDITIONAL-003, CHECK-CORE-033; startup nonzero, running process unready, recovery validation, module combinations and no runtime DDL",
         "done_when": "Required dependency failure rejects business consistently, startup fails when required, running faults preserve process and recover only after validation.",
         "state": "in_progress",
-        "progress_summary": "2026-10-16 已完成 B03 基础修复并单元/启动验证：Dockerfile EXPOSE 4004、模块开关严格布尔、Flowable schema 更新只跟随配置、启用加密密钥未就绪启动失败、缓存损坏值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。尚未实现运行期统一就绪门、任务暂停与一致性恢复；隔离空库 V1–V8 与 V7→V8 升级迁移、Docker 实际映射未运行。证据 EV-B03-BASELINE-20261016。"
+        "progress_summary": "2026-10-16 已完成 B03 基础修复并单元/启动验证：Dockerfile EXPOSE 4004、模块开关严格布尔、Flowable schema 更新只跟随配置、启用加密密钥未就绪启动失败、缓存损坏值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。隔离空库 V1–V8（8 个）与 V7→V8 升级、重复 validate 已在一次性库上通过（未断言运行角色无 DDL 与 OA/Workflow 默认 NONE/SELF）。仍未实现运行期统一就绪门、任务暂停与一致性恢复，Docker 实际映射未运行。证据 EV-B03-BASELINE-20261016、EV-B03-MIGRATION-20261016。"
       },
       {
         "id": "B04",
@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "963651771b38db6d544b947f1e5632165a0d24df902620eba32e6e8ce8f0cb12",
+      "content_sha256": "9f13e465323df0a64d82a090d067826d251b56281816654b387675a07a0b2bbb",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "7922e2d41fe167865e31ba1382cd1850749df9e4d1a80e6061a26f8ffbe7d56d",
+      "content_sha256": "65c14cde16d1b839bac412ca8a7294dc14d7ded5763012c39a1ab720c9569792",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5184,7 +5184,8 @@
         "EV-B02-CORE020-023-TWO-PROCESS-20261016",
         "EV-B02-CORE020-OPS-CLEAR-20261016",
         "EV-SCRIPT-B01-20261016",
-        "EV-B03-BASELINE-20261016"
+        "EV-B03-BASELINE-20261016",
+        "EV-B03-MIGRATION-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11625,6 +11626,22 @@
       "review_limits": ["纯单元测试。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-ADDITIONAL-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/migration/FlywayMigrationAssemblyTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "938a3043927e40afbe041555765e126f55945d27c3f7d130328a185e7dd0543c",
+      "reviewed_rules": ["04 §9 配置/迁移/故障", "04 §13 验证"],
+      "issue_ids": ["DIAG-BASE-015"],
+      "evidence_ids": ["EV-B03-MIGRATION-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "在一次性库 devops00_spectra_db_migration_check 上验证 Flyway 空库应用 V1–V8（8 个）、V7→V8 升级只应用 V8、重复 validate 通过，结束后删除临时库。",
+      "review_limits": ["不验证运行角色无 DDL 的数据库权限隔离，也不单独断言 OA/Workflow 默认 NONE/SELF 数据。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-004"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -72503,7 +72520,24 @@
         ".temp/b03/b03-app-regression-20261016.log",
         ".temp/b03/b03-static-20261016.log"
       ],
-      "limits": "运行期统一就绪门（业务 unready、后台任务暂停、有界退避与一致性校验后恢复）、Docker 容器实际 4004 映射、隔离空库 V1–V8 与 V7→V8 升级、缓存键碰撞调用验证仍未执行；BC-BASE-009/010/014/015 维持部分执行。"
+      "limits": "运行期统一就绪门（业务 unready、后台任务暂停、有界退避与一致性校验后恢复）、Docker 容器实际 4004 映射、缓存键碰撞调用验证仍未执行；BC-BASE-009/014/015 维持部分执行。"
+    },
+    {
+      "id": "EV-B03-MIGRATION-20261016",
+      "scope": "B03 BC-BASE-010 隔离空库 Flyway V1–V8 装配与 V7→V8 升级",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am clean test '-Dtest=FlywayMigrationAssemblyTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.groups.exclude=' '-Dspectra.test.real-deps=true' -> 退出 0，1/1",
+        "用例在维护库 postgres 上创建一次性库 devops00_spectra_db_migration_check：空库 migrate 应用 8 个迁移（V1–V8）并重复 validate；再重建后 target=V7 应用 7 个、随后升级只应用 V8；结束时 DROP 该临时库"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；仅使用专用测试库凭据创建并删除一次性迁移库，不触碰业务库或其他数据库；没有读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "隔离一次性数据库上，Flyway 空库应用 V1–V8 共 8 个迁移并重复 validate 通过；V7→V8 升级仅应用 V8，最终 8 个迁移且末位为 V8；临时库已删除。",
+      "artifacts": [
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/migration/FlywayMigrationAssemblyTest.java",
+        ".temp/b03/b03-flyway-20261016.log"
+      ],
+      "limits": "未验证运行角色无 DDL 的数据库权限隔离，也未单独断言 OA/Workflow 默认 NONE/SELF 数据；Flowable 最终 update=false 由 DIAG-BASE-015 配置修复覆盖。BC-BASE-010 维持部分执行。"
     },
     {
       "id": "EV-IMPORT-MOCK-20261004",
@@ -73986,7 +74020,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1599,
+      "included": 1600,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74012,7 +74046,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1613,
+    "reviewed_included": 1614,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -74456,15 +74490,21 @@
       {
         "id": "BC-BASE-010",
         "name": "迁移装配",
-        "status": "not_executed",
+        "status": "partially_executed",
         "necessary_acceptance": "隔离空库和V7→V8 upgrade、重复validate、OA/Workflow相关引用与默认NONE/SELF；最终Flowableupdatefalse和运行角色无DDL。",
-        "boundary": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
+        "boundary": "2026-10-16 在隔离一次性库 devops00_spectra_db_migration_check 上用 Flyway 验证：空库应用 V1–V8（8 个）并重复 validate 通过；V7→V8 升级仅应用 V8、最终 8 个且末位为 V8；结束删除临时库。Flowable 最终 update=false 由 WorkflowConfiguration 改为跟随配置（缺省 false）覆盖。运行角色无 DDL 的数据库权限隔离与 OA/Workflow 默认 NONE/SELF 数据未单独断言。",
         "scenario": "隔离空库和V7→V8 upgrade、重复validate、OA/Workflow相关引用与默认NONE/SELF；最终Flowableupdatefalse和运行角色无DDL。",
-        "state": "not_run",
-        "issue_ids": [],
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。"
+        "state": "partially_executed",
+        "issue_ids": [
+          "DIAG-BASE-015"
+        ],
+        "impact_ids": [
+          "IMP-BASE-004"
+        ],
+        "evidence_ids": [
+          "EV-B03-MIGRATION-20261016"
+        ],
+        "required_environment": "空库 V1–V8 与 V7→V8 升级已在一次性隔离库执行；运行角色无 DDL 权限隔离与默认范围数据未断言。"
       },
       {
         "id": "BC-BASE-011",
