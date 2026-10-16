@@ -9,6 +9,13 @@ function Invoke-SpectraRegionImport {
         return 1
     }
 
+    # 只有在显式声明允许导入的隔离数据库名时才继续；该变量由 Java 侧再次核对真实连接库名。
+    $regionAllowedDatabases = [Environment]::GetEnvironmentVariable('SPECTRA_REGION_IMPORT_ALLOWED_DATABASES', 'Process')
+    if ([string]::IsNullOrWhiteSpace($regionAllowedDatabases)) {
+        [Console]::Error.WriteLine('SPECTRA_REGION_IMPORT_ALLOWED_DATABASES must list the isolated import database name(s); refusing to run before connecting.')
+        return 1
+    }
+
     $regionPreviousLocation = (Get-Location).Path
     $regionHadImportVariable = Test-Path Env:SPECTRA_REGION_IMPORT
     $regionPreviousImportValue = [Environment]::GetEnvironmentVariable('SPECTRA_REGION_IMPORT', 'Process')

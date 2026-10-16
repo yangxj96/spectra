@@ -29,7 +29,7 @@ def default_website_root() -> Path:
 
 def contained(root: Path, relative: str, description: str) -> Path:
     root = full(root)
-    candidate = (root / relative.replace("/", "/")).resolve()
+    candidate = (root / relative).resolve()
     try:
         candidate.relative_to(root)
     except ValueError as exc:
@@ -39,6 +39,31 @@ def contained(root: Path, relative: str, description: str) -> Path:
 
 def relative(root: Path, path: Path) -> str:
     return path.resolve().relative_to(root.resolve()).as_posix()
+
+
+def within(root: Path, candidate: Path) -> bool:
+    try:
+        candidate.relative_to(root.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def scoped_generated(website_root: Path, managed_root_paths: list[Path], item: object) -> str:
+    """将清单中的历史生成文件规范化为受控生成区内的相对路径；越界或位于博客目录时拒绝。"""
+    text = str(item).strip().replace("\\", "/")
+    if not text:
+        raise RuntimeError("同步清单包含空文件路径。")
+    base = website_root.resolve()
+    candidate = (website_root / text).resolve()
+    if not within(base, candidate):
+        raise RuntimeError(f"同步清单文件越出网站根目录: {item}")
+    if not any(within(root, candidate) for root in managed_root_paths):
+        raise RuntimeError(f"同步清单文件不在受控生成区: {item}")
+    scoped = candidate.relative_to(base).as_posix()
+    if scoped.lower().startswith("docs/pages/blogs/"):
+        raise RuntimeError(f"同步清单误将博客文件纳入删除范围: {item}")
+    return scoped
 
 
 def sensitive_path(path: str) -> bool:
@@ -192,6 +217,7 @@ def main() -> int:
     sidebar_path = contained(website_root, sidebar_relative, "侧边栏生成文件")
     generated_manifest_path = contained(website_root, generated_manifest_relative, "同步清单生成文件")
     managed_roots = sorted({*(str(section["target"]) for section in sections), str(assets_relative), Path(sidebar_relative).parent.as_posix()})
+    managed_root_paths = [contained(website_root, root, "受控生成目录") for root in managed_roots]
     dirty = git_changes(website_root, managed_roots)
     if dirty and not args.allow_dirty_project_docs:
         raise RuntimeError("website 项目文档生成区存在未提交修改，请先处理:\n" + "\n".join(dirty))
@@ -328,6 +354,11 @@ def main() -> int:
                 previous = json.loads(generated_manifest_path.read_text(encoding="utf-8"))
             except json.JSONDecodeError:
                 warnings.append("无法读取旧同步清单，将跳过常规过期文件清理。")
+        if previous is not None:
+            if (not isinstance(previous, dict) or previous.get("version") != 2
+                    or not isinstance(previous.get("files"), list)
+                    or not all(isinstance(item, str) for item in previous["files"])):
+                raise RuntimeError("旧同步清单结构无效，拒绝生成删除计划。")
         stale: set[str] = set()
         if args.prune_legacy:
             for root in (*section_targets.values(), assets_target):
@@ -338,7 +369,10 @@ def main() -> int:
                             if not rel.lower().startswith("docs/pages/blogs/"):
                                 stale.add(rel)
         elif previous:
-            stale.update(str(item) for item in previous.get("files", []) if str(item) not in generated_files)
+            for item in previous["files"]:
+                scoped = scoped_generated(website_root, managed_root_paths, item)
+                if scoped not in generated_files:
+                    stale.add(scoped)
         stale.difference_update(generated_files)
         planned_adds = sorted(item for item in generated_files if not (website_root / item).is_file())
         planned_changes = sorted(item for item in generated_files if (website_root / item).is_file() and digest(stage / item) != digest(website_root / item))
@@ -380,7 +414,7 @@ def main() -> int:
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(stage / item, target)
             if args.build:
-                subprocess.run(["pnpm", "run", "docs:build"], cwd=website_root, check=True)
+                subprocess.run(["mise", "exec", "--", "pnpm", "run", "docs:build"], cwd=website_root, check=True)
         except Exception:
             for root in managed_roots:
                 actual = contained(website_root, root, "回滚目录")

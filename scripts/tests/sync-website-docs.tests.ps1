@@ -1,6 +1,22 @@
 $ErrorActionPreference = 'Stop'
 
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$syncPython = $null
+foreach ($pythonName in @('python', 'python3')) {
+    foreach ($pythonCandidate in @(Get-Command -Name $pythonName -CommandType Application -ErrorAction SilentlyContinue)) {
+        $candidatePath = $pythonCandidate.Source
+        if (-not [string]::IsNullOrWhiteSpace($candidatePath) -and $candidatePath -notmatch '\\WindowsApps\\' -and (Test-Path -LiteralPath $candidatePath -PathType Leaf)) {
+            $syncPython = $candidatePath
+            break
+        }
+    }
+    if ($null -ne $syncPython) {
+        break
+    }
+}
+if ($null -eq $syncPython) {
+    throw 'A runnable Python 3 was not found in PATH for the sync fixture.'
+}
 $temporaryRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath())
 $testRoot = Join-Path $temporaryRoot "spectra-doc-sync-$([guid]::NewGuid().ToString('N'))"
 $sourceRoot = Join-Path $testRoot 'spectra-docs'
@@ -84,6 +100,7 @@ function Invoke-WebsiteSync {
     $processInfo.StandardOutputEncoding = [Text.Encoding]::UTF8
     $processInfo.StandardErrorEncoding = [Text.Encoding]::UTF8
     $processInfo.Environment['PYTHONUTF8'] = '1'
+    $processInfo.Environment['SPECTRA_DOCS_PYTHON'] = $syncPython
     [void] $processInfo.ArgumentList.Add('-NoProfile')
     [void] $processInfo.ArgumentList.Add('-File')
     [void] $processInfo.ArgumentList.Add((Join-Path $sourceRoot 'scripts\sync-website-docs.ps1'))
@@ -252,6 +269,37 @@ try {
     $prunedApply = Invoke-WebsiteSync -WorkingDirectory $sourceRoot -ScriptArguments @('--source-root', $sourceRoot, '--website-root', $websiteRoot, '--mode', 'Apply')
     Assert-Equal -Expected 0 -Actual $prunedApply.ExitCode -Message 'Apply removes stale generated docs'
     Assert-Absent -Path (Join-Path $websiteRoot 'docs/pages/spectra-admin/old.md')
+
+    # BEH-4: Apply 失败时回滚受控生成区，并保留博客等受控根外文件。
+    $collisionSource = Join-Path $sourceRoot 'docs/参考文档/sub/99-temp.md'
+    Write-FixtureFile -Path $collisionSource -Content "# 临时页面`n"
+    # 将目标父路径预置为文件，使生成目标目录的 mkdir 失败。
+    Write-FixtureFile -Path (Join-Path $websiteRoot 'docs/pages/spectra-reference/sub') -Content 'blocker'
+    $rolledBack = Invoke-WebsiteSync -WorkingDirectory $sourceRoot -ScriptArguments @('--source-root', $sourceRoot, '--website-root', $websiteRoot, '--mode', 'Apply')
+    if ($rolledBack.ExitCode -eq 0) {
+        throw 'ASSERTION FAILED: Apply must fail and roll back when a target parent path is a file'
+    }
+    Assert-Contains -Content (Get-Content -Raw -Encoding utf8 (Join-Path $websiteRoot 'docs/pages/blogs/keep.md')) -Needle '# Keep my blog' -Message 'failed Apply preserves the blog directory'
+    Remove-Item -LiteralPath (Join-Path $sourceRoot 'docs/参考文档/sub') -Recurse -Force
+    Remove-Item -LiteralPath (Join-Path $websiteRoot 'docs/pages/spectra-reference/sub') -Force
+
+    # BEH-3: 受污染旧清单 fail-closed，不生成越界删除并保留网站根外哨兵文件。
+    $outsideSentinel = Join-Path $testRoot 'outside-sentinel.md'
+    Write-FixtureFile -Path $outsideSentinel -Content '# outside sentinel'
+    $generatedManifestFile = Join-Path $websiteRoot '.vitepress/generated/spectra-docs-sync.json'
+    $poisonedManifest = [ordered]@{
+        version = 2
+        files = @('../outside-sentinel.md')
+        sources = @()
+        sections = @()
+    }
+    [IO.File]::WriteAllText($generatedManifestFile, (($poisonedManifest | ConvertTo-Json -Depth 6) + "`n"), $fixtureEncoding)
+    $polluted = Invoke-WebsiteSync -WorkingDirectory $sourceRoot -ScriptArguments @('--source-root', $sourceRoot, '--website-root', $websiteRoot, '--mode', 'Apply')
+    if ($polluted.ExitCode -eq 0) {
+        throw 'ASSERTION FAILED: polluted previous manifest must fail closed'
+    }
+    Assert-File -Path $outsideSentinel
+    Remove-Item -LiteralPath $generatedManifestFile -Force
 
     Write-Output 'PASS: sync-website-docs fixture assertions'
 }

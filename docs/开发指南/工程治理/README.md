@@ -62,6 +62,8 @@ GOV-007 已完成后端/Web Skill 的入口、受影响示例、修改前后场�
 
 2026-10-16 本轮将 `BC-BASE-001`、`BC-BASE-002`、`BC-BASE-003`、`CHECK-CORE-020`、`CHECK-CORE-022` 置为 `passed`；新增两进程真实 Core HTTP 套件与单进程正式 HTTP 用例（见上列各专项）。重建空白专用测试库后八模块真实依赖 `clean verify` 退出 0：**common 5 + framework 130 + core 119 + launch 63 = 317/317**，Spotless、Checkstyle、PMD、SpotBugs、Enforcer 全部通过（证据 `EV-B02-FULL-GATE-20261016`）。B02 仍为 `in_progress`：剩余为需产品决策或外部依赖的方向——独立 `error_code`、旧格式会话上线处置、显式就绪门、通知投递、部门重组与 OA/Workflow 业务入口、B08 浏览器、启用调度器的通知/Quartz/Workflow。
 
+同日收口 **B01 脚本删除与导入隔离**：`sync-website-docs` 入口固定根 `.venv`、构建经 `mise exec -- pnpm`，旧同步清单删除候选解析为绝对路径并核对受控生成根，越界/博客/非法结构一律 fail-closed；`import-regions` 入口要求 `SPECTRA_REGION_IMPORT_ALLOWED_DATABASES` 并在连接前拒绝，新增 `RegionImportDatabaseGuard` 按实际数据源库名在导入上下文启动时校验。`BEH-IMP-SCRIPTS-001-1..5` 全部 `passed`，`DIAG-SCRIPT-001/002/004` 与 `IMP-SCRIPTS-001` 置为 `resolved`，`BC-BASE-013` 为 `partially_executed`（allow-list 已具备证据，完整 66.5 万行真实导入未执行）。证据 `EV-SCRIPT-B01-20261016`。
+
 ## 结构与字段
 
 ### 第一阶段枚举基线与复核方法

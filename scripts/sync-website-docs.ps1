@@ -1,16 +1,20 @@
 $syncPythonScript = Join-Path $PSScriptRoot 'sync-website-docs.py'
-$syncPythonCommand = Get-Command -Name python3 -CommandType Application -ErrorAction SilentlyContinue
+$syncProjectRoot = Split-Path -Parent $PSScriptRoot
 
-if ($null -eq $syncPythonCommand) {
-    $syncPythonCommand = Get-Command -Name python -CommandType Application -ErrorAction SilentlyContinue
+# 默认固定使用仓库根目录的 .venv；仅在显式提供 SPECTRA_DOCS_PYTHON（测试/CI）时才改用该解释器。
+$syncPython = $env:SPECTRA_DOCS_PYTHON
+
+if ([string]::IsNullOrWhiteSpace($syncPython)) {
+    $syncPython = Join-Path $syncProjectRoot '.venv\Scripts\python.exe'
 }
 
-if ($null -eq $syncPythonCommand) {
-    [Console]::Error.WriteLine('Python 3 was not found in PATH (looked for python3 and python).')
+if (-not (Test-Path -LiteralPath $syncPython -PathType Leaf)) {
+    [Console]::Error.WriteLine(
+        "Python venv not found: $syncPython. Create it with 'mise exec -- python -m venv .venv' or set SPECTRA_DOCS_PYTHON explicitly for test/CI.")
     exit 1
 }
 
-& $syncPythonCommand.Source $syncPythonScript @args
+& $syncPython $syncPythonScript @args
 $syncExitCode = 0
 if ($null -ne $LASTEXITCODE) {
     $syncExitCode = [int] $LASTEXITCODE

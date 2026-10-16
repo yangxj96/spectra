@@ -6,6 +6,7 @@ $projectRoot = (Resolve-Path (Join-Path $testScriptDirectory '..\..')).Path
 $backendRoot = Join-Path $projectRoot 'spectra-admin'
 $testPreviousLocation = (Get-Location).Path
 $testOriginalImportFlag = [Environment]::GetEnvironmentVariable('SPECTRA_REGION_IMPORT', 'Process')
+$testOriginalAllowedDatabases = [Environment]::GetEnvironmentVariable('SPECTRA_REGION_IMPORT_ALLOWED_DATABASES', 'Process')
 $temporaryRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath())
 $testRoot = Join-Path $temporaryRoot "spectra-import-regions-$([guid]::NewGuid().ToString('N'))"
 $script:MockMiseExitCode = 0
@@ -56,7 +57,14 @@ function mise {
 try {
     . $importScript
 
+    # BEH-1: 未声明隔离库允许列表时在连接前拒绝，不调用 mise。
+    Remove-Item Env:SPECTRA_REGION_IMPORT_ALLOWED_DATABASES -ErrorAction SilentlyContinue
+    $missingAllowListExitCode = Invoke-SpectraRegionImport
+    Assert-Equal -Expected 1 -Actual $missingAllowListExitCode -Message 'missing allow-list returns nonzero before connecting'
+    Assert-Equal -Expected 0 -Actual $script:CapturedMiseCallCount -Message 'mise is not invoked without an allow-list'
+
     $env:SPECTRA_REGION_IMPORT = 'restore-this-value'
+    $env:SPECTRA_REGION_IMPORT_ALLOWED_DATABASES = 'spectra_region_import_test'
     $script:MockMiseExitCode = 0
     $successExitCode = Invoke-SpectraRegionImport
 
@@ -122,6 +130,13 @@ finally {
     }
     else {
         $env:SPECTRA_REGION_IMPORT = $testOriginalImportFlag
+    }
+
+    if ($null -eq $testOriginalAllowedDatabases) {
+        Remove-Item Env:SPECTRA_REGION_IMPORT_ALLOWED_DATABASES -ErrorAction SilentlyContinue
+    }
+    else {
+        $env:SPECTRA_REGION_IMPORT_ALLOWED_DATABASES = $testOriginalAllowedDatabases
     }
 
     Set-Location -LiteralPath $testPreviousLocation

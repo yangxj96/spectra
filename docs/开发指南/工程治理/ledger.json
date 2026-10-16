@@ -77,7 +77,10 @@
         "change_scope": "Website sync manifest/managed roots and rollback, Python launcher and root .venv/mise selection, region import target guard and restart semantics",
         "prerequisites": "Use disposable directories and an allow-listed isolated database; protect outside sentinel files",
         "checks": "BEH-IMP-SCRIPTS-001-1..5 and BC-BASE-013; polluted manifests, Preview/Apply rollback, native mise argument and failure propagation, interrupted import",
-        "done_when": "Outside paths cannot become delete targets; unsafe DB targets fail before connection; interrupted import has an explicit recoverable result."
+        "done_when": "Outside paths cannot become delete targets; unsafe DB targets fail before connection; interrupted import has an explicit recoverable result.",
+        "state": "completed",
+        "completed_at": "2026-10-16",
+        "completion_summary": "B01：sync-website-docs 入口固定根 .venv、构建经 mise、旧清单删除候选解析并核对受控生成根（越界/博客/非法结构 fail-closed）；import-regions 入口要求 SPECTRA_REGION_IMPORT_ALLOWED_DATABASES 并在连接前拒绝，新增 RegionImportDatabaseGuard 按实际库名校验。BEH-IMP-SCRIPTS-001-1..5 全部 passed，DIAG-SCRIPT-001/002/004 与 IMP-SCRIPTS-001 resolved，BC-BASE-013 partially_executed（完整 66.5 万行真实导入未执行）。证据 EV-SCRIPT-B01-20261016。"
       },
       {
         "id": "B02",
@@ -4847,17 +4850,20 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4fe87caa1063c589eca17cee8f6127296fe390b22bcb50f041d6ad236731b362",
+      "content_sha256": "7bf9da328e651b3a6365552609e8d04d3a2e41180cf3acbb6107e68d61bbe7c4",
       "reviewed_rules": [
         "04§1",
         "04§4",
         "04§12",
         "04§13"
       ],
-      "issue_ids": [],
+      "issue_ids": [
+        "DIAG-SCRIPT-004"
+      ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-DOC-20261004"
+        "EV-ROOT-DOC-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -4899,7 +4905,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "5818cbb09e1b4c07cb30917c6f5fa5859bdac4bf0d6f0003a0ca0a9a6723773c",
+      "content_sha256": "d29242c18e67669938d841647d4b3d046876921b5c2bc2f5f91e01d78454bcd9",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4912,7 +4918,8 @@
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-DOC-20261004"
+        "EV-ROOT-DOC-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -4930,7 +4937,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "bc313cb269a63f8733ea687ddb34ac7d4d58f78a1ba1eeae94ac78c5520d122f",
+      "content_sha256": "05b39f0ab4faf58662c18f44ef421abf8ca019a49b2689991b59883870d2bf90",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4942,7 +4949,8 @@
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-DOC-20261004"
+        "EV-ROOT-DOC-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -5013,7 +5021,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "25c86d14ecaa91a065145010184985fc1a1e93845a2afa73566c55a8380a5da3",
+      "content_sha256": "4bc90df50d02caafbebaf65da671df6e7293d8cc3b2c95f954ddec4193330862",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5113,7 +5121,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "e96d6ac4bbf3ccdb1bc6a201c2e7638daaa07a34f0091fc32539a9952e3eedca",
+      "content_sha256": "9946922740550d411d31c7227d0420b6431011c04acce7c90c5bdd8e4c8d30d2",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5172,7 +5180,8 @@
         "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016",
         "EV-B02-BASE003-FAULT-RECOVERY-20261016",
         "EV-B02-CORE020-023-TWO-PROCESS-20261016",
-        "EV-B02-CORE020-OPS-CLEAR-20261016"
+        "EV-B02-CORE020-OPS-CLEAR-20261016",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -10994,7 +11003,7 @@
       "role": "公共脚本与脚本验证",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8fa0f7c7f1a51c6afb83b19455e488454ed9177a5935061c679e7c6a1a517e3c",
+      "content_sha256": "ba97f655f06a8fd2f937955e8af799a57d381ec4376c1c53e3f55f3a11d4cc77",
       "reviewed_rules": [
         "04§4",
         "04§12",
@@ -11005,7 +11014,8 @@
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-STATIC-20261004"
+        "EV-ROOT-STATIC-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11023,7 +11033,7 @@
       "role": "公共脚本与脚本验证",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "76c9131888fbd11d0a623bc510af8dc5d067a6db0cf72d214a94a9604c340d50",
+      "content_sha256": "fd8721aefaf7a6d0d76e49c8474aebee5f375dc94bbea7ced36713049156fe5f",
       "reviewed_rules": [
         "04§4",
         "04§12",
@@ -11034,7 +11044,8 @@
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-STATIC-20261004"
+        "EV-ROOT-STATIC-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11052,7 +11063,7 @@
       "role": "公共脚本与脚本验证",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "af30da755c13c8629149a2f459d52a1cc3d6cede59a45d7903293465732f6f3b",
+      "content_sha256": "955c3645beca03712d25011aaa97678dbf2564a4d3cb2c7e1b83b09a524977d5",
       "reviewed_rules": [
         "04§4",
         "04§12",
@@ -11064,7 +11075,8 @@
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-STATIC-20261004"
+        "EV-ROOT-STATIC-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11082,18 +11094,20 @@
       "role": "公共脚本与脚本验证",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "d7d081e9d38f6d64103102058fcdf8ff1a2a4d42218d65e9df1a2acf0eb7fa65",
+      "content_sha256": "fdbf43190354f3f99b6a0b6e4edac8a06bc301ab87413ad48190501803b63dde",
       "reviewed_rules": [
         "04§4",
         "04§12",
         "04§13"
       ],
       "issue_ids": [
-        "DIAG-SCRIPT-003"
+        "DIAG-SCRIPT-003",
+        "DIAG-SCRIPT-004"
       ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-STATIC-20261004"
+        "EV-ROOT-STATIC-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11136,16 +11150,19 @@
       "role": "公共脚本与脚本验证",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8862f5039ee73e2dfe79db49dc2851bffd570768b70223e4a6c6c8e71acde44b",
+      "content_sha256": "35ad4c28c286fd8fe5c2937c058a188668dd77a7f3c92e730ed09d62c9fc94de",
       "reviewed_rules": [
         "04§4",
         "04§12",
         "04§13"
       ],
-      "issue_ids": [],
+      "issue_ids": [
+        "DIAG-SCRIPT-002"
+      ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-STATIC-20261004"
+        "EV-ROOT-STATIC-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -19492,16 +19509,19 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8022dc6537c4ac3b39e57b46c8b7afc58b4ee22e15dd4bf3fa71c92af439ca6f",
+      "content_sha256": "ed226a6e9808a31812936b765dc440d25af7099b54daa7b1fa518a7777ed32ed",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
       ],
-      "issue_ids": [],
+      "issue_ids": [
+        "DIAG-SCRIPT-004"
+      ],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
         "EV-BASE-001",
-        "EV-B02-BASE008-OA-HTTP-20261012"
+        "EV-B02-BASE008-OA-HTTP-20261012",
+        "EV-SCRIPT-B01-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -19513,6 +19533,61 @@
       ],
       "review_kind": "source_responsibility_and_failure_path_review",
       "impact_ids": []
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/core/RegionImportDatabaseGuard.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "3df85d2739a00e89432bbce7b0c63497ebc1482b82749614fb9d92c348702691",
+      "reviewed_rules": [
+        "04 §4 数据与路径隔离",
+        "04 §12 脚本与导入安全边界",
+        "04 §13 真实依赖与门禁"
+      ],
+      "issue_ids": [
+        "DIAG-SCRIPT-004"
+      ],
+      "evidence_ids": [
+        "EV-SCRIPT-B01-20261016"
+      ],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "行政区划导入目标库守卫：从数据源 URL 解析数据库名并要求命中 SPECTRA_REGION_IMPORT_ALLOWED_DATABASES，未配置或不允许时在连接前失败。",
+      "review_limits": [
+        "仅校验目标库允许列表，不执行真实 66.5 万行导入。"
+      ],
+      "review_kind": "source_responsibility_and_failure_path_review",
+      "impact_ids": [
+        "IMP-SCRIPTS-001"
+      ]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/core/RegionImportDatabaseGuardTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "be36237bb7efbfc5954233d60c503e28c139e43c0787c71bfbea0ecb9ab012ae",
+      "reviewed_rules": [
+        "04 §4 数据与路径隔离",
+        "04 §13 真实依赖与门禁"
+      ],
+      "issue_ids": [
+        "DIAG-SCRIPT-004"
+      ],
+      "evidence_ids": [
+        "EV-SCRIPT-B01-20261016"
+      ],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "隔离库守卫单元测试：允许库通过、带参数 URL 解析、缺失允许列表拒绝、非允许库拒绝、缺失 URL 拒绝。",
+      "review_limits": [
+        "纯单元测试；不连接真实数据库。"
+      ],
+      "review_kind": "test_fixture_review",
+      "impact_ids": [
+        "IMP-SCRIPTS-001"
+      ]
     },
     {
       "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/BuiltinRoleAuthorizationDefaultsTest.java",
@@ -63786,11 +63861,12 @@
       "impact": "同步与fixture测试可能选择未管理Python/Node/pnpm，不能保证项目版本和隔离环境一致。",
       "priority": "P2",
       "disposition": "入口固定根.venv并声明创建方式；网站构建在目标项目使用mise且保持退出状态。",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-ROOT-STATIC-20261004",
-        "EV-SCRIPT-FIXTURE-20261004"
+        "EV-SCRIPT-FIXTURE-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "impact_ids": [
         "IMP-SCRIPTS-001"
@@ -63820,10 +63896,11 @@
       "impact": "受污染/损坏的旧清单可以引导Apply删除网站根外或受控生成区外文件，且备份/回滚不覆盖该文件；当前文档“所有路径校验/博客永不删除”承诺过强。",
       "priority": "P1",
       "disposition": "在规划前验证旧清单结构、规范化绝对路径、受控根及博客边界；生成、复制、清理和回滚采用同一范围判定，补隔离失败/重复测试。",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-SCRIPT-BOUNDARY-20261004"
+        "EV-SCRIPT-BOUNDARY-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "impact_ids": [
         "IMP-SCRIPTS-001"
@@ -63877,10 +63954,11 @@
       "impact": "误用普通应用数据源可产生真实行政区划写入/部分导入；文档“只写明确指定隔离库”无法由程序保证。未执行真实导入。",
       "priority": "P1",
       "disposition": "明确隔离数据库输入与拒绝默认/生产目标的校验，规定重复执行/部分失败恢复；fixture只验证入口不连接业务库。",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-ROOT-STATIC-20261004"
+        "EV-ROOT-STATIC-20261004",
+        "EV-SCRIPT-B01-20261016"
       ],
       "impact_ids": [
         "IMP-SCRIPTS-001"
@@ -67409,15 +67487,16 @@
         "补旧清单越界/博客变体/构建失败回滚的隔离测试并同步说明",
         "根代理脚本发现认领，导入命令目标guard、事务/分批中断恢复、全部区域资源一致性验收。"
       ],
-      "deferred_boundary": "真实业务数据导入和网站发布不在本次诊断执行范围；任何后续验证继续用隔离fixture。",
-      "state": "pending",
+      "deferred_boundary": "真实业务数据导入和网站发布不在本次诊断执行范围；任何后续验证继续用隔离fixture。2026-10-16 已修复 launcher、受控删除范围与导入 allow-list，并以隔离 fixture 行为测试与守卫单测收口；完整 66.5 万行真实导入本身仍未在本轮执行。",
+      "state": "resolved",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
         "EV-ROOT-STATIC-20261004",
         "EV-SCRIPT-FIXTURE-20261004",
         "EV-SCRIPT-BOUNDARY-20261004",
         "EV-IMPORT-MOCK-20261004",
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-SCRIPT-B01-20261016"
       ],
       "verification": [
         "非法目标在连接前拒绝",
@@ -72212,8 +72291,33 @@
       "limits": [
         "failed指路径安全断言未满足，程序实际退出0并产生越界删除候选；删除代码风险由静态读取确认，未实施删除来证明危害。",
         "检查执行状态与工程符合性分别记录；静态读取、工具版本及现有小范围测试不证明完整行为验收。",
-        ".temp产物是本机辅助；正式台账保留观察结果、当前输入范围与执行边界，不依赖临时产物长期存在。"
-      ]
+          ".temp产物是本机辅助；正式台账保留观察结果、当前输入范围与执行边界，不依赖临时产物长期存在。"
+        ]
+      },
+    {
+      "id": "EV-SCRIPT-B01-20261016",
+      "scope": "B01 同步入口/受控删除范围与行政区划导入 allow-list 修复及隔离行为测试",
+      "command_or_scenario": [
+        "workspace: pwsh -NoProfile -File scripts/tests/import-regions.tests.ps1 -> 退出 0；含 allow-list 缺失时连接前返回 1 且不调用 mise，native 替身失败保留退出码并恢复环境与位置",
+        "workspace: pwsh -NoProfile -File scripts/tests/sync-website-docs.tests.ps1 -> 退出 0；Preview 不写 website、Apply/prune 生效、重复 Apply 幂等、受污染旧清单越界删除候选 fail-closed、目标父路径异常时回滚并保留博客",
+        "workspace: pwsh -NoProfile -File scripts/tests/{open-source-docs,module-boundaries,governance-exceptions,complexity-calibration}.tests.ps1 -> 均退出 0，无回归",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=RegionImportDatabaseGuardTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.groups.exclude=' test -> 退出 0；允许库通过、带参数 URL 解析、缺失 allow-list/非允许库/缺失 URL 均拒绝"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise；脚本测试在系统临时目录fixture内运行，未连接业务库、未 Apply 真实网站；Java 守卫单测纯单元执行。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "sync-website-docs 入口固定根 .venv 并经 mise 构建；旧清单删除候选解析并核对受控生成根，越界/博客/非法结构 fail-closed；import-regions 要求 SPECTRA_REGION_IMPORT_ALLOWED_DATABASES 且 RegionImportDatabaseGuard 按实际库名在连接前校验。BEH-IMP-SCRIPTS-001-1..5 全部通过，脚本回归无变更。",
+      "artifacts": [
+        "scripts/sync-website-docs.ps1",
+        "scripts/sync-website-docs.py",
+        "scripts/import-regions.ps1",
+        "scripts/tests/import-regions.tests.ps1",
+        "scripts/tests/sync-website-docs.tests.ps1",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/core/RegionImportDatabaseGuard.java",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/core/RegionImportDatabaseGuardTest.java",
+        ".temp/b01/b01-region-guard-20261016.log"
+      ],
+      "limits": "完整 66.5 万行真实行政区划导入、资源规模与写入中断恢复未在隔离库执行（BC-BASE-013 维持 partial）；网站 Apply/构建未对真实网站运行；脚本测试依赖本机存在可运行的 Python 与 pwsh。"
     },
     {
       "id": "EV-IMPORT-MOCK-20261004",
@@ -73696,7 +73800,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1588,
+      "included": 1590,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -73722,7 +73826,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1602,
+    "reviewed_included": 1604,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -73776,10 +73880,14 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
-        "issue_ids": []
+        "issue_ids": [
+          "DIAG-SCRIPT-004"
+        ]
       },
       {
         "id": "BEH-IMP-SCRIPTS-001-2",
@@ -73787,10 +73895,14 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
-        "issue_ids": []
+        "issue_ids": [
+          "DIAG-SCRIPT-002"
+        ]
       },
       {
         "id": "BEH-IMP-SCRIPTS-001-3",
@@ -73798,10 +73910,14 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
-        "issue_ids": []
+        "issue_ids": [
+          "DIAG-SCRIPT-002"
+        ]
       },
       {
         "id": "BEH-IMP-SCRIPTS-001-4",
@@ -73809,10 +73925,14 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
-        "issue_ids": []
+        "issue_ids": [
+          "DIAG-SCRIPT-002"
+        ]
       },
       {
         "id": "BEH-IMP-SCRIPTS-001-5",
@@ -73820,10 +73940,14 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
-        "issue_ids": []
+        "issue_ids": [
+          "DIAG-SCRIPT-003"
+        ]
       },
       {
         "id": "BEH-IMP-ENGINEERING-001-1",
@@ -74177,15 +74301,21 @@
       {
         "id": "BC-BASE-013",
         "name": "人工导入",
-        "status": "not_executed",
+        "status": "partially_executed",
         "necessary_acceptance": "导入DB allow-list与参数只取隔离环境、失败中断恢复、资源规模；5JSON结构检查不能代表行政版本和DB导入成功。",
-        "boundary": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
+        "boundary": "2026-10-16 已实现导入数据库 allow-list：脚本在连接前要求 SPECTRA_REGION_IMPORT_ALLOWED_DATABASES，RegionImportDatabaseGuard 在导入上下文启动时按实际数据源库名校验，未配置或不允许即失败；RegionServiceTest 仍拒绝非空库重复导入。完整 66.5 万行真实导入、资源规模与中断恢复在本轮未执行，需隔离库与完整 schema。",
         "scenario": "导入DB allow-list与参数只取隔离环境、失败中断恢复、资源规模；5JSON结构检查不能代表行政版本和DB导入成功。",
-        "state": "not_run",
-        "issue_ids": [],
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。"
+        "state": "partially_executed",
+        "issue_ids": [
+          "DIAG-SCRIPT-004"
+        ],
+        "impact_ids": [
+          "IMP-SCRIPTS-001"
+        ],
+        "evidence_ids": [
+          "EV-SCRIPT-B01-20261016"
+        ],
+        "required_environment": "allow-list 脚本门与 Java 守卫已用隔离 fixture/单元测试验证；完整真实导入仍需隔离库与完整 schema，未执行。"
       },
       {
         "id": "BC-BASE-014",
