@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "2b0011a4e9f21aa0e5c24252b3479c4135f54510880cef41fe667e0a8a38cae4",
+      "content_sha256": "4654a57beca4df62a3b652e959380a192db53fd4aded2d896fb7e54ff998855d",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -12214,6 +12214,22 @@
       "impact_state": null,
       "review_summary": "异步校验创建资产时，createdBy/updatedBy 等于会话 ownerUserId，不依赖空安全上下文。",
       "review_limits": ["单元测试，未走真实对象存储。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-CORE-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/FileAssetReferenceAuthorizationTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "888428c6c6b02be7cd3c972be322e4c163cbaf6e88b802838163936b0bea71a4",
+      "reviewed_rules": ["04§7", "04§10", "04§13"],
+      "issue_ids": ["DIAG-CORE-007"],
+      "evidence_ids": ["EV-B05-REF-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "创建者可引用；持有引用该资产的就绪会话的上传者可引用去重资产；无关操作者与缺失操作者均被拒绝。",
+      "review_limits": ["单元测试，未走真实 HTTP。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-CORE-003"]
     },
@@ -38640,7 +38656,7 @@
       "role": "后端 spectra-core / mapper",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "2a4be445b6a8954bf9224231dc6f11577b2b027388bf6dfc5a51852d9dd0c636",
+      "content_sha256": "a906a7a4453b056cb185a6af788c1f95f40a8e3ad7147e981078149425bf6a8e",
       "reviewed_rules": [
         "04§4",
         "04§5",
@@ -38817,7 +38833,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "183c8236d685a4bbb43272f05abf52a52b255c83a99ec1ef48d3991f975c284c",
+      "content_sha256": "54f667a58475fc73aa8ffff68365705ce4c30e4710906c75738b0ac99fca7610",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -38891,7 +38907,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "49a3ffee6f2a0ecd3066767aa6c85701d0359fd04c0f0a74556b9c7397bd5bcb",
+      "content_sha256": "6f9a9bbf9cfaaf7539219f113e699de7d3381c022cfbc6057f5c1ab678913be1",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -43266,7 +43282,7 @@
       "role": "后端资源、运行配置或映射输入",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f0517f6404b81011785b66d9e9aee502340b27cc59efd33c96e8ef5b9442d704",
+      "content_sha256": "b9482c7971a29bb9ba127c12c0e6071905c10ae795806989f7f67ecb8d2c219a",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -66737,13 +66753,14 @@
         }
       ],
       "finding": "requireReadyForReference忽略operatorId，仅requireAsset READY；register仅验证目标业务可读并传null调用该资产入口。没有确认操作者对原资产的授权。",
-      "impact": "已知他人READY assetId可挂到自身可读业务继而下载；OA文档/合同/报销附件均受公共端口影响。",
+      "impact": "已知他人READY assetId可挂到自身可读业务继而下载；OA文档/合同/报销附件均受公共端口影响。2026-10-16 requireReadyForReference 改为校验操作者为资产创建者或持有引用该资产的就绪上传会话，register 传入当前用户（EV-B05-REF-20261016）。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B05-REF-20261016"
       ],
       "supporting_locations": [
         {
@@ -73773,6 +73790,26 @@
       "limits": "未走真实对象存储与异步线程池端到端。"
     },
     {
+      "id": "EV-B05-REF-20261016",
+      "scope": "B05 DIAG-CORE-007 引用资产操作者授权",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=FileAssetReferenceAuthorizationTest' test -> 退出 0，4/4；创建者/就绪会话所有者允许，无关与缺失操作者拒绝",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "requireReadyForReference 校验操作者为资产创建者或持有引用该资产的 READY 上传会话；register 改传当前用户，不再传 null。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/FileAssetApplicationService.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/FileReferenceApplicationService.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/resources/mapper/upload/FileUploadSessionMapper.xml",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/FileAssetReferenceAuthorizationTest.java",
+        ".temp/b05/b05-ref-test.log"
+      ],
+      "limits": "未走真实 HTTP；管理员是否应额外放行未定义。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75253,7 +75290,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1634,
+      "included": 1635,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -75279,7 +75316,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1648,
+    "reviewed_included": 1649,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
