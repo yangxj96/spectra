@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "0e497e8783ba1f56fd581b7078f4f5d28f661e75a5ff699b7f9aa0560b7f71d2",
+      "content_sha256": "96924daf464fc0286f7c5fcde72cd9fa9947c0c9bfda462c0dc3d1f7cbb66582",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "07cebfc054fd31d8b239c2bc31f367be232bb78f9cfca55ccf0b8b01308537ff",
+      "content_sha256": "f0e4f82996583512316acface0e4aac99b5aea72e181238355e8f5b1aea8fd63",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5191,7 +5191,8 @@
         "EV-B03-DBOUTAGE-20261016",
         "EV-B03-CONSISTENCY-20261016",
         "EV-B03-KEYGEN-20261016",
-        "EV-B03-RANGE-20261016"
+        "EV-B03-RANGE-20261016",
+        "EV-B03-ERRORCODE-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11874,6 +11875,38 @@
       "impact_ids": ["IMP-ADDITIONAL-002"]
     },
     {
+      "path": "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/web/response/WebErrorCode.java",
+      "role": "稳定对外错误码",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "da850f3d2eb336e8953434ea942d0f0d192d8dabe3c51a21b56776baeb22709c",
+      "reviewed_rules": ["04§5", "04§13"],
+      "issue_ids": ["DIAG-BASE-010"],
+      "evidence_ids": ["EV-B03-ERRORCODE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "统一失败响应 error_code 枚举：请求/认证/业务/基础设施/持久化等稳定取值，成功响应不设置。",
+      "review_limits": ["枚举需与解析器和各 Advice 保持一致。"],
+      "review_kind": "source_responsibility_and_failure_path_review",
+      "impact_ids": ["IMP-BASE-001"]
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/web/advice/exception/ExceptionResponseResolverTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "68ee9d5ade52b36dad209815cf7cb578e1a68ea8bf6c9ecf3a510a86494a0b9c",
+      "reviewed_rules": ["04§5", "04§13"],
+      "issue_ids": ["DIAG-BASE-010"],
+      "evidence_ids": ["EV-B03-ERRORCODE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "断言异常→状态+错误码：404 DATA_NOT_FOUND、409 DATA_EXIST/ENTITY_UPDATE_CONFLICT/BUSINESS_CONFLICT、400 BUSINESS_RULE_VIOLATION、503 SECURITY_REDIS/SECRET、403 ACCESS_DENIED、401 AUTHENTICATION_FAILED、500 INTERNAL_ERROR（含堆栈策略）。",
+      "review_limits": ["单元层级，未覆盖全部异常类型。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-001"]
+    },
+    {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
       "role": "工程说明与规则入口",
       "scope": "included",
@@ -16821,7 +16854,7 @@
       "role": "后端 spectra-framework / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "dd66789f80aea4ca30353ea21338d2b4b5bac29a0eaed60b236e24ac05f52735",
+      "content_sha256": "9856ef698558aea698a8c0abba85b20b1b40dd46cfa760905201a0bb299e502c",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -16908,7 +16941,7 @@
       "role": "后端 spectra-framework / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "eea54a1b81a9e2f49989d20b590fd6359c81d68380424b34e10298005e4726e1",
+      "content_sha256": "70ddea2c117af80efd88b9eb8a06956d8d4de1fee8361b40ad75ca42db04d698",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -18696,7 +18729,7 @@
       "role": "后端 spectra-framework / exception",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "0006fdad9efa49e26bb3da97ed3bc753320daff25b3ddf1119bb572c56e35e9a",
+      "content_sha256": "0c94c07e626a74d47d741d391325efa60527bb6b655a02c7aec8bee5a3f7cf2b",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -18723,7 +18756,7 @@
       "role": "后端 spectra-framework / exception",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f315389f901e66fc44b58df605bf1eccd57c3c15883f7a465a004ef9a8747a98",
+      "content_sha256": "f4840dd077396de79b5e18afa932502507fbc93421489b1c9360e3ef0d7c45f6",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -18756,7 +18789,7 @@
       "role": "后端 spectra-framework / exception",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1a54be9f65ea86bb42fe8164fe0d14004c7aa7b3d14295af0d53d42fb5aba6df",
+      "content_sha256": "f0b227689dbd020b504e57c8127147c4ed201679637bb5ce668e62ad8c17c8ae",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -18782,7 +18815,7 @@
       "role": "后端 spectra-framework / exception",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "e184e25dcd8b682d6cccfc7d4eb175f5b472ebfd1429ef30f78864fc0b7f1725",
+      "content_sha256": "e2e49a2643c3de7502c52dcf47b35e42a05d5fcb02faa0bb5e08c32b91af8f8c",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -18975,7 +19008,7 @@
       "role": "后端 spectra-framework / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "a5e0c6170abd7ba80c9383c224b0d4460c3e592190c153fd714f1044109001c5",
+      "content_sha256": "a4e537f0d70e80deabbde2902c67fe94248bbf7adb253aa3b20e498fbb6f2bd2",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -37251,7 +37284,7 @@
       "role": "后端 spectra-core / controller",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8655b3469a7f9a6af8de38f509fc29ff87b9ddf275409effe1f3f0fa813590c8",
+      "content_sha256": "e534320d2fb7ee99991eeed90b633023f4a94bf502bf44110c53e6f5f556d5c3",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -58506,7 +58539,7 @@
       "role": "Web plugin 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "cd39e9da8aa3b96f21e49d98ed13a9b136fe14553378c7c7a036f083dc1be366",
+      "content_sha256": "4248342a98ad84055bd77ba1f377546cb6e95c37c39957b2e2aaa1390074a39c",
       "reviewed_rules": [
         "§5 错误/协议",
         "§8 身份缓存/副作用",
@@ -58535,7 +58568,7 @@
       "role": "Web plugin 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "6850559e89028b74bf285b8f45f5825024180db7e26dd3e0877b5d5f590497b0",
+      "content_sha256": "24c61efade17a2ce4f638a4dcaa3f7904aecb9c4999e8eccc8442958cffaeba6",
       "reviewed_rules": [
         "§5 错误/协议",
         "§8 身份缓存/副作用",
@@ -58591,7 +58624,7 @@
       "role": "Web plugin 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "086aed7f5949352593c34f8cbc8fa9561ee4abda0e93787853b61fe46f104e78",
+      "content_sha256": "cce20a89af8b187db75c2cb13fd6ab98b2986930fa716a127ae1320d1f1f9fb4",
       "reviewed_rules": [
         "§5 错误/协议",
         "§8 身份缓存/副作用",
@@ -63289,7 +63322,7 @@
       "role": "Web http.d.ts 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "58644fc3329c3cc4b6e3f26afb7a0c7855972c87900ec39791ab917c407c68ed",
+      "content_sha256": "ca46b1764447724349c5293c6c03b51cca509e55c1cd5abd3bf631d9bcdbe1eb",
       "reviewed_rules": [
         "§5 JSON名称/可省略类型",
         "§6 时间",
@@ -64840,14 +64873,15 @@
         }
       ],
       "finding": "响应只有code/msg/data，没有Java errorCode/JSON error_code；部分错误码塞入msg；EntityUpdateException通用分支500，完整性异常默认500，filter sendError另一路径。",
-      "impact": "Web目前按msg前缀解释，无法稳定识别DOMAIN_REASON；版本冲突409与统一安全/基础设施错误协议尚未落实。",
-      "priority": "P2",
-      "disposition": "required_fix",
-      "state": "pending",
-      "exception_ids": [],
-      "evidence_ids": [
-        "EV-BASE-001"
-      ],
+  "impact": "Web目前按msg前缀解释，无法稳定识别DOMAIN_REASON；版本冲突409与统一安全/基础设施错误协议尚未落实。2026-10-16 已补 R.error_code 与 WebErrorCode，解析器/各 Advice 写入稳定错误码，EntityUpdateException 与完整性/重复键转 409，调度/Redis 转 503，filter 503 改统一响应；Web 客户端改为读取 error_code 并删除 msg 前缀解析（EV-B03-ERRORCODE-20261016）。",
+  "priority": "P2",
+  "disposition": "required_fix",
+  "state": "resolved",
+  "exception_ids": [],
+  "evidence_ids": [
+    "EV-BASE-001",
+    "EV-B03-ERRORCODE-20261016"
+  ],
       "supporting_locations": [
         {
           "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/controller/FileUploadExceptionAdvice.java",
@@ -68014,7 +68048,7 @@
       "required_changes": [
         "Core改密/敏感From/审计保存与Web错误解释同步；暂缓OA/Workflow审计输入和统一响应也需消费回归。"
       ],
-      "deferred_boundary": "OA/Workflow 共用 @Audit，Web 沿用既有审计字段；2026-10-16 改密入口已完成正式 sys_audit_event 写入与脱敏验证，OA/Workflow 逐入口真实 HTTP 回归仍待完成。DIAG-BASE-010 的稳定错误码另行治理。",
+      "deferred_boundary": "OA/Workflow 共用 @Audit，Web 沿用既有审计字段；2026-10-16 改密入口已完成正式 sys_audit_event 写入与脱敏验证，OA/Workflow 逐入口真实 HTTP 回归仍待完成。DIAG-BASE-010 稳定错误码已完成（EV-B03-ERRORCODE-20261016）。",
       "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
@@ -68022,7 +68056,8 @@
         "EV-B02-DEPS-PORTS-20261010",
         "EV-B02-BASE001-20261011",
         "EV-B02-BASE001-GATES-20261011",
-        "EV-B02-BASE005-HTTP-20261016"
+        "EV-B02-BASE005-HTTP-20261016",
+        "EV-B03-ERRORCODE-20261016"
       ],
       "verification": [
         "合成 PostgreSQL 的切面、嵌套快照、reason、事务与日志专项通过；Framework 校验日志和审计存储 503 单元测试通过；OA/Workflow 编译，Web 调用字段形状已核对；改密正式 HTTP 写入正式 sys_audit_event 并脱敏通过。"
@@ -72915,6 +72950,37 @@
       "limits": "start 越界与数值解析异常的独立 416 契约未实现，依赖 DIAG-BASE-010 错误码/状态协议；DIAG-ADDITIONAL-002 维持 in_progress。"
     },
     {
+      "id": "EV-B03-ERRORCODE-20261016",
+      "scope": "B03 DIAG-BASE-010 统一稳定错误码与 HTTP 语义（后端 + Web 消费迁移）",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=ExceptionResponseResolverTest' test -> 退出 0，10/10；异常→状态+error_code 映射稳定",
+        "spectra-admin: '-pl spectra-framework -am -Dspectra.test.real-deps=true clean test' -> BUILD SUCCESS，框架全量测试通过",
+        "spectra-admin: '-pl spectra-launch -Dtest=RootGovernanceFullHttpTest -Dspectra.test.real-deps=true test'（空库+清空 Redis DB5）-> BUILD SUCCESS，1/1",
+        "spectra-admin: '-DskipTests -Dspotless.ratchetFrom=NONE verify' -> BUILD SUCCESS；Spotless/Checkstyle/PMD/SpotBugs 通过",
+        "spectra-ui: 'pnpm run type-check'、'pnpm run test'（8 文件 20 用例）、eslint 与 prettier 检查 -> 全部通过"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；隔离测试库 devops00_spectra_db_test（空库重建）、Redis DB5 清理；Node/pnpm 由 mise 管理；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "R 新增 error_code（snake_case、NON_NULL 隐藏）与 WebErrorCode；解析器与 Advice 为各异常写入稳定错误码，EntityUpdateException→409、数据完整性/重复键→409、调度/Redis→503；TokenAuthenticationFilter 的 503 改走统一响应；Web 客户端改为读取 error_code，删除按 msg 前缀解析的兼容逻辑。",
+      "artifacts": [
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/web/response/R.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/web/response/WebErrorCode.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/web/advice/exception/ExceptionResponseResolver.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/web/advice/exception/CommonExceptionAdvice.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/web/advice/exception/SqlExceptionAdvice.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/security/authentication/TokenAuthenticationFilter.java",
+        "spectra-ui/src/plugin/request/error.ts",
+        "spectra-ui/src/plugin/request/fetch-client.ts",
+        "spectra-ui/src/plugin/request/xhr-client.ts",
+        "spectra-ui/types/http.d.ts",
+        ".temp/b03/b03-errorcode-20261016.log",
+        ".temp/b03/b03-errorcode-framework-full.log",
+        ".temp/b03/b03-errorcode-launch-test.log"
+      ],
+      "limits": "416 Range 契约仍待 DIAG-ADDITIONAL-002 收口；全量 launch 测试在共享库连续运行会出现 RootGovernance 期望空库的状态污染（单类空库运行通过），非本变更引入；未新增 OpenAPI 漂移检查。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74395,7 +74461,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1614,
+      "included": 1616,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74421,7 +74487,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1628,
+    "reviewed_included": 1630,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
