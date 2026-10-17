@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "64e7c4e3c21220927b2dcebc3f1bcc71d241ca6be7f8dc1ffeef6e9000737452",
+      "content_sha256": "42176e106f286769ece8c4d08f6e53684834687b027faf01db734ca2775c2dd3",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -12246,6 +12246,22 @@
       "impact_state": null,
       "review_summary": "LOCAL 会话写入的 providerUploadId 与会话 id 一致；分片目标地址使用该标识并指向可解析的上传入口。",
       "review_limits": ["未启动真实 HTTP 服务；S3 直传路径未覆盖。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-CORE-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/UploadVerificationRecoveryServiceTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "45ff886f68935932d02dff19e2a2ff8e99d8078de987c67dc4816f0b63d414c6",
+      "reviewed_rules": ["04§7", "04§10", "04§13"],
+      "issue_ids": ["DIAG-CORE-005"],
+      "evidence_ids": ["EV-B05-RECOVERY-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "过期校验会话逐条重新投递并统计；无候选时不投递。",
+      "review_limits": ["未覆盖线程池拒绝路径。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-CORE-003"]
     },
@@ -25231,7 +25247,7 @@
       "role": "后端 spectra-core / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4a5d4b407f7065b516090933203fafe07228fb2db8aadefae97cbaf71fb38d0d",
+      "content_sha256": "409bda782880ab2cc5dec9c3a7c0c449c90707e1edf8cf2e76364c8c9559cec1",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -38556,6 +38572,38 @@
       "impact_ids": []
     },
     {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/job/FileUploadVerificationRecoveryQuartzJob.java",
+      "role": "后端 spectra-core / 公共契约或内部实现",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "d250dd66a053adb98f2aedb3bd0448152ff15bf0a93fe999cb5f888aea60b0df",
+      "reviewed_rules": ["04§2", "04§7", "04§13", "05§1"],
+      "issue_ids": ["DIAG-CORE-005"],
+      "evidence_ids": ["EV-B05-RECOVERY-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "每分钟扫描心跳过期的 VERIFYING 会话并重新投递；禁止同 JobKey 并发，结果仅返回投递数量。",
+      "review_limits": ["未在真实 Quartz 集群中验证多节点抢领。"],
+      "review_kind": "source_responsibility_and_failure_path_review",
+      "impact_ids": ["IMP-CORE-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/UploadVerificationRecoveryService.java",
+      "role": "后端 spectra-core / 公共契约或内部实现",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "efa58979b4942fd8fcfe53a29916dcc79f58e981d22433b2b0967ff8742d1933",
+      "reviewed_rules": ["04§7", "04§10", "04§13"],
+      "issue_ids": ["DIAG-CORE-005"],
+      "evidence_ids": ["EV-B05-RECOVERY-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "以 updated_at 心跳和 10 分钟租约领取过期校验会话，逐条提交线程池并统计成功投递；投递失败仅记录等待下一轮。",
+      "review_limits": ["线程池拒绝路径仅单测模拟；未做真实重启恢复。"],
+      "review_kind": "source_responsibility_and_failure_path_review",
+      "impact_ids": ["IMP-CORE-003"]
+    },
+    {
       "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/mapper/FileAssetMapper.java",
       "role": "后端 spectra-core / mapper",
       "scope": "included",
@@ -38672,7 +38720,7 @@
       "role": "后端 spectra-core / mapper",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "a906a7a4453b056cb185a6af788c1f95f40a8e3ad7147e981078149425bf6a8e",
+      "content_sha256": "60ca51b1fd7b196d46edee4bf7e5a8402cd5c3330e6d0f3ea7d747dba75c6db1",
       "reviewed_rules": [
         "04§4",
         "04§5",
@@ -39103,7 +39151,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "5c659cbbc38ac4ec5f4157b5eee89e6bef9f3cad5a504375dedb2bf48e09a6e5",
+      "content_sha256": "963f746538864a9d588722cb0e47136438a49c1486c48079694ba831a546451a",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -43298,7 +43346,7 @@
       "role": "后端资源、运行配置或映射输入",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b9482c7971a29bb9ba127c12c0e6071905c10ae795806989f7f67ecb8d2c219a",
+      "content_sha256": "4c0e925f66561c4b7cde85c00fd0efdd1851927379c0591d9915247f73e8093d",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -66705,13 +66753,14 @@
         }
       ],
       "finding": "afterCommit仅向内存线程池execute；拒绝/进程退出后VERIFYING没有持久重领扫描。再次complete对VERIFYING返回verificationClaimed=false，不再调度，最终由TTL清理而非恢复。",
-      "impact": "正常受理上传无法兑现校验结果，多实例/重启丢任务；必须持久意图、领取、租约和分类恢复。",
+      "impact": "正常受理上传无法兑现校验结果，多实例/重启丢任务；必须持久意图、领取、租约和分类恢复。2026-10-16 新增 file.upload.verification-recovery 作业，按心跳与租约持久重领并重新投递（EV-B05-RECOVERY-20261016）。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B05-RECOVERY-20261016"
       ],
       "supporting_locations": [
         {
@@ -73846,6 +73895,27 @@
       "limits": "未启动真实 HTTP 服务；S3 预签名直传路径未覆盖。"
     },
     {
+      "id": "EV-B05-RECOVERY-20261016",
+      "scope": "B05 DIAG-CORE-005 校验任务持久重领",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=UploadVerificationRecoveryServiceTest' test -> 退出 0，2/2；过期会话重新投递，无候选不投递",
+        "spectra-admin: 核心模块全量测试（排除 RootGovernancePostgresTest）-> BUILD SUCCESS",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "新增 file.upload.verification-recovery 内置作业，每分钟按 updated_at 心跳和 10 分钟租约重领 VERIFYING 会话并重新投递；SKIP LOCKED 避免阻塞运行中的校验。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/UploadVerificationRecoveryService.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/job/FileUploadVerificationRecoveryQuartzJob.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/resources/mapper/upload/FileUploadSessionMapper.xml",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/quartz/configuration/CoreQuartzJobDefinitionConfiguration.java",
+        ".temp/b05/b05-recovery-test.log"
+      ],
+      "limits": "未在真实 Quartz 集群与进程重启场景验证；线程池拒绝路径仅代码审查。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75326,7 +75396,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1636,
+      "included": 1639,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -75352,7 +75422,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1650,
+    "reviewed_included": 1653,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
