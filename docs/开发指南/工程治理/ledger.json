@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "96924daf464fc0286f7c5fcde72cd9fa9947c0c9bfda462c0dc3d1f7cbb66582",
+      "content_sha256": "9fe7e84f9c0ded269498370e9b5484f980b9d812b51a6cbc9148b722231c99da",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f0e4f82996583512316acface0e4aac99b5aea72e181238355e8f5b1aea8fd63",
+      "content_sha256": "010b3718e22e9ade23d7b8e3fa685c1925271cbc1774fe1c392faf9a0a3c17ec",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5192,7 +5192,8 @@
         "EV-B03-CONSISTENCY-20261016",
         "EV-B03-KEYGEN-20261016",
         "EV-B03-RANGE-20261016",
-        "EV-B03-ERRORCODE-20261016"
+        "EV-B03-ERRORCODE-20261016",
+        "EV-B03-RANGE416-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11863,7 +11864,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "a849a10c95a87abed7205b1ae14b15338eec59ba64b9a48edacd616b7f348f98",
+      "content_sha256": "8c6d2c2aeeff86a11410fc9d6d13e1746823a1dd0f70b14dd52cdbc79d817a4e",
       "reviewed_rules": ["04§5", "04§13"],
       "issue_ids": ["DIAG-ADDITIONAL-002"],
       "evidence_ids": ["EV-B03-RANGE-20261016"],
@@ -11905,6 +11906,38 @@
       "review_limits": ["单元层级，未覆盖全部异常类型。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-BASE-001"]
+    },
+    {
+      "path": "spectra-admin/spectra-common/src/main/java/com/devops00/spectra/common/port/file/FileRangeNotSatisfiableException.java",
+      "role": "范围不可满足契约",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "1f9eb74dafe27abeefefcf0a70b7b7d39c1ef7be076d1f47cb47b233a5c6f8f0",
+      "reviewed_rules": ["04§5", "04§13"],
+      "issue_ids": ["DIAG-ADDITIONAL-002"],
+      "evidence_ids": ["EV-B03-RANGE416-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "携带资产总长度（未知为负）的范围不可满足异常，供适配层返回 416 与 Content-Range。",
+      "review_limits": ["仅数据载体。"],
+      "review_kind": "source_responsibility_and_failure_path_review",
+      "impact_ids": ["IMP-ADDITIONAL-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/controller/FileUploadExceptionAdviceTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "b18b06918aa370e676576863154d8702b8a65afa0580f5e570a320082a88f2d9",
+      "reviewed_rules": ["04§5", "04§13"],
+      "issue_ids": ["DIAG-ADDITIONAL-002"],
+      "evidence_ids": ["EV-B03-RANGE416-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "已知总长度→416 且 Content-Range bytes */100 与 error_code FILE_RANGE_NOT_SATISFIABLE；未知总长度省略 Content-Range。",
+      "review_limits": ["单元层级，未启动安全/HTTP 栈。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-ADDITIONAL-002"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -37089,7 +37122,7 @@
       "role": "后端 spectra-core / controller",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "119fdb41760f9d81ca2132bfa32b82dd0c3240cb21475e824d53dab261694cec",
+      "content_sha256": "6cab978f7b12eb5b5818008a77d3295ee6278ef5b5bbc8461ebb11f5d526db9f",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -37284,7 +37317,7 @@
       "role": "后端 spectra-core / controller",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "e534320d2fb7ee99991eeed90b633023f4a94bf502bf44110c53e6f5f556d5c3",
+      "content_sha256": "657dc519f6b9fcdef48a24903188df1919ec57200301a41eb358b56a3d1b1a35",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -38506,7 +38539,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "95453120185a0ba4a821eb95bac77c574b2096e22cfc89b8c862ff8e61694065",
+      "content_sha256": "183c8236d685a4bbb43272f05abf52a52b255c83a99ec1ef48d3991f975c284c",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -67556,7 +67589,7 @@
       ]
     },
     {
-  "state": "in_progress",
+  "state": "resolved",
   "id": "DIAG-ADDITIONAL-002",
       "locations": [
         {
@@ -67569,11 +67602,12 @@
       "exception_ids": [],
   "evidence_ids": [
     "EV-ADDITIONAL-003",
-    "EV-B03-RANGE-20261016"
+    "EV-B03-RANGE-20261016",
+    "EV-B03-RANGE416-20261016"
   ],
   "priority": "P2",
   "disposition": "使用实际provider范围/资产总长度构造响应并明确非法Range的状态，验证LOCAL/S3一致性",
-  "impact": "分段下载/预览看到区间与返回数据矛盾，可能恢复错误；需共用返回范围和总长度信息，不能把请求范围原样当响应范围。2026-10-16 已将 Content-Range 改为按 provider 实际返回字节裁剪（EV-B03-RANGE-20261016）；start 越界与数值解析异常的独立 416 契约仍待实现（依赖 DIAG-BASE-010 状态协议）。",
+  "impact": "分段下载/预览看到区间与返回数据矛盾，可能恢复错误；需共用返回范围和总长度信息，不能把请求范围原样当响应范围。2026-10-16 已将 Content-Range 改为按 provider 实际返回字节裁剪（EV-B03-RANGE-20261016），并补齐 416 契约：语法非法/负值/倒序与 start 越界统一 416、error_code=FILE_RANGE_NOT_SATISFIABLE，已知总长度时附 Content-Range: bytes */total（EV-B03-RANGE416-20261016）。",
   "rule": "04§5实际HTTP二进制范围契约",
       "impact_ids": [
         "IMP-ADDITIONAL-002"
@@ -72981,6 +73015,27 @@
       "limits": "416 Range 契约仍待 DIAG-ADDITIONAL-002 收口；全量 launch 测试在共享库连续运行会出现 RootGovernance 期望空库的状态污染（单类空库运行通过），非本变更引入；未新增 OpenAPI 漂移检查。"
     },
     {
+      "id": "EV-B03-RANGE416-20261016",
+      "scope": "B03 DIAG-ADDITIONAL-002 非法/越界 Range 的 416 契约",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=FileAssetStreamControllerTest,FileUploadExceptionAdviceTest' test -> 退出 0，5/5；语法非法→FileRangeNotSatisfiableException、越界→416+bytes */total、未知总长度省略 Content-Range",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> 退出 0；Spotless/Checkstyle/PMD/SpotBugs 通过（拆解 parse 复杂度、保留异常 cause）"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "非法 Range 语法/负值/倒序统一抛 FileRangeNotSatisfiableException；service 在起点≥资产总长度时携带总长度抛出；Advice 返回 416、error_code=FILE_RANGE_NOT_SATISFIABLE，已知总长度时附 Content-Range: bytes */total。",
+      "artifacts": [
+        "spectra-admin/spectra-common/src/main/java/com/devops00/spectra/common/port/file/FileRangeNotSatisfiableException.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/controller/FileAssetStreamController.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/FileAssetApplicationService.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/controller/FileUploadExceptionAdvice.java",
+        ".temp/b03/b03-range416-20261016.log",
+        ".temp/b03/b03-range416-static-20261016.log"
+      ],
+      "limits": "未验证真实 HTTP/浏览器断点续传；S3 起点越界由 service 预校验覆盖，provider 层未单独断言。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74461,7 +74516,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1616,
+      "included": 1618,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74487,7 +74542,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1630,
+    "reviewed_included": 1632,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
