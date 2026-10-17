@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "d9b2200ed47c671373568b6afac702a52a7d8526c3a5b58dd781575cc6d7c353",
+      "content_sha256": "adc360a3fd05d94c7c3a28e0d2c47d5a20970a443de9c6a23b1cb64daf1308c6",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ae3ff3d32602490fa433689118d47944a962848cba14ec6d2279213d821bfcd4",
+      "content_sha256": "ce3f8ff9d5ac21352d38ca3eea03d3f658dd945c78f69ec2d4eb26458822c34d",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5201,7 +5201,8 @@
         "EV-B03-OFFSET-20261016",
         "EV-B03-CONTACT-20261016",
         "EV-B03-S3-20261016",
-        "EV-B03-RUNTIMEROLE-20261016"
+        "EV-B03-RUNTIMEROLE-20261016",
+        "EV-B03-SCOPE-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -19332,7 +19333,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "07b0d303f4eb0e612b0c7571ef0dc6d381debe00278829292ca23305f3552b6e",
+      "content_sha256": "dc0c5794fd68fecc5d5c5f1e5c0f245c9602ba40213e449ad98f0eef3ce94c61",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -73306,6 +73307,24 @@
       "limits": "未验证 OA/Workflow 默认数据范围 NONE/SELF；未覆盖所有业务写路径与 Quartz 任务实际执行。BC-BASE-010 维持 partially_executed。"
     },
     {
+      "id": "EV-B03-SCOPE-20261016",
+      "scope": "B03 BC-BASE-010 数据范围默认 NONE 与 SELF 断言",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=ScopeSqlPolicyTest' test -> 退出 0，11/11；缺少边界默认 1=0、NONE 1=0、SELF 使用 created_by=当前主体、OA 关系维度保持既有语义",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "补充缺失边界默认 NONE（1=0）与 SELF 使用 ownerColumn 的断言，结合既有 NONE/ALL/RULES 与 OA 关系用例覆盖默认范围语义。",
+      "artifacts": [
+        "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/persistence/scope/authorization/ScopeSqlPolicyTest.java",
+        ".temp/b03/b03-scope.log",
+        ".temp/b03/b03-scope-static.log"
+      ],
+      "limits": "单元级策略验证，未对每个 OA/Workflow 实体逐一做真实 SQL 断言。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75260,11 +75279,11 @@
       {
         "id": "BC-BASE-010",
         "name": "迁移装配",
-        "status": "partially_executed",
+        "status": "passed",
         "necessary_acceptance": "隔离空库和V7→V8 upgrade、重复validate、OA/Workflow相关引用与默认NONE/SELF；最终Flowableupdatefalse和运行角色无DDL。",
-        "boundary": "2026-10-16 在隔离一次性库 devops00_spectra_db_migration_check 上用 Flyway 验证：空库应用 V1–V8（8 个）并重复 validate 通过；V7→V8 升级仅应用 V8、最终 8 个且末位为 V8；结束删除临时库。Flowable 最终 update=false 由 WorkflowConfiguration 改为跟随配置（缺省 false）覆盖。2026-10-16 以超级用户迁移后创建无 DDL 运行角色，应用成功启动并返回 401，角色执行 CREATE TABLE 被拒（EV-B03-RUNTIMEROLE-20261016）。OA/Workflow 默认 NONE/SELF 数据仍未单独断言。",
+        "boundary": "2026-10-16 在隔离一次性库 devops00_spectra_db_migration_check 上用 Flyway 验证：空库应用 V1–V8（8 个）并重复 validate 通过；V7→V8 升级仅应用 V8、最终 8 个且末位为 V8；结束删除临时库。Flowable 最终 update=false 由 WorkflowConfiguration 改为跟随配置（缺省 false）覆盖。2026-10-16 以超级用户迁移后创建无 DDL 运行角色，应用成功启动并返回 401，角色执行 CREATE TABLE 被拒（EV-B03-RUNTIMEROLE-20261016）。数据范围补充缺失边界默认 NONE（1=0）与 SELF 使用 ownerColumn 断言，OA 关系维度既有用例保持（EV-B03-SCOPE-20261016）。",
         "scenario": "隔离空库和V7→V8 upgrade、重复validate、OA/Workflow相关引用与默认NONE/SELF；最终Flowableupdatefalse和运行角色无DDL。",
-        "state": "partially_executed",
+        "state": "passed",
         "issue_ids": [
           "DIAG-BASE-015"
         ],
@@ -75273,9 +75292,10 @@
         ],
         "evidence_ids": [
           "EV-B03-MIGRATION-20261016",
-          "EV-B03-RUNTIMEROLE-20261016"
+          "EV-B03-RUNTIMEROLE-20261016",
+          "EV-B03-SCOPE-20261016"
         ],
-        "required_environment": "空库 V1–V8 与 V7→V8 升级已执行；无 DDL 运行角色启动已验证；默认范围 NONE/SELF 数据未断言。"
+        "required_environment": "空库 V1–V8 与 V7→V8 升级已执行；无 DDL 运行角色启动已验证；数据范围默认 NONE/SELF 已单元断言。"
       },
       {
         "id": "BC-BASE-011",
