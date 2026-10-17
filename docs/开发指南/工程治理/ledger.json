@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "54973ed3f9a63d0890e9a308551924198d846e5def886fe73ad12b6faf721457",
+      "content_sha256": "1e748a59e866c654229b29ba4d6a281de3427e2b03514e0ef4416a18e48b873a",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "e6f8c4277906eb2c7b833fe93b91a5038c0c56281973998d4c6b5c1de03b0dd1",
+      "content_sha256": "7c9a570afc4fa81759aeb334cd83dd6323b449f03743ae9da482ec3ec9a8e5fc",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5207,7 +5207,8 @@
         "EV-B03-REDACT-20261016",
         "EV-B03-TIMEPROTO-20261016",
         "EV-B03-TTL-20261016",
-        "EV-B03-GATECAL-20261016"
+        "EV-B03-GATECAL-20261016",
+        "EV-B03-CONFLICT-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -12112,6 +12113,38 @@
       "review_limits": ["纯时间计算单元测试，未含 Redis 交互。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/web/advice/exception/SqlExceptionAdviceTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "0db7a03a978a66b22c578d6c592d2759085ffcf61632fb7b4b38e5f7af733dbd",
+      "reviewed_rules": ["04§5", "04§13"],
+      "issue_ids": [],
+      "evidence_ids": ["EV-B03-CONFLICT-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "重复键→409 DATA_EXIST；数据完整性→409 BUSINESS_CONFLICT，响应状态与 body 错误码一致。",
+      "review_limits": ["直接调用 Advice，未走完整 MVC。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-001"]
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/web/advice/exception/CommonExceptionAdviceConflictTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "fdd7a2d4d48214dd49138ae36b900679b416e6dd7f8703a09c1daa49423edc19",
+      "reviewed_rules": ["04§5", "04§13"],
+      "issue_ids": [],
+      "evidence_ids": ["EV-B03-CONFLICT-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "EntityUpdateException→409 ENTITY_UPDATE_CONFLICT，统一响应状态与错误码一致。",
+      "review_limits": ["直接调用 Advice，未走完整 MVC。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-001"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -73492,6 +73525,25 @@
       "limits": "formatter 冷/热/断网 timeout 退出码与 ArchUnit 故意反向依赖失败未执行；DI 构造/DTO 结构型例外沿用 ledger 逐符号登记。BC-BASE-011 维持 partially_executed。"
     },
     {
+      "id": "EV-B03-CONFLICT-20261016",
+      "scope": "B03 BC-BASE-006 409 冲突状态与 error_code 一致性",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=SqlExceptionAdviceTest,CommonExceptionAdviceConflictTest' test -> 退出 0，3/3；重复键/完整性→409，版本冲突→409 ENTITY_UPDATE_CONFLICT",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "SQL 重复键→409 DATA_EXIST、数据完整性→409 BUSINESS_CONFLICT、EntityUpdateException→409 ENTITY_UPDATE_CONFLICT，状态码与 body error_code 一致。",
+      "artifacts": [
+        "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/web/advice/exception/SqlExceptionAdviceTest.java",
+        "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/web/advice/exception/CommonExceptionAdviceConflictTest.java",
+        ".temp/b03/b03-conflict.log",
+        ".temp/b03/b03-conflict-static.log"
+      ],
+      "limits": "未走完整 MVC/真实 SQL 触发的 409；NON_NULL OpenAPI 类型同步未做。BC-BASE-006 维持 partially_executed。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74972,7 +75024,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1628,
+      "included": 1630,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74998,7 +75050,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1642,
+    "reviewed_included": 1644,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -75341,13 +75393,13 @@
         "name": "API协议",
         "status": "partially_executed",
         "necessary_acceptance": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
-        "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 的 SQL/版本冲突有 resolver 单测但未做真实 HTTP；NON_NULL OpenAPI 类型同步未做。",
+        "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 已补 Advice 层断言：重复键 DATA_EXIST、完整性 BUSINESS_CONFLICT、版本冲突 ENTITY_UPDATE_CONFLICT（EV-B03-CONFLICT-20261016）；仍未走完整 MVC/真实 SQL 触发，NON_NULL OpenAPI 类型同步未做。",
         "scenario": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
         "state": "partially_executed",
         "issue_ids": ["DIAG-BASE-010"],
         "impact_ids": ["IMP-BASE-001"],
-        "evidence_ids": ["EV-B03-ERRORCODE-20261016", "EV-B03-PROTOCOL-20261016"],
-        "required_environment": "401/403/503 已单元验证；409 真实 HTTP 与 OpenAPI 类型同步待执行；不读取本机秘密或误连开发库。"
+        "evidence_ids": ["EV-B03-ERRORCODE-20261016", "EV-B03-PROTOCOL-20261016", "EV-B03-CONFLICT-20261016"],
+        "required_environment": "401/403/503 已单元验证；409 已完成 Advice 层验证，完整 MVC 与 OpenAPI 类型同步待执行。"
       },
       {
         "id": "BC-BASE-007",
