@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "63473cc33676852d3d3d93f60736972bb61ba568f451c2cfdf7d75e840ba49c9",
+      "content_sha256": "045bdfb9744b54abe19d79a250779686c5f769e6e32f9935606f9a40d56f565c",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b47208023628197c55980804013abc7170297315cba6b564b1afe90ae5802493",
+      "content_sha256": "056bf56cd2024883e920c23936a7ddea9b18608719cc8c3308621dbf59055ac5",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5210,7 +5210,8 @@
         "EV-B03-GATECAL-20261016",
         "EV-B03-CONFLICT-20261016",
         "EV-B03-BOUNDARY-20261016",
-        "EV-B03-OFFSET-FULL-20261016"
+        "EV-B03-OFFSET-FULL-20261016",
+        "EV-B03-CONFLICT-HTTP-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -12145,6 +12146,22 @@
       "impact_state": null,
       "review_summary": "EntityUpdateException→409 ENTITY_UPDATE_CONFLICT，统一响应状态与错误码一致。",
       "review_limits": ["直接调用 Advice，未走完整 MVC。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-001"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/CoreConflictHttpTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "80237044cd25a3b26a863c297c631a22e1e07a1d5e5aaace1748a5067a3bf0b7",
+      "reviewed_rules": ["04§5", "04§13"],
+      "issue_ids": ["DIAG-BASE-010"],
+      "evidence_ids": ["EV-B03-CONFLICT-HTTP-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "真实登录后创建重复角色编码，断言 HTTP 409 且 body error_code=DATA_EXIST。",
+      "review_limits": ["使用 ROLE_DEV_OPS 夹具；未覆盖版本冲突的完整 MVC。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-BASE-001"]
     },
@@ -41110,7 +41127,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "stale",
-      "content_sha256": "370a3394f319cfb1ea33441875c01a0945ffc69f91d38338547c07dfa846516a",
+      "content_sha256": "2142e00295423a4c77e5da6e285988e92abe1e6226f83f0477d63e17953bd1c4",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -73575,6 +73592,24 @@
       "limits": "未走完整 MVC/真实 SQL 触发的 409；NON_NULL OpenAPI 类型同步未做。BC-BASE-006 维持 partially_executed。"
     },
     {
+      "id": "EV-B03-CONFLICT-HTTP-20261016",
+      "scope": "B03 BC-BASE-006 完整 MVC 409（重复角色编码）",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=CoreConflictHttpTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；真实登录后创建重复角色编码返回 409，body error_code=DATA_EXIST",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；隔离 PostgreSQL/Redis DB5；未输出凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "重复角色编码原先抛 DataException 映射为 500 INTERNAL_ERROR，改为 DataExistException 后统一返回 409 DATA_EXIST；真实 MVC HTTP 断言通过。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/user/service/impl/RoleServiceImpl.java",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/CoreConflictHttpTest.java",
+        ".temp/b03/b03-http409.log"
+      ],
+      "limits": "版本冲突（EntityUpdateException）仍为 Advice 层断言；NON_NULL OpenAPI 类型同步未做。"
+    },
+    {
       "id": "EV-B03-BOUNDARY-20261016",
       "scope": "B03 BC-BASE-011 模块反向依赖校准",
       "command_or_scenario": [
@@ -75074,7 +75109,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1630,
+      "included": 1631,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -75100,7 +75135,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1644,
+    "reviewed_included": 1645,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -75443,13 +75478,13 @@
         "name": "API协议",
         "status": "partially_executed",
         "necessary_acceptance": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
-        "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 已补 Advice 层断言：重复键 DATA_EXIST、完整性 BUSINESS_CONFLICT、版本冲突 ENTITY_UPDATE_CONFLICT（EV-B03-CONFLICT-20261016）；仍未走完整 MVC/真实 SQL 触发，NON_NULL OpenAPI 类型同步未做。",
+        "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 已补 Advice 层断言：重复键 DATA_EXIST、完整性 BUSINESS_CONFLICT、版本冲突 ENTITY_UPDATE_CONFLICT（EV-B03-CONFLICT-20261016），并补完整 MVC 真实 HTTP：重复角色编码由 500 修为 409 DATA_EXIST（EV-B03-CONFLICT-HTTP-20261016）；NON_NULL OpenAPI 类型同步未做。",
         "scenario": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
         "state": "partially_executed",
         "issue_ids": ["DIAG-BASE-010"],
         "impact_ids": ["IMP-BASE-001"],
-        "evidence_ids": ["EV-B03-ERRORCODE-20261016", "EV-B03-PROTOCOL-20261016", "EV-B03-CONFLICT-20261016"],
-        "required_environment": "401/403/503 已单元验证；409 已完成 Advice 层验证，完整 MVC 与 OpenAPI 类型同步待执行。"
+        "evidence_ids": ["EV-B03-ERRORCODE-20261016", "EV-B03-PROTOCOL-20261016", "EV-B03-CONFLICT-20261016", "EV-B03-CONFLICT-HTTP-20261016"],
+        "required_environment": "401/403/503 已单元验证；409 已完成 Advice 层与真实 MVC（重复角色编码）验证；OpenAPI 类型同步待执行。"
       },
       {
         "id": "BC-BASE-007",
