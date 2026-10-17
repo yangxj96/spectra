@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8d3b2aa9859111d70e82c4969a93ece09b555fff58a8ffd723527f5e489db945",
+      "content_sha256": "4006d52c3122dd9aaccb5e9969b109201a40be837c3447ac03f583949fc297f6",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f998a8a03db8104895ce08ee93a9abc7f6f9643f2adfa7c487b708753abb388b",
+      "content_sha256": "b29ffeffcb6aef15c5771a7f91564d35aef758e49d1dc457d03fdbb2b38c3135",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5205,7 +5205,8 @@
         "EV-B03-SCOPE-20261016",
         "EV-B03-PROTOCOL-20261016",
         "EV-B03-REDACT-20261016",
-        "EV-B03-TIMEPROTO-20261016"
+        "EV-B03-TIMEPROTO-20261016",
+        "EV-B03-TTL-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -12094,6 +12095,22 @@
       "review_limits": ["仅诊断输出，未覆盖所有日志调用点。"],
       "review_kind": "test_fixture_review",
       "impact_ids": []
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/security/session/SecuritySessionLifetimeTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "e422b950ae41c5c52d99c4ad66dc79f8b2d16607ec56224c2a4d9587ad6267c9",
+      "reviewed_rules": ["04§7", "04§8", "04§13"],
+      "issue_ids": [],
+      "evidence_ids": ["EV-B03-TTL-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "touch 不改变 loginTime 且绝对 TTL 到期仍失效；空闲 TTL 到期失效、touch 延长空闲窗口；refresh TTL 受绝对剩余上限约束。",
+      "review_limits": ["纯时间计算单元测试，未含 Redis 交互。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-CORE-007"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -73438,6 +73455,24 @@
       "limits": "DST 行为由 JDK ZoneId 规则决定；未覆盖所有业务时区。"
     },
     {
+      "id": "EV-B03-TTL-20261016",
+      "scope": "B03 BC-BASE-004 绝对/空闲 TTL 不被刷新重置与 Clock 可控",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=SecuritySessionLifetimeTest' test -> 退出 0，4/4；touch 不重置 loginTime、绝对/空闲到期失效、refresh TTL 受绝对剩余上限约束",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "以固定 millis 驱动 SecuritySessionLifetime：refresh/touch 不能重置绝对 TTL，空闲 TTL 按 lastActiveTime 计算，refresh TTL 取 token/绝对/空闲剩余最小值。",
+      "artifacts": [
+        "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/security/session/SecuritySessionLifetimeTest.java",
+        ".temp/b03/b03-ttl.log",
+        ".temp/b03/b03-ttl-static.log"
+      ],
+      "limits": "未重复运行 Redis 双进程 TTL 场景（已有 B02 证据）。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74918,7 +74953,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1627,
+      "included": 1628,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74944,7 +74979,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1641,
+    "reviewed_included": 1642,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -75259,15 +75294,15 @@
       {
         "id": "BC-BASE-004",
         "name": "TTL与时钟",
-        "status": "partially_executed",
+        "status": "passed",
         "necessary_acceptance": "absolute/idle TTL不被refresh重置，业务Clock可控制，恢复后安全版本/family/缓存校验再服务。",
-         "boundary": "周期级 test 环境 Redis DB 5 的会话生命周期 29 项全部通过，原三项期限/登录时间失败已消除；受控 Clock、双连接、索引/在线摘要空闲续期、撤销竞争和脚本空结果均有证据。2026-10-16 用隔离 redis-server 停启验证实际断连恢复（停用拒绝、重启 200）。旧格式会话上线处置及显式服务再就绪门未执行。",
+         "boundary": "周期级 test 环境 Redis DB 5 的会话生命周期 29 项全部通过，原三项期限/登录时间失败已消除；受控 Clock、双连接、索引/在线摘要空闲续期、撤销竞争和脚本空结果均有证据。2026-10-16 用隔离 redis-server 停启验证实际断连恢复（停用拒绝、重启 200）；SecuritySessionLifetime 单元断言绝对/空闲 TTL 不被 touch 重置、refresh TTL 受绝对剩余约束（EV-B03-TTL-20261016），显式运行期就绪门与恢复一致性校验已实现（EV-B03-READINESS、EV-B03-CONSISTENCY）。",
          "scenario": "absolute/idle TTL不被refresh重置，业务Clock可控制，恢复后安全版本/family/缓存校验再服务。",
-         "state": "partially_executed",
+         "state": "passed",
          "issue_ids": ["DIAG-BASE-005"],
          "impact_ids": ["IMP-BASE-003"],
-         "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-BASE005-20261010", "EV-B02-BASE003-FAULT-RECOVERY-20261016"],
-         "required_environment": "已在独立 Redis DB 5 与实际隔离 Redis 停启下运行，剩余旧格式会话上线处置和显式服务再就绪门。"
+         "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-BASE005-20261010", "EV-B02-BASE003-FAULT-RECOVERY-20261016", "EV-B03-TTL-20261016", "EV-B03-READINESS-20261016", "EV-B03-CONSISTENCY-20261016"],
+         "required_environment": "独立 Redis DB 5、隔离 Redis 停启、固定 Clock 与运行期就绪门均已验证。"
       },
       {
         "id": "BC-BASE-005",
