@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "24e1e96d230de0df0b0facacab338981748be2a5d72bb25bc9707aa4815fbb8f",
+      "content_sha256": "9ae5a06a970312b3543355cee8c7739f66e7cca9232c2434af5bb89e6ba22ae2",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4094b32a1391d5f44e9c8b49d1201cde350992213035fa384ca97141fb253e7f",
+      "content_sha256": "53565fb99398fb9d14421a4a72d764ed275cb760d11c083f0c73d900090cf4f7",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5195,7 +5195,8 @@
         "EV-B03-ERRORCODE-20261016",
         "EV-B03-RANGE416-20261016",
         "EV-B03-CLOCK-20261016",
-        "EV-B03-TIMEZONE-20261016"
+        "EV-B03-TIMEZONE-20261016",
+        "EV-B03-TIMEPARSE-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11958,6 +11959,22 @@
       "impact_ids": ["IMP-BASE-002"]
     },
     {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/serialization/mapper/TimeMapperTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "fc26ffb265bdc5c6a0b606f4de60f026004071d1bbcfc1a36a25e2bb6003403a",
+      "reviewed_rules": ["04§6", "04§13"],
+      "issue_ids": ["DIAG-BASE-008"],
+      "evidence_ids": ["EV-B03-TIMEPARSE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "带偏移/时区字符串保留绝对时刻；无偏移量完整日期时间按用户时区解释；仅日期/仅时间字符串抛 DateTimeParseException；空白返回 null。",
+      "review_limits": ["单元层级，未覆盖所有调用方输入。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-002"]
+    },
+    {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
       "role": "工程说明与规则入口",
       "scope": "included",
@@ -18605,7 +18622,7 @@
       "role": "后端 spectra-framework / mapper",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "e00721dfeebe70b4ea62e73ac5e6b08c4a186e138fdb76913cc8e38b6e2e9a57",
+      "content_sha256": "b45bdadaada086fe9f91f7a360c6cac5c025f1b0d1ee3750b59c57b6b7014b64",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -64798,7 +64815,7 @@
         }
       ],
       "finding": "共享映射输出LocalDateTime去掉offset；无日期时间补LocalDate.now，String尝试多格式猜测；非法用户/系统ZoneId返回null并回退。",
-      "impact": "Core在线会话/审计/通知/Quartz及暂缓OA合同与Workflow任务的同一时间点无法形成统一offset协议；非法时区不显式失败。2026-10-16 已让已配置但非法的用户/系统时区显式失败（EV-B03-TIMEZONE-20261016）；LocalDateTime 输出去 offset、无日期补当天与 String 多格式猜测仍待统一接口时间协议后处理。",
+      "impact": "Core在线会话/审计/通知/Quartz及暂缓OA合同与Workflow任务的同一时间点无法形成统一offset协议；非法时区不显式失败。2026-10-16 已让已配置但非法的用户/系统时区显式失败（EV-B03-TIMEZONE-20261016），String 多格式猜测收敛为严格 ISO 日期时间（EV-B03-TIMEPARSE-20261016）；LocalDateTime 输出去 offset 与 toInstant(LocalTime) 补当天仍待统一接口时间协议。",
       "priority": "P2",
       "disposition": "required_fix",
       "state": "in_progress",
@@ -73095,6 +73112,27 @@
       "limits": "TimeMapper 的 LocalDateTime 输出去 offset、无日期补当天、String 多格式猜测尚未调整（需统一接口时间协议后实施）。"
     },
     {
+      "id": "EV-B03-TIMEPARSE-20261016",
+      "scope": "B03 DIAG-BASE-008 String 时间解析收敛为严格 ISO 日期时间",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=TimeMapperTest' test -> 退出 0，4/4；offset/zoned 保留绝对时刻、本地日期时间按用户时区、仅日期/仅时间拒绝、空白 null",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS",
+        "spectra-admin: '-pl spectra-framework -am -Dspectra.test.real-deps=true clean test' -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "TimeMapper.toInstant(String) 只接受带偏移/时区的日期时间或无偏移量的完整日期时间，删除仅日期/仅时间的多格式猜测与“今天”隐式补全。",
+      "artifacts": [
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/serialization/mapper/TimeMapper.java",
+        "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/serialization/mapper/TimeMapperTest.java",
+        ".temp/b03/b03-timeparse.log",
+        ".temp/b03/b03-timeparse-static.log",
+        ".temp/b03/b03-timeparse-framework.log"
+      ],
+      "limits": "LocalDateTime 输出仍去 offset、toInstant(LocalTime) 仍补当天；需统一接口时间类型后处理。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74575,7 +74613,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1619,
+      "included": 1620,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74601,7 +74639,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1633,
+    "reviewed_included": 1634,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
