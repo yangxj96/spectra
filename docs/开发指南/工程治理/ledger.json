@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8410c1df73c3e72dc1648f0f88be3de527609b16417fc6a7bdc6d4be90d72344",
+      "content_sha256": "2b0011a4e9f21aa0e5c24252b3479c4135f54510880cef41fe667e0a8a38cae4",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -12200,6 +12200,22 @@
       "review_limits": ["失败路径；成功任务完成需要已部署流程与任务夹具。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-BASE-001"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/UploadVerificationWorkerOwnershipTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "9a425948f60542d33684d8f67700af9c024308878d8b81a5ef8da6d293929444",
+      "reviewed_rules": ["04§7", "04§8", "04§13"],
+      "issue_ids": ["DIAG-CORE-006"],
+      "evidence_ids": ["EV-B05-OWNER-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "异步校验创建资产时，createdBy/updatedBy 等于会话 ownerUserId，不依赖空安全上下文。",
+      "review_limits": ["单元测试，未走真实对象存储。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-CORE-003"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -39198,7 +39214,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "99ba7ade6f21614fb7c11100a0de86d00023f9c820022616d522dfe9df409e02",
+      "content_sha256": "db0623276cef863a4d41bf64723adc04d02e73b6da78d2c187eb8d368f1b3e71",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -66692,13 +66708,14 @@
         }
       ],
       "finding": "异步createAsset未从session.ownerUserId设置资产归属；ThreadPoolTaskExecutor无身份传播，BaseEntity填充依赖当前身份。新READY资产createdBy为空时上传者临时下载规则不满足。",
-      "impact": "正常上传未挂引用资产不能预览/下载；全局去重需独立上传证明/访问grant，不能只依赖单createdBy。",
+      "impact": "正常上传未挂引用资产不能预览/下载；全局去重需独立上传证明/访问grant，不能只依赖单createdBy。2026-10-16 createAsset 显式继承 session.ownerUserId 到 createdBy/updatedBy（EV-B05-OWNER-20261016）；全局去重访问凭据仍由 DIAG-CORE-007/008 覆盖。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B05-OWNER-20261016"
       ],
       "impact_ids": [
         "IMP-CORE-003"
@@ -73738,6 +73755,24 @@
       "limits": "离线模式依赖本地仓库已缓存插件；未模拟插件缺失的失败退出码。"
     },
     {
+      "id": "EV-B05-OWNER-20261016",
+      "scope": "B05 DIAG-CORE-006 异步校验资产归属继承",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=UploadVerificationWorkerOwnershipTest' test -> 退出 0，1/1；会话 ownerUserId 写入资产 createdBy/updatedBy",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "UploadVerificationWorker.createAsset 显式继承会话所有者，修复异步线程空安全上下文导致 createdBy 为空。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/UploadVerificationWorker.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/UploadVerificationWorkerOwnershipTest.java",
+        ".temp/b05/b05-owner.log"
+      ],
+      "limits": "未走真实对象存储与异步线程池端到端。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75218,7 +75253,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1633,
+      "included": 1634,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -75244,7 +75279,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1647,
+    "reviewed_included": 1648,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
