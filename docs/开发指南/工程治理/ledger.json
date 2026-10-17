@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f5e1854f41e25938931b20d373967a5704931dbfac75b12d992669bd1e2aa47b",
+      "content_sha256": "24e1e96d230de0df0b0facacab338981748be2a5d72bb25bc9707aa4815fbb8f",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ea04012a7465ce6cdae3930591452167cde43f8f14de0567969dd90f3fcac5e0",
+      "content_sha256": "4094b32a1391d5f44e9c8b49d1201cde350992213035fa384ca97141fb253e7f",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5194,7 +5194,8 @@
         "EV-B03-RANGE-20261016",
         "EV-B03-ERRORCODE-20261016",
         "EV-B03-RANGE416-20261016",
-        "EV-B03-CLOCK-20261016"
+        "EV-B03-CLOCK-20261016",
+        "EV-B03-TIMEZONE-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -18085,7 +18086,7 @@
       "role": "后端 spectra-framework / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1ebfd7147eaaaccb7b022a7222f1da61b6d38bf605526226de39128d4a02af97",
+      "content_sha256": "c1d699458538672be92e0d9316924647f0ced2c0a650ede0c7721cd3d44662e9",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -64797,14 +64798,15 @@
         }
       ],
       "finding": "共享映射输出LocalDateTime去掉offset；无日期时间补LocalDate.now，String尝试多格式猜测；非法用户/系统ZoneId返回null并回退。",
-      "impact": "Core在线会话/审计/通知/Quartz及暂缓OA合同与Workflow任务的同一时间点无法形成统一offset协议；非法时区不显式失败。",
+      "impact": "Core在线会话/审计/通知/Quartz及暂缓OA合同与Workflow任务的同一时间点无法形成统一offset协议；非法时区不显式失败。2026-10-16 已让已配置但非法的用户/系统时区显式失败（EV-B03-TIMEZONE-20261016）；LocalDateTime 输出去 offset、无日期补当天与 String 多格式猜测仍待统一接口时间协议后处理。",
       "priority": "P2",
       "disposition": "required_fix",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
         "EV-BASE-001",
-        "EV-MODEL-001"
+        "EV-MODEL-001",
+        "EV-B03-TIMEZONE-20261016"
       ],
       "supporting_locations": [
         {
@@ -73073,6 +73075,24 @@
         ".temp/b03/b03-clock-static.log"
       ],
       "limits": "未显式设置 PostgreSQL 连接会话时区（依赖实例/角色配置）；未做跨时区真实部署验证。"
+    },
+    {
+      "id": "EV-B03-TIMEZONE-20261016",
+      "scope": "B03 DIAG-BASE-008 非法时区显式失败",
+      "command_or_scenario": [
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS",
+        "spectra-admin: '-pl spectra-framework -am -Dspectra.test.real-deps=true clean test' -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "SecuritySessionContextAccessor 对已配置但非法的用户/系统时区抛 SpectraException（显式失败），仅在未配置时回退系统时区或 UTC。",
+      "artifacts": [
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/security/session/query/SecuritySessionContextAccessor.java",
+        ".temp/b03/b03-timezone-static.log",
+        ".temp/b03/b03-timezone-framework.log"
+      ],
+      "limits": "TimeMapper 的 LocalDateTime 输出去 offset、无日期补当天、String 多格式猜测尚未调整（需统一接口时间协议后实施）。"
     },
     {
       "id": "EV-IMPORT-MOCK-20261004",
