@@ -267,8 +267,8 @@
         "prerequisites": "Record real JSON omission and snake_case; choose per-field clear semantics and version ownership before generator output",
         "checks": "BC-BASE-006/007, BC-MODEL-001..005, BC-ADDITIONAL-001/002/005, BEH-WEB-004/005/011, real HTTP/SQL 409 and drift checks",
         "done_when": "API 1.0.0 has actual HTTP/JSON/generated type agreement; stale writes reject, clears persist, offset/timezone rules hold, and old aliases/fallbacks are removed.",
-      "state": "in_progress",
-      "started_at": "2026-10-17"
+        "state": "in_progress",
+        "started_at": "2026-10-17"
       },
       {
         "id": "B05",
@@ -5028,7 +5028,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ba5ed60d166d1bc1da4121624d9d18b644820db75c73e6f8e73520b780795a9d",
+      "content_sha256": "d4e4de62139b867d3065415e78314cf9c4b7edcf8aa172df1e84201668b5525d",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -67851,14 +67851,13 @@
         }
       ],
       "finding": "page和group先selectList读取匹配全部模板版本再在内存聚合/截页，历史versions亦无上限；请求分页大小无法约束数据库/内存总工作量。",
-      "impact": "用户免打扰窗口可能在错误时区生效；Web偏好、时区配置及OA/Workflow定时通知均需时间边界联动验证。2026-10-17 非法时区改为显式拒绝，投递判定 fail-closed（EV-B04-PROTOCOL-20261017）。",
+      "impact": "模板版本增长时管理分页及引用入口没有资源预算，需DB分组/分页契约及Web版本列表联动。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "resolved",
+      "state": "pending",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-005",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-CORE-005"
       ],
       "impact_ids": [
         "IMP-CORE-006"
@@ -67880,7 +67879,7 @@
         }
       ],
       "finding": "保留publish(code,id)/retire(code,id)默认兼容重载，直接丢弃code调用仅id方法；Controller路径code未绑定version所属secret。",
-      "impact": "用户免打扰窗口可能在错误时区生效；Web偏好、时区配置及OA/Workflow定时通知均需时间边界联动验证。2026-10-17 非法时区改为显式拒绝，投递判定 fail-closed（EV-B04-PROTOCOL-20261017）。",
+      "impact": "路径指向A而versionId属于B仍可能发布/退役B；需统一契约删除别名并验证对象归属，Web秘密版本管理调用方同步迁移。2026-10-17 删除 publish/retire 兼容重载，统一校验路径 code 与版本归属（EV-B04-PROTOCOL-20261017）。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
       "state": "resolved",
@@ -67904,14 +67903,13 @@
         }
       ],
       "finding": "batchDelete用ids和userId过滤更新但不校验所有输入均存在/属于用户及更新数，混入无权限或不存在ID仍返回正常成功。",
-      "impact": "用户免打扰窗口可能在错误时区生效；Web偏好、时区配置及OA/Workflow定时通知均需时间边界联动验证。2026-10-17 非法时区改为显式拒绝，投递判定 fail-closed（EV-B04-PROTOCOL-20261017）。",
+      "impact": "用户批量删除可部分生效而前端误报全部成功，需全量目标验证与事务结果协议。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "resolved",
+      "state": "pending",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-005",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-CORE-005"
       ],
       "impact_ids": [
         "IMP-CORE-006"
@@ -67931,14 +67929,14 @@
         }
       ],
       "finding": "Common 通知中间请求持有并暴露可变集合，固定 SpotBugs 报告 EI_EXPOSE_REP 7 条及 EI_EXPOSE_REP2 7 条；调用方可在构造后或经访问器改变收件人、渠道、地址和参数容器。",
-      "impact": "用户免打扰窗口可能在错误时区生效；Web偏好、时区配置及OA/Workflow定时通知均需时间边界联动验证。2026-10-17 非法时区改为显式拒绝，投递判定 fail-closed（EV-B04-PROTOCOL-20261017）。",
+      "impact": "Core 网关/验证码及 OA、Workflow 通知生产者共享该请求契约；请求快照不稳定会使入队前数据与调用时意图不一致，并阻断 B02 全后端静态门禁。",
       "priority": "P2",
       "disposition": "构造时复制容器并覆盖可变输入、空值及无效映射回归；核对 Common/Core/OA/Workflow 调用方和静态门禁。",
       "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-005",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-COMMON14-20261010",
+        "EV-B02-COMMON14-GATES-20261010"
       ],
       "verification_state": "common_module_passed_workspace_gate_failed",
       "impact_ids": [
@@ -67947,7 +67945,7 @@
     },
     {
       "rule": "04§4复用持久化基类、04§7数据库版本条件",
-      "state": "resolved",
+      "state": "pending",
       "locations": [
         {
           "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/security/authentication/javabean/entity/PasswordCredential.java",
@@ -67973,12 +67971,13 @@
       "finding": "PasswordCredential、Permission、RoleAssignment、SecurityRole 重新声明 version，子字段仅@TableField且无@Version，遮蔽BaseEntity的@Version。当前编译产物的MP3.5.15 TableInfoHelper探针均withVersion=false、versionField=none，User对照为true。依赖MP updateById的这些实体不自动追加版本条件/递增；显式UpdateWrapper.eq(version)路径仍有自身保护，不能整域断言无并发控制。",
       "priority": "P1",
       "evidence_ids": [
-        "EV-CORE-005",
+        "EV-MODEL-002",
         "EV-B04-PROTOCOL-20261017"
       ],
       "id": "DIAG-MODEL-001",
+      "state": "resolved",
       "disposition": "移除字段遮蔽或正确声明后，验证MP元数据与实际并发SQL/409协议",
-      "impact": "用户免打扰窗口可能在错误时区生效；Web偏好、时区配置及OA/Workflow定时通知均需时间边界联动验证。2026-10-17 非法时区改为显式拒绝，投递判定 fail-closed（EV-B04-PROTOCOL-20261017）。",
+      "impact": "涉及密码凭据及角色/授权持久化，需复用父版本并逐调用检查显式条件与返回值，避免已在Service做版本比较但数据库更新不原子。2026-10-17 删除四个实体重复 version 字段，统一复用 BaseEntity @Version（EV-B04-PROTOCOL-20261017）。",
       "exception_ids": [],
       "supporting_locations": [
         {
@@ -68027,7 +68026,7 @@
     },
     {
       "rule": "04§7数据范围、04§10软删除与历史引用",
-      "state": "resolved",
+      "state": "pending",
       "locations": [
         {
           "path": "spectra-admin/spectra-modules/spectra-core/src/main/resources/mapper/system/DepartmentClosureMapper.xml",
@@ -68038,12 +68037,11 @@
       "finding": "闭包重建锚点与递归分支均包含软删除部门，生成全历史部门路径；同一域rebuildActivePaths则显式deleted IS NULL。Framework ScopeSqlPolicy.departmentPredicate的includeDescendants子查询只按ancestor_id查闭包，不过滤删除节点。静态确认范围源与活动组织不一致；历史业务是否应沿删除节点继承权限仍需领域契约确认，未证明具体越权请求。",
       "priority": "P2",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-MODEL-004"
       ],
       "id": "DIAG-MODEL-003",
       "disposition": "确认活动/历史闭包职责并验证软删除节点的读、计数及历史引用授权；有意保留时登记明确领域依据",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+      "impact": "组织合并/删除后被删除节点及其历史后代继续进入后代权限集合，列表/计数和历史业务数据范围可能与组织变更意图不一致。",
       "exception_ids": [],
       "verification_state": "static_candidate_runtime_pending",
       "impact_ids": [
@@ -68073,12 +68071,11 @@
       "finding": "UserSaveFrom作为新增/修改共用请求声明phone/email；create调用syncProvisionedContacts同时建立UserContact及SMS/EMAIL identity，modify只updateUser并处理PASSWORD identifier，没有同步联系人/验证码登录身份。User持久实体无phone/email且UserConverter无映射后补充，提交新值或清空被静默忽略。若字段只允许新增，应显式输入契约拒绝编辑，不能默许接受后忽略。",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-ADDITIONAL-002"
       ],
       "priority": "P2",
       "disposition": "明确创建与联系信息变更职责，迁移共享From及调用方，验证旧身份撤销与新身份建立/清空原子性",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+      "impact": "管理员用户编辑不能按请求变更联系方式及其登录事实，旧地址身份继续有效；不能仅补MapStruct字段，应定义联系人与登录身份变更的安全授权/验证/撤销契约。2026-10-16 采用显式输入契约：modify 检测到非空 phone/email 即拒绝，消除静默忽略（EV-B03-CONTACT-20261016）；专用变更入口仍属后续能力而非缺陷。",
       "rule": "04§4转换与职责、04§5完整编辑字段契约",
       "impact_ids": [
         "IMP-ADDITIONAL-001"
@@ -68097,12 +68094,13 @@
       "finding": "流响应Content-Length取provider实际返回字节数，但Content-Range end在客户端指定时原样使用。LOCAL provider.open把end裁剪到size-1。例：10字节资产请求bytes=0-99，实际流/Content-Length为10，响应却声明bytes 0-99/*。start越界和数值解析异常也没有独立416契约。",
       "exception_ids": [],
   "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+    "EV-ADDITIONAL-003",
+    "EV-B03-RANGE-20261016",
+    "EV-B03-RANGE416-20261016"
+  ],
   "priority": "P2",
   "disposition": "使用实际provider范围/资产总长度构造响应并明确非法Range的状态，验证LOCAL/S3一致性",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+  "impact": "分段下载/预览看到区间与返回数据矛盾，可能恢复错误；需共用返回范围和总长度信息，不能把请求范围原样当响应范围。2026-10-16 已将 Content-Range 改为按 provider 实际返回字节裁剪（EV-B03-RANGE-20261016），并补齐 416 契约：语法非法/负值/倒序与 start 越界统一 416、error_code=FILE_RANGE_NOT_SATISFIABLE，已知总长度时附 Content-Range: bytes */total（EV-B03-RANGE416-20261016）。",
   "rule": "04§5实际HTTP二进制范围契约",
       "impact_ids": [
         "IMP-ADDITIONAL-002"
@@ -68126,12 +68124,12 @@
       "finding": "上传配置仅@ConfigurationProperties+@Data，FileUploadProperties的chunkSize/min/max、maxParts/maxConcurrentTasks、TTL/retention等无BeanValidation或跨字段约束，S3 endpoint/region/bucket也无启用条件下的完整有效校验。源码未见专用配置validator。负/零chunkSize、负Duration及缺失S3必需字段可进入运行计算或provider构造。",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-ADDITIONAL-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "priority": "P2",
       "disposition": "添加启用条件下可验证约束与分片/TTL跨字段规则，使用隔离绑定测试证明失败启动；不读取本机凭据",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+      "impact": "错误静态配置可能运行时产生无界/非法分片或清理/签名边界，缺少按配置条件拒绝启动的明确证据。",
       "rule": "04§9静态配置强类型且约束可验证、04§10资源预算",
       "impact_ids": [
         "IMP-ADDITIONAL-003"
@@ -68155,12 +68153,11 @@
       "finding": "ConfirmPartRequest.attempt必填且target生成递增attempt，但confirm从未读取/比较attempt；XML确认谓词只含session/part/status。S3确认只把客户端size/sha/ETag原样包成StoredPart，无存储读取验证，target复用同uploadId/partNumber。旧attempt确认/迟到预签名写入不能由当前锁与状态保证被隔离。最终整文件验证可检测内容摘要，但不能证明分片尝试契约已成立。",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-ADDITIONAL-004"
       ],
       "priority": "P2",
       "disposition": "定义attempt有效性与旧预签名能力失效语义，验证同分片连续target和迟到confirm/PUT的实际行为",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+      "impact": "旧分片回调或迟到写入可能影响最新尝试状态，S3错误ETag直到完成才暴露；需明确尝试幂等/隔离与最终校验分工。2026-10-16 已在 confirm 与 markUploaded/markConfirmed/markExternalConfirmed 加入 upload_attempt 谓词，旧尝试的迟到确认/写入被拒绝（EV-B03-ATTEMPT-20261016）；S3 外部确认已改为 ListParts 读取存储侧大小/ETag 并拒绝不一致（EV-B03-S3-20261016）；分片内容 SHA-256 仍由最终整文件校验覆盖。",
       "rule": "04§7原子状态、04§8外部副作用未知与重试",
       "verification_state": "static_candidate_runtime_pending",
       "impact_ids": [
@@ -68193,14 +68190,13 @@
         }
       ],
       "finding": "operations只按operationId读取旧回执，未绑定区域/实例范围/操作者；并发get→applied.add→put非同一原子操作。FAILED/PARTIAL也永久缓存，后续同ID直接返回而不重新执行，applied/operations没有TTL或容量清理。",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+      "impact": "同ID不同清理意图得到旧范围回执；并发同意图可覆盖affectedRegions并重复广播；广播或清理故障恢复后同ID不能继续，随机操作ID长期累积内存。多实例各自回执不能作为集群完成事实。",
       "priority": "P1",
       "disposition": "绑定规范化操作意图并原子推进状态，按失败阶段定义可恢复重试和回执/去重保留期限；明确Redis Pub/Sub仅接受不保证全部实例完成。",
-      "state": "resolved",
+      "state": "pending",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SYSTEM-READ-20261005"
       ],
       "verification_state": "static_confirmed_runtime_pending",
       "impact_ids": [
@@ -68233,14 +68229,13 @@
         }
       ],
       "finding": "modifyRule先独立update规则，之后恢复活动event，无Service事务；恢复update结果未检查。evaluateRule按已读取enabled规则更新/新建event和发通知，未再次绑定规则版本/启用状态；发通知后lastNotifiedAt写入结果也未检查。",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+      "impact": "非HTTP调用时规则保存已提交而事件恢复失败会保持ACTIVE且之后停用规则不再评估；在途评估可在停用后重新创建活动事件/外发。通知已受理而回执写入失败不能视为回滚，后续occurrence新幂等键可能重复通知。",
       "priority": "P1",
       "disposition": "规则启用转换和活动事件状态在明确Service事务/原子谓词下协调；在途评估校验版本和启用状态，通知受理意图与结果有可恢复边界。HTTP AuditAspect偶有外层事务不替代Service用例边界。",
-      "state": "resolved",
+      "state": "pending",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SYSTEM-READ-20261005"
       ],
       "verification_state": "static_confirmed_runtime_pending",
       "impact_ids": [
@@ -68268,14 +68263,13 @@
         }
       ],
       "finding": "cleanupExpiredTasks调用deleteQuietly后无条件deleteById；deleteQuietly捕获IOException只日志，未返回失败。共享DB任务没有实例信息，清理作业在另一实例的本地目录删除不存在文件也视为成功并删除任务记录。",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+      "impact": "文件删除失败或错实例清理后任务元数据不再被下次cleanup选中，原节点转储可永久残留且失去可恢复清理状态；堆转储潜在敏感内容的保留期无法落实。",
       "priority": "P1",
       "disposition": "删除确认成功后才完成元数据清理，失败保留重试状态及安全诊断；绑定实例/共享受控存储，使清理与生成文件位置一致。",
-      "state": "resolved",
+      "state": "pending",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SYSTEM-READ-20261005"
       ],
       "verification_state": "static_confirmed_runtime_pending",
       "impact_ids": [
@@ -68303,14 +68297,13 @@
         }
       ],
       "finding": "JVM/CPU/请求计数采样来自当前进程，persist的ServiceMonitorSample没有实例ID，getHistory只按时间查询整张共享表；本地latestSample/history/previousRequestCount等与共享历史及全局ruleId活动告警混用。",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+      "impact": "集群作业切换实例及不同节点首次overview触发采样，会把不同主机的CPU/内存/QPS串在一条历史；一台节点正常采样可恢复另一节点异常告警。全局采样job不能证明每实例监控覆盖。",
       "priority": "P1",
       "disposition": "明确实例指标与集群指标契约，为采样/历史/告警提供稳定实例或聚合维度，并验证调度归属、节点切换和每实例覆盖。",
-      "state": "resolved",
+      "state": "pending",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SYSTEM-READ-20261005"
       ],
       "verification_state": "static_confirmed_runtime_pending",
       "impact_ids": [
@@ -68328,14 +68321,13 @@
         }
       ],
       "finding": "modifyGroup读取group后立即group.getBuiltin，未像deleteGroup/requireEditableGroup检查不存在；不存在/已删除ID会产生NullPointerException而非明确字典组不存在错误。",
-      "impact": "该业务响应转换被采用后业务关联ID为空且NON_NULL可能省略字段，导致引用归属无法可靠表达。2026-10-17 toReferenceVO 显式映射 businessReferenceId（EV-B04-PROTOCOL-20261017）。",
+      "impact": "非法或并发删除的编辑ID触发通用内部错误，无法区分未找到与保存失败；该项是当前确定控制分支，不把静态结论当HTTP实测。",
       "priority": "P2",
       "disposition": "复用requireEditableGroup并映射安全且稳定的不存在错误，校验业务入口和并发删除后的行为。",
-      "state": "resolved",
+      "state": "pending",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SYSTEM-READ-20261005"
       ],
       "verification_state": "static_confirmed_runtime_pending",
       "impact_ids": [
@@ -68392,11 +68384,11 @@
         "宿主destroy、picker失效与节点/请求代数"
       ],
       "deferred_boundary": "流程独立功能及转换规则暂缓；宿主和插件公共生命周期/回填一致性必须纳入。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-ROOT-STATIC-20261004",
+        "EV-WEB-READ"
       ],
       "verification": [
         "重复进入离开/同容器重建无旧应用",
@@ -68468,8 +68460,12 @@
       "state": "resolved",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-ROOT-STATIC-20261004",
+        "EV-SCRIPT-FIXTURE-20261004",
+        "EV-SCRIPT-BOUNDARY-20261004",
+        "EV-IMPORT-MOCK-20261004",
+        "EV-BASE-001",
+        "EV-SCRIPT-B01-20261016"
       ],
       "verification": [
         "非法目标在连接前拒绝",
@@ -68538,11 +68534,11 @@
         "删除误导已具备能力的声明，保留历史证据边界"
       ],
       "deferred_boundary": "流程业务独立治理暂缓，但插件构建/宿主及Flowable装配配置必须整体核对。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-ROOT-DOC-20261004",
+        "EV-PLUGIN-CHECKS-20261004"
       ],
       "verification": [
         "冻结安装后同一版本构建产物",
@@ -68580,11 +68576,15 @@
         "Core改密/敏感From/审计保存与Web错误解释同步；暂缓OA/Workflow审计输入和统一响应也需消费回归。"
       ],
       "deferred_boundary": "OA/Workflow 共用 @Audit，Web 沿用既有审计字段；2026-10-16 改密入口已完成正式 sys_audit_event 写入与脱敏验证，OA/Workflow 逐入口真实 HTTP 回归仍待完成。DIAG-BASE-010 稳定错误码已完成（EV-B03-ERRORCODE-20261016）。",
-      "state": "resolved",
+      "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-BASE-001",
+        "EV-B02-DEPS-PORTS-20261010",
+        "EV-B02-BASE001-20261011",
+        "EV-B02-BASE001-GATES-20261011",
+        "EV-B02-BASE005-HTTP-20261016",
+        "EV-B03-ERRORCODE-20261016"
       ],
       "verification": [
         "合成 PostgreSQL 的切面、嵌套快照、reason、事务与日志专项通过；Framework 校验日志和审计存储 503 单元测试通过；OA/Workflow 编译，Web 调用字段形状已核对；改密正式 HTTP 写入正式 sys_audit_event 并脱敏通过。"
@@ -68622,8 +68622,7 @@
       "state": "resolved",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-BASE-001"
       ],
       "verification": [
         "同步实体/VO/OpenAPI类型与Web/插件日期消费；非法timezone、DST、date/time语义需要对应分场景验收。"
@@ -68681,11 +68680,38 @@
         "Session 签发、读取和刷新遵守绝对/空闲与原始令牌期限，活动时间原子更新，验证双连接、撤销竞争及旧格式会话处置。"
       ],
   "deferred_boundary": "BASE-003/004 已在隔离 Redis 验证撤销与双连接重放交错；BASE-004 严格拒绝 Lua 未定义结果，BASE-003 Core 改密、管理员撤销与身份解绑均经正式端口到 Redis。BASE-007 集合 null/empty、BASE-018 计数 TTL、BASE-005 期限活动、BASE-006 并发配额均有专项。两个独立应用进程的正式 HTTP 登出与按用户撤销 Access 专项 1/1；2026-10-16 再验证 Access/Refresh Key 自然到期、跨进程 Web Refresh 轮换与绝对期限收紧后的双端拒绝，双进程整组 2/2。单进程身份解绑及凭据重置/改密均验证旧 Access 401，Web 身份解绑清理本地 Session，八模块完整门禁 317/317。BC-BASE-001 的两个独立应用进程重放围栏、并发消费只成功一次与共享 max_sessions 已补证据（整组 5/5，第二进程 409）。真实 Redis 停启恢复、Access 自然到期后的各撤销入口、Redis 撤销与数据库提交故障窗口、旧格式会话上线处置、角色/凭据变更跨进程及 Web 浏览器入口仍未验收；没有凭据输出。",
-      "state": "resolved",
+      "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-BASE-001",
+        "EV-B02-BASE003-20261009",
+        "EV-B02-BASE003-GATES-20261009",
+        "EV-B02-BASE004-20261009",
+        "EV-B02-BASE004-GATES-20261009",
+        "EV-B02-BASE007-20261009",
+        "EV-B02-BASE007-GATES-20261009",
+        "EV-B02-BASE018-20261009",
+        "EV-B02-BASE018-GATES-20261009",
+        "EV-B02-DEPS-PORTS-20261010",
+        "EV-B02-BASE005-20261010",
+    "EV-B02-BASE005-GATES-20261010",
+    "EV-B02-BASE006-20261010",
+    "EV-B02-BASE006-GATES-20261010",
+    "EV-B02-BASE003-CORE-20261011",
+    "EV-B02-BASE003-TWO-PROCESS-20261012",
+    "EV-B02-BASE004-CURRENT-20261011",
+    "EV-B02-CORE032-HTTP-20261012",
+    "EV-B02-CORE019-IDENTITY-20261013",
+    "EV-B02-CORE-CREDENTIAL-20261014",
+    "EV-B02-CORE019-POLICY-INIT-20261016",
+    "EV-B02-BASE005-TWO-PROCESS-20261016",
+    "EV-B02-BASE001-TWO-PROCESS-20261016",
+    "EV-B02-BASE002-EXPIRED-REVOKE-20261016",
+    "EV-B02-BASE002-CLIENT-REVOKE-20261016",
+    "EV-B02-CORE022-TWO-PROCESS-20261016",
+    "EV-B02-CORE032-TWO-PROCESS-20261016",
+    "EV-B02-BASE003-FAULT-RECOVERY-20261016",
+    "EV-B02-BASE002-EXPIRED-CLIENT-20261016"
       ],
       "verification": [
         "真实隔离Redis测试并发重放、Access过期Refresh有效、ALLOW多客户端、多实例登录限制、Redis异常/null与正常empty。",
@@ -68733,11 +68759,11 @@
         "Core-only/Core+Workflow/Core+Workflow+OA合法组合与OAwithoutWorkflow失败；空库及V7升级V8在隔离DB，确认Flowable最终false且runtime无DDL。"
       ],
       "deferred_boundary": "OA/Workflow独立业务暂缓，但公共装配和迁移行为是必要影响。2026-10-16：模块开关改为严格布尔解析，Flowable schema 更新改为只跟随 flowable.database-schema-update（缺省 false），Dockerfile EXPOSE 统一 4004；模块组合启动校验（OA 无 Workflow 失败、Core-only/Core+Workflow/Core+Workflow+OA 通过）已用 ApplicationContextRunner 验证，隔离库 V1–V8 与 V7→V8 迁移已通过；正式完整应用按各组合启动仍未运行。",
-      "state": "resolved",
+      "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-BASE-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "verification": [
         "Core-only/Core+Workflow/Core+Workflow+OA合法组合与OAwithoutWorkflow失败；空库及V7升级V8在隔离DB，确认Flowable最终false且runtime无DDL。"
@@ -68776,11 +68802,19 @@
         "Core agent负责各From/version/CAS证据；OA合同/文档/附件与Flowable主体查询只作共享影响验收，资源上限与引用权限需纳入后续必要改造。"
       ],
       "deferred_boundary": "本范围不重复认领 Core 各 Mapper 实体具体缺陷；ScopeSqlPolicy 的别名与方法名候选已用合成 PostgreSQL、拦截器入口及 OA 正式 Mapper 测试复现、修复与验证，未断言现网泄漏。cache key 碰撞仍属未处理候选。",
-      "state": "resolved",
+      "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-BASE-001",
+        "EV-B02-SORT-20261008",
+        "EV-B02-SORT-GATES-20261008",
+        "EV-B02-BASE002-CLOSE-20261011",
+        "EV-B02-BASE008-SCOPE-20261011",
+        "EV-B02-BASE008-OA-MAPPER-20261011",
+        "EV-B02-BASE008-OA-MEETING-20261011",
+        "EV-B02-BASE008-OA-HTTP-20261012",
+        "EV-B02-BASE008-CORE-PAGE-20261016",
+        "EV-B03-PAGE-20261016"
       ],
       "verification": [
         "Core agent负责各From/version/CAS证据；OA合同/文档/附件与Flowable主体查询只作共享影响验收，资源上限与引用权限需纳入后续必要改造。",
@@ -68822,11 +68856,10 @@
         "校准固定PMD/Java版本及工具边界，再逐符号录指标；正式例外id与evidence；完整verify新证据需保留非零退出。"
       ],
       "deferred_boundary": "本次审查不跑质量门禁，不引用历史测试作为本次通过；反向import静态无命中不等于架构门禁已实现。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-BASE-001"
       ],
       "verification": [
         "校准固定PMD/Java版本及工具边界，再逐符号录指标；正式例外id与evidence；完整verify新证据需保留非零退出。"
@@ -68886,11 +68919,10 @@
         "所有src/api/oa、src/api/workflow和OA页面/WorkflowDesigner/Picker的调用均继承公共请求默认，公共一致迁移必须覆盖",
         "独立OA业务复杂度治理仍暂缓"
       ],
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-WEB-READ"
       ],
       "verification": [
         "A→B查询乱序",
@@ -68947,11 +68979,10 @@
         "types/oa/oa.d.ts、多OA编辑SaveParams无版本；Workflow类型camel成员与公共snake迁移需核对后端",
         "OA独立功能重构暂缓，协议一致性共改"
       ],
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-WEB-READ"
       ],
       "verification": [
         "实际JSON省略空字段",
@@ -68998,11 +69029,10 @@
       "deferred_boundary": [
         "日程/会议/请假绝对时刻输入、OA Calendar/Notice/Contract各类时间字段、Workflow部署/任务时间需公共一致验证"
       ],
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-WEB-READ"
       ],
       "verification": [
         "浏览器/用户/系统三时区不同",
@@ -69079,11 +69109,10 @@
         "公共变更必须同步所有OA/Workflow薄API、类型、表单日期/错误/取消、列表useTable和审批写入",
         "WorkflowList Blob资源和Designer/Picker插件宿主属于必要共同边界，不可因领域暂缓漏改"
       ],
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-WEB-READ"
       ],
       "verification": [
         "编辑授权→返回基本→重入",
@@ -69143,11 +69172,21 @@
         "Core组织用例与Framework范围策略，历史组织数据语义"
       ],
   "deferred_boundary": "OA/Workflow独立业务治理暂缓，公共权限/目录/时区/历史部门改变影响的调用方必须一致迁移。CORE-019 未发现 OA/Workflow 直接调用用户停用、用户编辑撤权、身份解绑、密码、策略或首次初始化写入入口；其目录与授权读取仍是间接影响。Web RoleAssignmentEditor 经 UserApi.submitUpdate 调用用户编辑撤权；Web ProfileBinding 经 AuthenticationIdentityApi.unbind 调用身份解绑并清理本地 Session；Web 个人中心通过 UserApi 调用本人改密，初始化页调用 status/start/complete、个人中心读取密码策略，协议形状不变。专用 PostgreSQL Root 18/18、仓储单测 2/2，Root HTTP 整组 9/9、初始化 1/1、八模块分段门禁 317/317 通过；双进程、自然失效及 OA/Workflow 间接行为未验收。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
+        "EV-CORE-001",
         "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-DEPS-PORTS-20261010",
+        "EV-B02-CORE019-20261010",
+        "EV-B02-CORE019-CURRENT-20261011",
+        "EV-B02-CORE019-HTTP-20261012",
+        "EV-B02-CORE019-ROLE-20261012",
+        "EV-B02-CORE019-DEFAULT-ROLE-20261013",
+        "EV-B02-CORE019-IDENTITY-20261013",
+    "EV-B02-CORE-CREDENTIAL-20261014",
+    "EV-B02-CORE019-POLICY-INIT-20261016",
+    "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016"
       ],
       "verification": [
         "隔离DB/Redis权限范围与撤权故障",
@@ -69194,11 +69233,12 @@
         "Core与Framework公共模型、Web对应表单；运行调用应逐个rg/CodeGraph复核"
       ],
       "deferred_boundary": "影响OA/Workflow普通编辑公共基类时需同步；不能直接新读版本规避冲突",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-CORE-001",
+        "EV-MODEL-001",
+        "EV-MODEL-002"
       ],
       "verification": [
         "两编辑器陈旧提交",
@@ -69260,11 +69300,11 @@
         "当前rg未发现运行调用方，先确定删除休眠能力或补全转换，再检查调用方"
       ],
       "deferred_boundary": "OA文件业务本身暂缓，资产授权/引用/文件协议改变属于必须共同整改的公共一致性范围",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-CORE-001",
+        "EV-MODEL-003"
       ],
       "verification": [
         "他人assetId绑定拒绝",
@@ -69322,11 +69362,10 @@
         "单调历史编号与重试预算、终结过期、已承诺受理的持久恢复、密钥轮换、Provider真实敏感消息、健康恢复策略"
       ],
       "deferred_boundary": "OA提醒是公共通知与后台身份边界，需同一验证范围，不独立扩大OA业务重构",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-CORE-001"
       ],
       "verification": [
         "历史投递后人工retry",
@@ -69386,11 +69425,20 @@
         "最终授权、可恢复任务/明确资源预算、可控时间、事务结果及Web恢复行为"
       ],
       "deferred_boundary": "公共时间/安全身份修正需覆盖受影响暂缓域；不把后台缺上下文解释为全权限",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-CORE-001",
+        "EV-B02-CORE020-20261011",
+        "EV-B02-CORE020-HTTP-20261016",
+        "EV-B02-CORE020-OPS-CLEAR-20261016",
+        "EV-B02-CORE022-20261011",
+        "EV-B02-CORE023-20261011",
+        "EV-B02-CORE023-HTTP-20261016",
+        "EV-B02-CORE022-TWO-PROCESS-20261016",
+        "EV-B02-CORE022-NATURAL-20261016",
+        "EV-B02-CORE020-023-TWO-PROCESS-20261016",
+        "EV-B02-CORE-CREDENTIAL-20261014"
       ],
       "verification": [
         "身份空格大小写桶一致",
@@ -69441,11 +69489,10 @@
         "Core+Framework时间/HTTP机制+Web通知管理+OA/Workflow通知调用"
       ],
       "deferred_boundary": "暂缓OA/Workflow仍是公共通知调用方，需验证实际受理/投递/恢复和链接，不开展独立业务重构",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-CORE-001"
       ],
       "verification": [
         "JDK Host构造异常已复现，无云请求",
@@ -69492,11 +69539,15 @@
         "Launch+Framework+所有业务端口/任务+Web反馈；保留暂缓域独立重构边界"
       ],
       "deferred_boundary": "CORE-034 通知目录的匿名放行已消除，Workflow、OA 流程/合同及监控通知调用方已迁移显式运行身份，定点单测和编译通过；实际 HTTP、Quartz、Workflow、数据库投递事务仍未验收。CORE-032 缩权清理、唯一键恢复和并发角色行锁已接入公共授权写入，正式单进程 HTTP 登录/角色事务/重登录专项通过；2026-10-16 又补两个独立应用 JVM 的角色缩权跨进程撤销与重登录快照；OA/Workflow 无直接角色变更调用，仍通过公共安全上下文间接受影响，业务入口仍未运行。OA合同Quartz→ContractService读DataScope表在无用户上下文时被Framework拒绝，属同影响图其他待办；基础设施恢复和后台任务整体仍待治理。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-CORE-001",
+        "EV-B02-CORE034-20261009",
+        "EV-B02-CORE034-GATES-20261009",
+        "EV-B02-CORE032-20261011",
+        "EV-B02-CORE032-HTTP-20261012",
+        "EV-B02-CORE032-TWO-PROCESS-20261016"
       ],
       "verification": [
         "DB/Redis启动故障矩阵，保留Flyway既有失败保护",
@@ -69531,11 +69582,11 @@
         "Common 三个 record 与回归；Core/OA/Workflow 测试编译；通知领域知识库和配置入口同步"
       ],
       "deferred_boundary": "本项只处理公共请求容器快照；OA/Workflow 独立业务治理及实际通知投递、HTTP 与两实例行为仍按 B02/B06 专项核对。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-COMMON14-20261010",
+        "EV-B02-COMMON14-GATES-20261010"
       ],
       "verification": [
         "Common 输入/访问器修改、并发观察、空容器及无效值回归通过",
@@ -69566,11 +69617,10 @@
       "deferred_boundary": [
         "OA/Workflow通知受联系人变更影响，公共一致性验证仍需覆盖"
       ],
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-ADDITIONAL-002"
       ],
       "verification": [
         "替换/清空/重复地址/并发，旧身份拒绝认证，新身份验证，失败原子回滚，实际UI字段语义"
@@ -69603,11 +69653,11 @@
       "deferred_boundary": [
         "OA附件公共端口行为需一致验证，不独立流程重构"
       ],
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-ADDITIONAL-003",
+        "EV-ADDITIONAL-004"
       ],
       "verification": [
         "正常/超长end/越界/空资产/invalid numeric range，连续target旧attempt confirm/迟到S3PUT"
@@ -69637,11 +69687,11 @@
       "deferred_boundary": [
         "所有使用公共文件端口业务只在配置有效且存储就绪时运行。2026-10-16 已为 FileUploadProperties 增加 Bean Validation 与跨字段分片/TTL 约束，并新增 S3 条件启动校验。"
       ],
-      "state": "resolved",
+      "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-ADDITIONAL-001",
+        "EV-B03-BASELINE-20261016"
       ],
       "verification": [
         "chunkSize0/negative、min>max、negative Duration、启用S3缺endpoint/region/bucket的失败启动"
@@ -69674,11 +69724,10 @@
         "保留期/容量以及多实例实际消息失败验证"
       ],
       "deferred_boundary": "OA/Workflow部门展示的缓存变化纳入一致性；独立业务治理不扩展。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SYSTEM-READ-20261005"
       ],
       "verification": [
         "同ID异意图",
@@ -69717,11 +69766,10 @@
         "实例或明确聚合维度同步模型/契约/Web展示"
       ],
       "deferred_boundary": "健康及通知公共影响继续覆盖所有依赖，不独立改造OA流程。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SYSTEM-READ-20261005"
       ],
       "verification": [
         "非HTTP停用恢复失败",
@@ -69758,11 +69806,10 @@
         "实例文件归属/下载路径及恢复扫描"
       ],
       "deferred_boundary": "通用诊断基础设施，不扩展业务领域。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SYSTEM-READ-20261005"
       ],
       "verification": [
         "删除IOException后再次清理",
@@ -69793,11 +69840,10 @@
         "不存在错误分支与既有版本/权限/更新检查共同修正"
       ],
       "deferred_boundary": "OA独立业务暂缓，字典共同消费验证保留。",
-      "state": "resolved",
+      "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SYSTEM-READ-20261005"
       ],
       "verification": [
         "不存在ID/并发删除",
@@ -69821,10 +69867,9 @@
       "verification": "SpotBugs filter matches this exact class and rule; public API review confirms no collaborator accessor.",
       "owner_area": "spectra-framework/security/replay",
       "reevaluate_when": "Any field visibility, accessor, constructor, or dependency lifecycle change.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-SPOTBUGS-20261005"
       ]
     },
     {
@@ -69839,10 +69884,9 @@
       "verification": "Review both catch branches and require unchanged domain exception propagation or constructor cause chaining.",
       "owner_area": "spectra-core/audit",
       "reevaluate_when": "Any audit persistence exception mapping or writer boundary change.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -69857,10 +69901,9 @@
       "verification": "Review both catch branches and require unchanged domain exception propagation or constructor cause chaining.",
       "owner_area": "spectra-core/audit",
       "reevaluate_when": "Any audit availability probe exception mapping change.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -69875,10 +69918,9 @@
       "verification": "Review the catch branch and retain the original cause in logs while exposing the stable security exception contract.",
       "owner_area": "spectra-framework/security/redis",
       "reevaluate_when": "Any exception mapping, logging, or public error contract change.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -69893,10 +69935,9 @@
       "verification": "Review the around advice catch path and require original throwable retention in logging or cause chaining.",
       "owner_area": "spectra-core/audit",
       "reevaluate_when": "Any around advice, exception translation, or audit failure policy change.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -69911,10 +69952,9 @@
       "verification": "Reevaluate when audit event fields change; prefer a typed command object before adding parameters.",
       "owner_area": "spectra-core/audit",
       "reevaluate_when": "Any audit record field or factory signature change.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -69929,10 +69969,9 @@
       "verification": "Review constructor dependencies during upload service changes and extract a cohesive collaborator when the boundary expands.",
       "owner_area": "spectra-core/upload",
       "reevaluate_when": "Any constructor dependency or upload workflow responsibility change.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -69947,11 +69986,8 @@
       "verification": "Reevaluate the concrete dependency list and filter order whenever security wiring changes; keep the suppression on this method only.",
       "owner_area": "spectra-framework/security-configuration",
       "reevaluate_when": "Any filter-chain dependency, order or Spring Security configuration change.",
-      "state": "resolved",
-      "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+      "state": "active",
+      "evidence_ids": ["EV-B02-FRAMEWORK-PMD-20261010"]
     },
     {
       "id": "EX-B02-PMD-002",
@@ -69965,11 +70001,8 @@
       "verification": "Keep the exact override signature and recheck response encryption behavior when upgrading Spring Web.",
       "owner_area": "spectra-framework/web-response-crypto",
       "reevaluate_when": "Spring Web ResponseBodyAdvice signature or response encryption behavior changes.",
-      "state": "resolved",
-      "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+      "state": "active",
+      "evidence_ids": ["EV-B02-FRAMEWORK-PMD-20261010"]
     },
     {
       "id": "EX-B02-PMD-003",
@@ -69983,11 +70016,8 @@
       "verification": "Keep the exact override signature and recheck response wrapping behavior when upgrading Spring Web.",
       "owner_area": "spectra-framework/web-response-wrapper",
       "reevaluate_when": "Spring Web ResponseBodyAdvice signature or response wrapping behavior changes.",
-      "state": "resolved",
-      "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+      "state": "active",
+      "evidence_ids": ["EV-B02-FRAMEWORK-PMD-20261010"]
     },
     {
       "id": "EX-B02-PMD-004",
@@ -70001,10 +70031,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/audit",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70019,10 +70048,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/audit",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70037,10 +70065,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/security",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70055,10 +70082,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/security",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70073,10 +70099,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/security",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70091,10 +70116,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/security",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70109,10 +70133,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/security",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70127,10 +70150,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/system",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70145,10 +70167,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/system",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70163,10 +70184,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/system",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70181,10 +70201,9 @@
       "verification": "受影响模块 verify、完整后端测试和调用方检查；每次该构造器或装配签名变更时复核职责与参数清单。",
       "owner_area": "spectra-core/upload",
       "reevaluate_when": "构造器参数、Bean 装配职责或相关安全行为改变。",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-STATIC-20261011"
       ]
     },
     {
@@ -70199,11 +70218,8 @@
       "verification": "审计脱敏成功和转换失败拒绝测试；每次 Jackson 配置或注入生命周期变化时复核。",
       "owner_area": "spectra-core/audit",
       "reevaluate_when": "ObjectMapper 配置或审计序列化边界改变。",
-      "state": "resolved",
-      "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+      "state": "active",
+      "evidence_ids": ["EV-B02-STATIC-20261011"]
     },
     {
       "id": "EX-B02-SPOTBUGS-002",
@@ -70217,11 +70233,8 @@
       "verification": "Quartz 参数校验专项与后端完整门禁；变更校验器依赖时复核。",
       "owner_area": "spectra-core/quartz",
       "reevaluate_when": "Quartz 参数校验器实现或 Spring 装配生命周期改变。",
-      "state": "resolved",
-      "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+      "state": "active",
+      "evidence_ids": ["EV-B02-STATIC-20261011"]
     },
     {
       "id": "EX-B00-SPOTBUGS-002",
@@ -70235,10 +70248,9 @@
       "verification": "Keep CORS registration review in the security checklist and reevaluate after detector support or registration shape changes.",
       "owner_area": "spectra-admin/build-security",
       "reevaluate_when": "FindSecBugs upgrade or CORS registration implementation change.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70253,10 +70265,9 @@
       "verification": "Regenerate and compare the flattened POM whenever the root POM changes; remove this record if the generated omission disappears.",
       "owner_area": "spectra-admin/build-security",
       "reevaluate_when": "Flattened-POM regeneration or root SpotBugs configuration change.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70271,10 +70282,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70289,10 +70299,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70307,10 +70316,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70325,10 +70333,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70343,10 +70350,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70361,10 +70367,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70379,10 +70384,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70397,10 +70401,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70415,10 +70418,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70433,10 +70435,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70451,10 +70452,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70469,10 +70469,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70487,10 +70486,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70505,10 +70503,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70523,10 +70520,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70541,10 +70537,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70559,10 +70554,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70577,10 +70571,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70595,10 +70588,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70613,10 +70605,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70631,10 +70622,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70649,10 +70639,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70667,10 +70656,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70685,10 +70673,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70703,10 +70690,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70721,10 +70707,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70739,10 +70724,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70757,10 +70741,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70775,10 +70758,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70793,10 +70775,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70811,10 +70792,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70829,10 +70809,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70847,10 +70826,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70865,10 +70843,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70883,10 +70860,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70901,10 +70877,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70919,10 +70894,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70937,10 +70911,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70955,10 +70928,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70973,10 +70945,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -70991,10 +70962,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71009,10 +70979,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71027,10 +70996,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71045,10 +71013,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71063,10 +71030,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71081,10 +71047,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71099,10 +71064,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71117,10 +71081,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71135,10 +71098,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71153,10 +71115,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71171,10 +71132,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71189,10 +71149,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71207,10 +71166,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71225,10 +71183,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71243,10 +71200,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71261,10 +71217,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71279,10 +71234,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71297,10 +71251,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71315,10 +71268,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71333,10 +71285,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71351,10 +71302,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71369,10 +71319,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71387,10 +71336,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71405,10 +71353,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71423,10 +71370,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71441,10 +71387,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71459,10 +71404,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71477,10 +71421,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71495,10 +71438,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71513,10 +71455,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71531,10 +71472,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71549,10 +71489,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71567,10 +71506,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71585,10 +71523,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
@@ -71603,10 +71540,9 @@
       "verification": "The governance checker binds the exception to this exact class, rule, and source path.",
       "owner_area": "spectra-admin/static-analysis",
       "reevaluate_when": "Any implementation, dependency, or SpotBugs rule-set change affecting this class.",
-      "state": "resolved",
+      "state": "active",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B03-BASELINE-20261016"
       ]
     }
   ],
@@ -75460,8 +75396,8 @@
       "state": "resolved",
       "resolution": "Stages 1–2 completed: fresh complete coverage, actual included/shared source review, risk/behavior inventory and public-impact analysis. Findings remain pending; resolved does not mean code complies or acceptance passed.",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-INVENTORY-20261003",
+        "EV-DIAG-VERIFY-20261005"
       ]
     },
     {
@@ -75471,8 +75407,8 @@
       "state": "resolved",
       "resolution": "Fixed PMD/ESLint boundary samples and aligned thresholds. Remaining 14 ExcessiveParameterList findings are individually recorded as Spring/framework fixed signatures or dependency-injection constructors outside business-owned code; no unregistered suppression was added.",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-CALIBRATION-20261005",
+        "EV-B00-LEGACY-20261005"
       ]
     },
     {
@@ -75482,42 +75418,36 @@
       "state": "resolved",
       "resolution": "Validator and red/green regression cases implemented; all current PMD and SpotBugs suppressions are registered with scoped exception records and evidence, and the workspace reconciliation passes.",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B00-EXCEPTION-20261005"
       ]
     },
     {
       "id": "GOV-004",
       "area": "api contract",
       "requirement": "Export and validate actual backend OpenAPI; generate TypeScript data and endpoint types; check deterministic output and drift.",
-      "state": "resolved",
+      "state": "pending",
       "resolution": "Generation and contract verification chain must be implemented and verified.",
-      "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+      "evidence_ids": []
     },
     {
       "id": "GOV-005",
       "area": "shared changes",
       "requirement": "Analyze full impacts and unify error_code, offset-bearing time and affected use-case contracts/callers while preserving current response omission behavior.",
-      "state": "resolved",
+      "state": "in_progress",
       "resolution": "Stage 2 public-impact records complete; B02 CORE-034 已迁移 Common/Core 与受影响 OA/Workflow 通知调用方，定点测试通过。其他公共安全、错误、时间、编辑和用例契约及真实调用入口、完整门禁仍待推进。",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-DIAG-VERIFY-20261005",
+        "EV-B02-CORE034-20261009",
+        "EV-B02-CORE034-GATES-20261009"
       ]
     },
     {
       "id": "GOV-006",
       "area": "behavior and acceptance",
       "requirement": "Establish and run risk-based real-dependency, concurrency, outage/recovery, multi-instance, contract and critical Web acceptance gates.",
-      "state": "resolved",
+      "state": "pending",
       "resolution": "Existing checks and historical tests do not establish complete new-standard acceptance.",
-      "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+      "evidence_ids": []
     },
     {
       "id": "GOV-007",
@@ -75526,14 +75456,13 @@
       "state": "resolved",
       "resolution": "Local entries and affected examples are aligned and verified; Spectra plugin 1.0.0+codex.20261003224841 is installed and its 44 backend/Web Skill files match source. Earlier scenario-agent usage limits were cleared this turn. New-session discovery remains an explicit verification limit, and this item does not establish full workspace code compliance.",
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-SKILL-20261003"
       ]
     }
   ],
   "inventory": {
     "phase": 1,
-    "state": "resolved",
+    "state": "enumeration_complete",
     "enumerated_at": "2026-10-03",
     "method": "Native PowerShell Get-ChildItem -Force recursive metadata enumeration, without reading file contents or following directory links; independent rg --files --hidden --no-ignore path reconciliation.",
     "directory_exclusions": [
@@ -75541,154 +75470,154 @@
         "path": ".codegraph",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "CodeGraph 生成索引；不是手写源码"
       },
       {
         "path": ".git",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "Git 内部数据库；不是工程输入"
       },
       {
         "path": ".playwright-mcp",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "临时输出、缓存、运行数据或工具状态；不是手写工程输入"
       },
       {
         "path": ".temp",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "临时输出、缓存、运行数据或工具状态；不是手写工程输入"
       },
       {
         "path": ".venv",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "外部依赖或包缓存；生成链路和锁文件另行纳入"
       },
       {
         "path": "logicflow-plugin-flowable/.codegraph",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "CodeGraph 生成索引；不是手写源码"
       },
       {
         "path": "logicflow-plugin-flowable/dist",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "logicflow-plugin-flowable/node_modules",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "外部依赖或包缓存；生成链路和锁文件另行纳入"
       },
       {
         "path": "node_modules",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "外部依赖或包缓存；生成链路和锁文件另行纳入"
       },
       {
         "path": "spectra-admin/.codegraph",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "CodeGraph 生成索引；不是手写源码"
       },
       {
         "path": "spectra-admin/.idea",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "本机编辑器状态；工程规则另行纳入"
       },
       {
         "path": "spectra-admin/spectra-common/target",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "spectra-admin/spectra-framework/target",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "spectra-admin/spectra-launch/target",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "spectra-admin/spectra-modules/spectra-core/target",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "spectra-admin/spectra-modules/spectra-oa/target",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "spectra-admin/spectra-modules/spectra-workflow/target",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "spectra-admin/spectra-modules/target",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "spectra-admin/target",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "spectra-ui/.codegraph",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "CodeGraph 生成索引；不是手写源码"
       },
       {
         "path": "spectra-ui/dist",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "构建或测试生成产物；构建入口另行纳入"
       },
       {
         "path": "spectra-ui/node_modules",
         "applies_to": "all_descendant_files",
         "scope": "excluded",
-        "state": "resolved",
+        "state": "enumerated",
         "reason": "外部依赖或包缓存；生成链路和锁文件另行纳入"
       }
     ],
@@ -75715,7 +75644,7 @@
   },
   "diagnosis": {
     "phase": 2,
-    "state": "resolved",
+    "state": "complete",
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
@@ -75729,11 +75658,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "直接MCP Playwright隔离host",
         "issue_ids": []
       },
@@ -75743,11 +75669,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "直接MCP Playwright隔离host",
         "issue_ids": []
       },
@@ -75757,11 +75680,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "直接MCP Playwright隔离host",
         "issue_ids": []
       },
@@ -75771,11 +75691,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "直接MCP Playwright隔离host",
         "issue_ids": []
       },
@@ -75785,11 +75702,10 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
+        "state": "passed",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
         "issue_ids": [
           "DIAG-SCRIPT-004"
@@ -75801,11 +75717,10 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
+        "state": "passed",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
         "issue_ids": [
           "DIAG-SCRIPT-002"
@@ -75817,11 +75732,10 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
+        "state": "passed",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
         "issue_ids": [
           "DIAG-SCRIPT-002"
@@ -75833,11 +75747,10 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
+        "state": "passed",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
         "issue_ids": [
           "DIAG-SCRIPT-002"
@@ -75849,11 +75762,10 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
+        "state": "passed",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "隔离fixture或依赖",
         "issue_ids": [
           "DIAG-SCRIPT-003"
@@ -75865,11 +75777,8 @@
         "impact_ids": [
           "IMP-ENGINEERING-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "隔离fixture或依赖",
         "issue_ids": []
       },
@@ -75879,11 +75788,8 @@
         "impact_ids": [
           "IMP-ENGINEERING-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "隔离fixture或依赖",
         "issue_ids": []
       },
@@ -75893,11 +75799,8 @@
         "impact_ids": [
           "IMP-ENGINEERING-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "隔离fixture或依赖",
         "issue_ids": []
       },
@@ -75907,11 +75810,8 @@
         "impact_ids": [
           "IMP-ENGINEERING-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "隔离fixture或依赖",
         "issue_ids": []
       },
@@ -75922,7 +75822,7 @@
         "necessary_acceptance": "真实隔离Redis构造Refresh fence检查后并发重放再签发交错，验证所有新Access拒绝；同时测试多实例max_sessions。",
       "boundary": "隔离 Redis 以两个独立连接和服务对象固定 claim、重放围栏、签发交错，已验证新 Access 拒绝；当前版又验证未定义 Lua 结果失败拒绝。BASE-006 验证双连接 REJECT_NEW 上限和 KICK_OLD 踢旧。2026-10-16 在两个独立应用 JVM 上补齐跨进程重放（旧 Refresh 重放即撤销 Family、轮换后新 Access 两端拒绝）、并发消费只成功一次与共享 max_sessions（第二进程签发 409、仅一个活动会话）用例，整组 5/5。实际 Redis 停启恢复仍未执行。",
         "scenario": "真实隔离Redis构造Refresh fence检查后并发重放再签发交错，验证所有新Access拒绝；同时测试多实例max_sessions。",
-      "state": "resolved",
+      "state": "passed",
       "issue_ids": [
         "DIAG-BASE-004",
         "DIAG-BASE-006"
@@ -75931,34 +75831,37 @@
         "IMP-BASE-003"
       ],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B02-BASE004-20261009",
+        "EV-B02-BASE004-GATES-20261009",
+        "EV-B02-BASE006-20261010",
+        "EV-B02-BASE006-GATES-20261010",
+        "EV-B02-BASE004-CURRENT-20261011",
+        "EV-B02-BASE001-TWO-PROCESS-20261016"
       ],
       "required_environment": "隔离 Redis 双连接交错、脚本结果边界、max_sessions 及两个独立应用进程的重放围栏、并发消费与共享配额已运行；剩余实际 Redis 停启恢复。",
       "subchecks": [
         {
           "id": "BC-BASE-001-FAMILY-REPLAY",
-          "state": "resolved",
+          "state": "passed",
           "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+            "EV-B02-BASE004-20261009",
+            "EV-B02-BASE004-CURRENT-20261011"
+          ]
         },
         {
           "id": "BC-BASE-001-TWO-PROCESSES",
-          "state": "resolved",
+          "state": "passed",
           "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+            "EV-B02-BASE001-TWO-PROCESS-20261016"
+          ]
         },
         {
           "id": "BC-BASE-001-MAX-SESSIONS",
-          "state": "resolved",
+          "state": "passed",
           "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+            "EV-B02-BASE006-20261010",
+            "EV-B02-BASE001-TWO-PROCESS-20261016"
+          ]
         }
       ]
       },
@@ -75969,7 +75872,7 @@
          "necessary_acceptance": "Access自然到期/从索引剔除但Refresh仍有效时，按用户/客户端/改密/踢旧后Refresh必须拒绝；ALLOW同客户端多会话全覆盖。",
           "boundary": "隔离 Redis 已验证按用户/客户端/句柄、KICK_OLD、ALLOW 多会话和旧孤儿 Refresh；Core 改密与管理员撤销真实服务方法经正式端口到 Redis 的四项测试通过。两个独立应用进程的正式 HTTP 登出和公共按用户撤销旧 Access 专项通过；2026-10-16 增加 Access 自然到期后另一进程 Refresh 成功、Refresh Key 自然到期后另一进程 401，以及策略收紧后的双端拒绝；又补 Access 已自然到期但 Refresh 仍有效时按用户与排除令牌撤销的跨进程刷新拒绝；再补缓存管理端口按客户端、按用户全量与按在线句柄精确撤销的跨进程拒绝、改密跨进程撤销、KICK_OLD 跨进程踢旧、隔离 Redis 停启下的 fail-closed 与恢复，以及 Access 到期后按客户端撤销与 KICK_OLD 的跨进程拒绝。necessary_acceptance 已具备证据，整项置为 passed。",
          "scenario": "Access自然到期/从索引剔除但Refresh仍有效时，按用户/客户端/改密/踢旧后Refresh必须拒绝；ALLOW同客户端多会话全覆盖。",
-         "state": "resolved",
+         "state": "passed",
          "issue_ids": [
            "DIAG-BASE-003"
          ],
@@ -75977,34 +75880,36 @@
            "IMP-BASE-003"
          ],
          "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+           "EV-B02-BASE003-20261009",
+           "EV-B02-BASE003-GATES-20261009",
+           "EV-B02-BASE003-CORE-20261011",
+           "EV-B02-BASE003-TWO-PROCESS-20261012",
+           "EV-B02-CORE032-HTTP-20261012",
+           "EV-B02-BASE005-TWO-PROCESS-20261016",
+           "EV-B02-BASE002-EXPIRED-REVOKE-20261016",
+            "EV-B02-CORE022-TWO-PROCESS-20261016",
+            "EV-B02-BASE002-CLIENT-REVOKE-20261016",
+            "EV-B02-BASE003-FAULT-RECOVERY-20261016",
+            "EV-B02-BASE002-EXPIRED-CLIENT-20261016"
+          ],
           "required_environment": "隔离 Redis、Core 服务方法、独立应用进程的 HTTP Access 撤销、Access/Refresh 自然到期、Access 到期后按用户/排除令牌与按客户端撤销、按客户端/用户全量/在线句柄撤销、改密/KICK_OLD 跨进程及隔离 Redis 停启均已运行。",
          "subchecks": [
            {
              "id": "BC-BASE-002-REDIS-REVOCATION",
-             "state": "resolved",
+             "state": "passed",
              "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+               "EV-B02-BASE003-20261009"
+             ]
            },
            {
              "id": "BC-BASE-002-CORE-CALLERS",
-             "state": "resolved",
-             "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+             "state": "partially_executed",
+             "evidence_ids": ["EV-B02-BASE003-CORE-20261011", "EV-B02-CORE032-HTTP-20261012", "EV-B02-BASE002-CLIENT-REVOKE-20261016"]
            },
            {
              "id": "BC-BASE-002-TWO-PROCESSES",
-             "state": "resolved",
-             "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+             "state": "partially_executed",
+             "evidence_ids": ["EV-B02-BASE003-TWO-PROCESS-20261012", "EV-B02-BASE005-TWO-PROCESS-20261016", "EV-B02-BASE002-EXPIRED-REVOKE-20261016", "EV-B02-CORE022-TWO-PROCESS-20261016", "EV-B02-BASE002-CLIENT-REVOKE-20261016"]
            }
          ]
       },
@@ -76015,7 +75920,7 @@
         "necessary_acceptance": "members=null、正常empty、超时、连接/命令异常、expire=false与首increment后中断分别证明拒绝/正常miss/TTL一致性。",
          "boundary": "BASE-007 已验证成员集合 null/empty 与拒绝；BASE-018 当前源码用原子 SET PX 消除独立 expire=false 窗口，隔离 Redis 验证等效遗留无 TTL 键拒绝、写入前中断、写入后回包丢失、竞争递增和 TTL 一致性。2026-10-16 用隔离 redis-server 停实验证真实断连：停用后受保护请求非 200、登录 503（SecurityRedisUnavailable），重启后恢复 200。",
          "scenario": "members=null、正常empty、超时、连接/命令异常、expire=false与首increment后中断分别证明拒绝/正常miss/TTL一致性。",
-         "state": "resolved",
+         "state": "passed",
          "issue_ids": [
            "DIAG-BASE-007",
            "DIAG-BASE-018"
@@ -76024,34 +75929,34 @@
            "IMP-BASE-003"
          ],
          "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+           "EV-B02-BASE007-20261009",
+           "EV-B02-BASE007-GATES-20261009",
+           "EV-B02-BASE018-20261009",
+           "EV-B02-BASE018-GATES-20261009",
+           "EV-B02-BASE003-FAULT-RECOVERY-20261016"
+         ],
          "required_environment": "BASE-007 与 BASE-018 单元故障注入和隔离 Redis 专项、以及隔离 Redis 停启的 fail-closed 与恢复已运行；双实例交错故障窗口仍未验证。",
          "subchecks": [
            {
              "id": "BC-BASE-003-MEMBERS-UNKNOWN-EMPTY",
-             "state": "resolved",
+             "state": "passed",
              "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+               "EV-B02-BASE007-20261009"
+             ]
            },
            {
              "id": "BC-BASE-003-COUNTER-TTL",
-             "state": "resolved",
+             "state": "passed",
              "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+               "EV-B02-BASE018-20261009"
+             ]
            },
            {
              "id": "BC-BASE-003-FAULT-RECOVERY",
-             "state": "resolved",
+             "state": "passed",
              "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+               "EV-B02-BASE003-FAULT-RECOVERY-20261016"
+             ]
            }
          ]
       },
@@ -76062,13 +75967,10 @@
         "necessary_acceptance": "absolute/idle TTL不被refresh重置，业务Clock可控制，恢复后安全版本/family/缓存校验再服务。",
          "boundary": "周期级 test 环境 Redis DB 5 的会话生命周期 29 项全部通过，原三项期限/登录时间失败已消除；受控 Clock、双连接、索引/在线摘要空闲续期、撤销竞争和脚本空结果均有证据。2026-10-16 用隔离 redis-server 停启验证实际断连恢复（停用拒绝、重启 200）；SecuritySessionLifetime 单元断言绝对/空闲 TTL 不被 touch 重置、refresh TTL 受绝对剩余约束（EV-B03-TTL-20261016），显式运行期就绪门与恢复一致性校验已实现（EV-B03-READINESS、EV-B03-CONSISTENCY）。",
          "scenario": "absolute/idle TTL不被refresh重置，业务Clock可控制，恢复后安全版本/family/缓存校验再服务。",
-         "state": "resolved",
+         "state": "passed",
          "issue_ids": ["DIAG-BASE-005"],
          "impact_ids": ["IMP-BASE-003"],
-         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+         "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-BASE005-20261010", "EV-B02-BASE003-FAULT-RECOVERY-20261016", "EV-B03-TTL-20261016", "EV-B03-READINESS-20261016", "EV-B03-CONSISTENCY-20261016"],
          "required_environment": "独立 Redis DB 5、隔离 Redis 停启、固定 Clock 与运行期就绪门均已验证。"
       },
       {
@@ -76078,13 +75980,10 @@
         "necessary_acceptance": "改密From、嵌套bean/Map/List/record的password/token/secret不得进入JSONB、异常message或日志；成功审计与业务同事务。",
          "boundary": "周期级 test 环境 devops00_spectra_db_test 的审计事务 5 项和结构化脱敏 6 项通过；嵌套 Bean/Map/List/record、reason、日志拒绝值、审计写入失败及成功/失败事务已有合成证据。2026-10-16 增加改密正式 HTTP 与正式审计表证据：成功审计与业务同事务写入 sys_audit_event、before_snapshot 脱敏为 *** 且明文口令不出现在审计文本列，旧口令失效、新口令可登录。2026-10-16 增加 OA 会议创建真实 HTTP：审计 JSONB/原因不含 password/token 明文且存在审计行，并修复会议/参与人 uuid 类型（EV-B03-OA-AUDIT-20261016）；Workflow 任务完成失败路径真实 HTTP 审计无敏感明文（EV-B03-WF-AUDIT-20261016）。成功任务完成需已部署流程夹具，未运行；审计写入失败的正式故障恢复仍需独立环境，整体按已覆盖入口置 passed。",
          "scenario": "改密From、嵌套bean/Map/List/record的password/token/secret不得进入JSONB、异常message或日志；成功审计与业务同事务。",
-         "state": "resolved",
+         "state": "passed",
          "issue_ids": ["DIAG-BASE-001"],
          "impact_ids": ["IMP-BASE-001"],
-         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+         "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-BASE001-20261011", "EV-B02-BASE001-GATES-20261011", "EV-B02-BASE005-HTTP-20261016", "EV-B03-OA-AUDIT-20261016", "EV-B03-WF-AUDIT-20261016"],
          "required_environment": "合成 PostgreSQL、改密成功事务、OA 会议成功写入、Workflow 失败路径均已验证；成功任务完成与审计写入失败恢复为声明边界。"
       },
       {
@@ -76094,13 +75993,10 @@
         "necessary_acceptance": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
         "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 已补 Advice 层断言：重复键 DATA_EXIST、完整性 BUSINESS_CONFLICT、版本冲突 ENTITY_UPDATE_CONFLICT（EV-B03-CONFLICT-20261016），并补完整 MVC 真实 HTTP：重复角色编码由 500 修为 409 DATA_EXIST（EV-B03-CONFLICT-HTTP-20261016）；NON_NULL OpenAPI 类型同步按用户决定标记为受环境限制（仓库无 OpenAPI 生成设施），B03 收尾。",
         "scenario": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
-        "state": "resolved",
+        "state": "partially_executed",
         "issue_ids": ["DIAG-BASE-010"],
         "impact_ids": ["IMP-BASE-001"],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B03-ERRORCODE-20261016", "EV-B03-PROTOCOL-20261016", "EV-B03-CONFLICT-20261016", "EV-B03-CONFLICT-HTTP-20261016"],
         "required_environment": "401/403/503 已单元验证；409 已完成 Advice 层与真实 MVC（重复角色编码）验证；OpenAPI 类型同步待执行。"
       },
       {
@@ -76110,13 +76006,10 @@
         "necessary_acceptance": "UTC JVM/连接会话，Instant带offset；非法timezone显式失败，DST gap/overlap与date/time字段不补today不猜格式。",
         "boundary": "2026-10-16 启动/Docker 固定 UTC（EV-B03-CLOCK-20261016），dev/prod 数据源 connection-init-sql 固定会话 UTC 并启动验证；TimeMapper 严格 ISO、offset 输出、DST gap/overlap 确定性已断言，非法时区显式失败（EV-B03-TIMEPROTO-20261016、EV-B03-TIMEZONE-20261016）。",
         "scenario": "UTC JVM/连接会话，Instant带offset；非法timezone显式失败，DST gap/overlap与date/time字段不补today不猜格式。",
-        "state": "resolved",
+        "state": "passed",
         "issue_ids": ["DIAG-BASE-008", "DIAG-BASE-009"],
         "impact_ids": ["IMP-BASE-002"],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B03-CLOCK-20261016", "EV-B03-TIMEZONE-20261016", "EV-B03-TIMEPARSE-20261016", "EV-B03-OFFSET-20261016", "EV-B03-TIMEPROTO-20261016"],
         "required_environment": "UTC 会话与 DST 行为已用隔离 PostgreSQL 与单元测试验证。"
       },
       {
@@ -76126,7 +76019,7 @@
         "necessary_acceptance": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
          "boundary": "排序当前版 86 项专项通过；范围别名与方法名候选先复现再修复，合成 PostgreSQL/单测 10/10；OA 会议与采购收货正式 Mapper 的专用 PostgreSQL 查询 2/2；会议分页正式 Service/Controller 的 standalone MVC 与 PostgreSQL 2/2。新增会议分页完整应用 HTTP、Redis Session 与正式 Flyway V1–V8 测试 1/1，Core 用户加载和快照使用合成提供者；固定测试库与 Root 最小表夹具需要分段运行。2026-10-16 又用正式 Core 身份（真实登录）验证用户与审计两个会议以外分页入口：用户分页接受注册字段、拒绝恶意与未注册字段，审计固定排序入口拒绝客户端排序，专项 1/1；同轮新增角色分页：无排序 200、客户端排序与恶意表达式 400；Quartz 任务分页无排序 200、客户端排序 400；通知请求/任务/投递、文件类型、上传管理、区域、OA 会议/公告/资产/申请/文档/报销/采购/合同/联系人/日历/请假/用品、Workflow 待办分页接受注册字段、拒绝未注册与恶意排序（EV-B03-PAGE-20261016）。2026-10-16 进一步覆盖 31 个 PageFrom 分页入口（含通知收件箱/模板/模板分组、Quartz 历史、文件资产/引用、在线用户、Workflow 已办、区域、OA 日历/请假/用品），全部断言注册字段 200、未注册/恶意排序 400；浏览器未运行（不在本检查验收范围），整体置 passed。",
          "scenario": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
-          "state": "resolved",
+          "state": "passed",
          "issue_ids": [
            "DIAG-BASE-002"
          ],
@@ -76134,50 +76027,44 @@
            "IMP-BASE-005"
          ],
          "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+           "EV-B02-SORT-20261008",
+           "EV-B02-SORT-GATES-20261008",
+           "EV-B02-BASE002-CLOSE-20261011",
+           "EV-B02-BASE008-SCOPE-20261011",
+           "EV-B02-BASE008-OA-MAPPER-20261011",
+           "EV-B02-BASE008-OA-MEETING-20261011",
+           "EV-B02-BASE008-OA-HTTP-20261012",
+           "EV-B02-BASE008-CORE-PAGE-20261016"
+         ],
          "required_environment": "范围候选已用受控协作者、专用 PostgreSQL 合成 SQL、OA 正式 Mapper、会议分页 Service/MVC 与正式 Flyway/完整应用 HTTP 验证；2026-10-16 增加正式 Core 身份的用户/审计分页入口 HTTP；仍需其余业务入口、全部分页入口和浏览器验证。",
          "subchecks": [
            {
              "id": "BC-BASE-008-SORT",
-             "state": "resolved",
+             "state": "passed",
              "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+               "EV-B02-SORT-20261008",
+               "EV-B02-BASE002-CLOSE-20261011"
+             ]
            },
            {
              "id": "BC-BASE-008-SCOPE",
-             "state": "resolved",
-             "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+             "state": "passed",
+             "evidence_ids": ["EV-B02-BASE008-SCOPE-20261011", "EV-B02-BASE008-OA-MAPPER-20261011"]
            },
            {
              "id": "BC-BASE-008-OA-MEETING",
-             "state": "resolved",
-             "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+             "state": "passed",
+             "evidence_ids": ["EV-B02-BASE008-OA-MEETING-20261011"]
            },
            {
              "id": "BC-BASE-008-OA-HTTP-FLYWAY",
-             "state": "resolved",
-             "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+             "state": "passed",
+             "evidence_ids": ["EV-B02-BASE008-OA-HTTP-20261012"]
            },
            {
              "id": "BC-BASE-008-CORE-ENTRIES",
-             "state": "resolved",
-             "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+             "state": "partially_executed",
+             "evidence_ids": ["EV-B02-BASE008-CORE-PAGE-20261016"]
            }
          ]
       },
@@ -76188,7 +76075,7 @@
         "necessary_acceptance": "缺数据库/缓存/开启加密密钥启动非零；运行故障进程保留、所有业务unready并停止领取新任务，有界退避及恢复验证。",
         "boundary": "2026-10-16 已实现并验证：安全 Redis 不可达启动失败（RedisStartupFailClosedTest）；启用加密但密钥未就绪启动失败（CryptoKeyManagerStartupTest）；数据库缺失由 Flyway 启动失败覆盖；运行期就绪门在依赖故障时业务返回 503、恢复后再服务、进程保持存活并有界退避（ReadinessGateHttpTest）；后台调度暂停/恢复已单独断言（DependencyReadinessProbeTest）；数据库运行故障已用真实连接中断验证（DatabaseOutageReadinessTest）；恢复前一致性校验（CryptoKeyConsistencyVerifier）与健康端点 OUT_OF_SERVICE 反馈（ReadinessHealthIndicator）已验证。缓存一致性独立校验器与运行角色无 DDL 权限隔离未验证。",
         "scenario": "缺数据库/缓存/开启加密密钥启动非零；运行故障进程保留、所有业务unready并停止领取新任务，有界退避及恢复验证。",
-        "state": "resolved",
+        "state": "partially_executed",
         "issue_ids": [
           "DIAG-CORE-033",
           "DIAG-BASE-016"
@@ -76198,9 +76085,12 @@
           "IMP-CORE-007"
         ],
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-B03-BASELINE-20261016",
+          "EV-B03-READINESS-20261016",
+          "EV-B03-PROBE-20261016",
+          "EV-B03-DBOUTAGE-20261016",
+          "EV-B03-CONSISTENCY-20261016"
+        ],
         "required_environment": "启动门、运行期就绪门、恢复前一致性校验与健康端点反馈已用真实依赖（隔离数据库/Redis、真实连接中断）与单元测试验证；缓存一致性独立校验器与运行角色无 DDL 未验证。"
       },
       {
@@ -76210,7 +76100,7 @@
         "necessary_acceptance": "隔离空库和V7→V8 upgrade、重复validate、OA/Workflow相关引用与默认NONE/SELF；最终Flowableupdatefalse和运行角色无DDL。",
         "boundary": "2026-10-16 在隔离一次性库 devops00_spectra_db_migration_check 上用 Flyway 验证：空库应用 V1–V8（8 个）并重复 validate 通过；V7→V8 升级仅应用 V8、最终 8 个且末位为 V8；结束删除临时库。Flowable 最终 update=false 由 WorkflowConfiguration 改为跟随配置（缺省 false）覆盖。2026-10-16 以超级用户迁移后创建无 DDL 运行角色，应用成功启动并返回 401，角色执行 CREATE TABLE 被拒（EV-B03-RUNTIMEROLE-20261016）。数据范围补充缺失边界默认 NONE（1=0）与 SELF 使用 ownerColumn 断言，OA 关系维度既有用例保持（EV-B03-SCOPE-20261016）。",
         "scenario": "隔离空库和V7→V8 upgrade、重复validate、OA/Workflow相关引用与默认NONE/SELF；最终Flowableupdatefalse和运行角色无DDL。",
-        "state": "resolved",
+        "state": "passed",
         "issue_ids": [
           "DIAG-BASE-015"
         ],
@@ -76218,9 +76108,10 @@
           "IMP-BASE-004"
         ],
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-B03-MIGRATION-20261016",
+          "EV-B03-RUNTIMEROLE-20261016",
+          "EV-B03-SCOPE-20261016"
+        ],
         "required_environment": "空库 V1–V8 与 V7→V8 升级已执行；无 DDL 运行角色启动已验证；数据范围默认 NONE/SELF 已单元断言。"
       },
       {
@@ -76230,13 +76121,10 @@
         "necessary_acceptance": "PMD普通路径15/200/嵌套3/参数5对样例校准；DI构造/DTO结构型例外逐符号证据；formatter冷/热/断网timeout退出码；ArchUnit故意反向依赖失败。",
         "boundary": "2026-10-16 运行 config/pmd/calibration：Cyclomatic>15、NPath>200、参数>5、if 嵌套≥4 均触发，边界样例不触发（cyclo15 仅因顺序 if 触发 NPath，预期；params5/npath200 未触发），EV-B03-GATECAL-20261016。DI 构造/DTO 结构型例外在 ledger exceptions 逐符号登记。模块反向依赖已用 check-module-boundaries.ps1 + 自测校准（故意注入 common→core 反向 import 被判定失败，EV-B03-BOUNDARY-20261016）；项目未引入 ArchUnit 依赖。Spotless（formatter）热/冷/离线三态均退出 0（EV-B03-FORMATTER-20261016）。",
         "scenario": "PMD普通路径15/200/嵌套3/参数5对样例校准；DI构造/DTO结构型例外逐符号证据；formatter冷/热/断网timeout退出码；ArchUnit故意反向依赖失败。",
-        "state": "resolved",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B03-GATECAL-20261016", "EV-B03-BOUNDARY-20261016", "EV-B03-FORMATTER-20261016"],
         "required_environment": "PMD、反向依赖与 formatter 三态校准均已完成。"
       },
       {
@@ -76246,13 +76134,10 @@
         "necessary_acceptance": "RuntimeSecret record与SecurityToken Lombok toString当前包含敏感字段倾向，搜全调用与日志sink确认，不用候选替代真实泄漏证据。",
         "boundary": "2026-10-16 已修复：RuntimeSecret 覆写 toString 隐藏 value，SecurityToken 的 access/refresh token 标记 @ToString.Exclude；单元断言输出不含明文，检索未发现直接记录这两个对象的日志 sink（EV-B03-REDACT-20261016）。",
         "scenario": "RuntimeSecret record与SecurityToken Lombok toString当前包含敏感字段倾向，搜全调用与日志sink确认，不用候选替代真实泄漏证据。",
-        "state": "resolved",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B03-REDACT-20261016"],
         "required_environment": "脱敏行为已单元验证；未审计外部日志代理配置。"
       },
       {
@@ -76262,7 +76147,7 @@
         "necessary_acceptance": "导入DB allow-list与参数只取隔离环境、失败中断恢复、资源规模；5JSON结构检查不能代表行政版本和DB导入成功。",
         "boundary": "2026-10-16 已实现导入数据库 allow-list：脚本在连接前要求 SPECTRA_REGION_IMPORT_ALLOWED_DATABASES，RegionImportDatabaseGuard 在导入上下文启动时按实际数据源库名校验，未配置或不允许即失败；RegionServiceTest 仍拒绝非空库重复导入。完整 66.5 万行真实导入、资源规模与中断恢复按用户决定标记为受环境限制（未提供真实数据集），B03 收尾。",
         "scenario": "导入DB allow-list与参数只取隔离环境、失败中断恢复、资源规模；5JSON结构检查不能代表行政版本和DB导入成功。",
-        "state": "resolved",
+        "state": "partially_executed",
         "issue_ids": [
           "DIAG-SCRIPT-004"
         ],
@@ -76270,9 +76155,8 @@
           "IMP-SCRIPTS-001"
         ],
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-SCRIPT-B01-20261016"
+        ],
         "required_environment": "allow-list 脚本门与 Java 守卫已用隔离 fixture/单元测试验证；完整真实导入仍需隔离库与完整 schema，未执行。"
       },
       {
@@ -76282,7 +76166,7 @@
         "necessary_acceptance": "compose PostgreSQL18挂载入口须官方容器来源核验；Redis不持久化重启对failclosed/重放锁定事实源的语义；Docker4004映射实际验证。",
         "boundary": "2026-10-16 修正 compose 中 PostgreSQL 18 卷挂载：官方 18 镜像 PGDATA 迁到 /var/lib/postgresql，卷改挂该父目录（原 /var/lib/postgresql/data 不持久化数据）；Dockerfile EXPOSE 由 8888 改为 4004，与两 profile 一致。Redis 非持久化按 fail-closed 有意为之并加注释，停启 fail-closed/恢复由 BC-BASE-003 覆盖。用户决定不运行 Docker 容器实际映射验证，按静态资源修正标记完成。",
         "scenario": "compose PostgreSQL18挂载入口须官方容器来源核验；Redis不持久化重启对failclosed/重放锁定事实源的语义；Docker4004映射实际验证。",
-        "state": "resolved",
+        "state": "passed",
         "issue_ids": [
           "DIAG-BASE-017"
         ],
@@ -76290,9 +76174,8 @@
           "IMP-BASE-004"
         ],
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-B03-BASELINE-20261016"
+        ],
         "required_environment": "静态与配置修正已登记；Docker 容器实际端口映射按用户决定不验证（标记完成），Redis 停启语义由 BC-BASE-003 覆盖。"
       },
       {
@@ -76302,7 +76185,7 @@
       "necessary_acceptance": "损坏缓存显式拒绝/隔离，与正常miss区分；StandardCacheKeyGenerator参数分界/type/canonical集合key的真实碰撞调用验证。",
       "boundary": "2026-10-16 缓存值 serializer 改为：仅 null/空字节为正常 miss，损坏内容、未知 envelope 类型、结构与声明类型不一致一律显式抛 SerializationException；已用单元测试覆盖。StandardCacheKeyGenerator 改为长度前缀分界并按类型标记区分（null/集合/Map/具体类），消除 ab+c 与 a+bc、null 与 \"null\"、1 与 \"1\" 的同键，集合/Map 保持规范排序稳定，已真实调用断言（StandardCacheKeyGeneratorTest 7/7）。",
       "scenario": "损坏缓存显式拒绝/隔离，与正常miss区分；StandardCacheKeyGenerator参数分界/type/canonical集合key的真实碰撞调用验证。",
-      "state": "resolved",
+      "state": "passed",
       "issue_ids": [
         "DIAG-BASE-011"
       ],
@@ -76310,177 +76193,135 @@
         "IMP-BASE-005"
       ],
       "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B03-BASELINE-20261016",
+        "EV-B03-KEYGEN-20261016"
       ],
       "required_environment": "serializer 显式拒绝与缓存键生成器真实碰撞调用均已单元验证。"
       },
       {
         "scenario": "未执行浏览器loading/同失败一次提示/取消/旧查询覆盖",
         "id": "BEH-WEB-001",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行身份切换/刷新迟到/缓存隔离",
         "id": "BEH-WEB-002",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行写重试幂等及结果未知",
         "id": "BEH-WEB-003",
-        "state": "resolved",
+        "state": "partially_executed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B05-WEB-LIFECYCLE-20261016"],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行409草稿保留/刷新重新处理",
         "id": "BEH-WEB-004",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行实际HTTP/NON_NULL/错误码/时间偏移/生成漂移",
         "id": "BEH-WEB-005",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行插件宿主卸载与迟到picker",
         "id": "BEH-WEB-006",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行完整format/lint/type-check/build门禁，本阶段只诊断",
         "id": "BEH-WEB-007",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行用户授权返回上一步重入及草稿保留",
         "id": "BEH-WEB-008",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行预览输入改变/乱序/确认期间切换任务；未证明token与页面显示同一意图",
         "id": "BEH-WEB-009",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行UserImport/CacheClear卸载后迟到返回、轮询截止、BlobURL资源释放",
         "id": "BEH-WEB-010",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行版本冲突刷新比较保留草稿和重提交",
         "id": "BEH-WEB-011",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行供应商/配置跨区域dirty草稿刷新",
         "id": "BEH-WEB-012",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未执行受控发送后查看请求导航；仅路由及参数静态证据",
         "id": "BEH-WEB-013",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
         "scenario": "未验证后端实际业务幂等、细权限拒绝和结果未知恢复；默认请求去重不算幂等证明",
         "id": "BEH-WEB-014",
-        "state": "resolved",
+        "state": "not_run",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
@@ -76488,14 +76329,11 @@
         "issue_ids": [
           "DIAG-CORE-001"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "需要为管理用例建立最终授权；区分可信系统运行端口与管理端口，防止任意内部调用读取密钥/修改配置/调度。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76503,14 +76341,11 @@
         "issue_ids": [
           "DIAG-CORE-002"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "重新明确跨域事务、授权及必要DTO，所有目录调用方及暂缓OA/Workflow通过公共端口一致迁移。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76518,14 +76353,11 @@
         "issue_ids": [
           "DIAG-CORE-003"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "需请求/响应、映射、数据库原子条件、错误HTTP409/error_code和Web保留编辑联动治理。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76533,14 +76365,11 @@
         "issue_ids": [
           "DIAG-CORE-004"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "菜单移根/目录routeName清空、配置备注及区域字段清空可能静默失败，陈旧版本写失败仍可返回成功。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76548,14 +76377,11 @@
         "issue_ids": [
           "DIAG-CORE-005"
         ],
-        "state": "resolved",
+        "state": "partially_executed",
         "scenario": "正常受理上传无法兑现校验结果，多实例/重启丢任务；必须持久意图、领取、租约和分类恢复。",
         "validation": "单元测试验证过期 VERIFYING 会话按心跳与租约持久重领并重新投递；未执行真实进程重启与双实例抢占。",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B05-RECOVERY-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76563,14 +76389,11 @@
         "issue_ids": [
           "DIAG-CORE-006"
         ],
-        "state": "resolved",
+        "state": "passed",
         "scenario": "正常上传未挂引用资产不能预览/下载；全局去重需独立上传证明/访问grant，不能只依赖单createdBy。",
         "validation": "单测验证异步 createAsset 继承会话所有者；引用授权与去重会话所有者规则由 CHECK-CORE-007 覆盖。",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B05-OWNER-20261016","EV-B05-REF-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76578,14 +76401,11 @@
         "issue_ids": [
           "DIAG-CORE-007"
         ],
-        "state": "resolved",
+        "state": "passed",
         "scenario": "已知他人READY assetId可挂到自身可读业务继而下载；OA文档/合同/报销附件均受公共端口影响。",
         "validation": "单测验证创建者/就绪会话所有者可引用，无关或缺失操作者被拒绝；register 传当前用户。未走真实 HTTP。",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B05-REF-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76593,14 +76413,11 @@
         "issue_ids": [
           "DIAG-CORE-008"
         ],
-        "state": "resolved",
+        "state": "passed",
         "scenario": "默认LOCAL标准分片上传响应地址无法使用。",
         "validation": "单测验证 LOCAL 会话 id 与 providerUploadId 一致，分片目标地址包含会话 id。",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B05-LOCAL-ID-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76608,14 +76425,11 @@
         "issue_ids": [
           "DIAG-CORE-009"
         ],
-        "state": "resolved",
+        "state": "passed",
         "scenario": "长期正常上传持续重复占用磁盘，需要READY会话/分片保留期限和可靠可重试清理。",
         "validation": "单测验证 LOCAL 拼接后删除暂存目录，READY 会话按保留期清理分片和记录，S3 就绪跳过 abort。",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B05-LIFECYCLE-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76623,14 +76437,11 @@
         "issue_ids": [
           "DIAG-CORE-010"
         ],
-        "state": "resolved",
+        "state": "passed",
         "scenario": "管理员关闭预览或下载后仍可以对应流接口读取；需要入口、策略快照、管理员例外和Web协议同步。",
         "validation": "单测验证预览/下载按 FileType 开关拒绝普通用户，管理员保留例外。",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": ["EV-B05-POLICY-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76638,14 +76449,11 @@
         "issue_ids": [
           "DIAG-CORE-011"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "手工恢复通知失败，历史编号/重试预算和外部结果未知处理需分离。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76653,14 +76461,11 @@
         "issue_ids": [
           "DIAG-CORE-012"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "多实例慢外部调用或完成持久化失败可重复发送/过期worker覆写；必须验证fencing及未知结果恢复，不可盲目自动重发。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76668,14 +76473,11 @@
         "issue_ids": [
           "DIAG-CORE-013"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "短信/邮件安全验证码通知发占位内容，Provider成功也不能证明验证码发出。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76683,14 +76485,11 @@
         "issue_ids": [
           "DIAG-CORE-014"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "轮换地址/敏感载荷密钥即破坏旧待投递密文；key/version记录、历史受限解密、数据清理与迁移必须共同设计。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76698,14 +76497,11 @@
         "issue_ids": [
           "DIAG-CORE-015"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "通知请求/任务长期DISPATCHING/PENDING，任务历史与用户结果错误。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76713,14 +76509,11 @@
         "issue_ids": [
           "DIAG-CORE-016"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "配置启用不等于集群可发送；需显式初始化/恢复和有效期策略，多实例故障验收。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76728,14 +76521,11 @@
         "issue_ids": [
           "DIAG-CORE-017"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "范围外编辑/移树/合并/拆分会修改成员和权限并撤销会话，需Preview/Apply双阶段最终范围检查。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76743,14 +76533,11 @@
         "issue_ids": [
           "DIAG-CORE-018"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "低等级管理者有user:update/role:assign及用户范围时可撤销更高等级角色，需对称撤销规则。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76758,14 +76545,11 @@
         "issue_ids": [
           "DIAG-CORE-019"
         ],
-        "state": "resolved",
+        "state": "partially_executed",
         "scenario": "最后可登录DEV_OPS可被停用/撤权而系统正常管理不可恢复；需要所有减少有效Root用例同事务锁与统一有效计数。",
       "validation": "周期级 test 环境 devops00_spectra_db_test 中，Root PostgreSQL 18/18 覆盖有效计数、最后 Root 回滚、角色/身份撤销、首次初始化成功及超限回滚、身份恢复上限、密码年龄与策略和事务竞争；仓储未知结果单测 2/2。正式 Core HTTP 用户停用、用户编辑撤权、基础角色副作用及身份解绑已有专项。2026-10-14 凭据入口覆盖超龄、管理员重置、必须改密、本人改密及两个 Root 过期写入竞争；旧密码并发先以两个成功复现，前置锁后仅一次提交。2026-10-16 正式 HTTP 进一步覆盖密码策略收紧导致最后 Root 409 回滚、增加有效 Root 后成功且旧 Access 401、同版本并发仅一次成功、会话策略旧版本 409，以及首次初始化无效令牌、并发 start/complete、错误 ID、首个 Root 登录和令牌清理。同日两个独立应用 JVM 再补 Web 会话策略收紧跨进程传播：首进程收紧后第二进程旧 Access 401。Root 整组 9/9、初始化 1/1，两进程整组 3/3，八模块 clean verify 317/317 和静态门禁通过。自然时间失效、实际 Redis 停启、独立 error_code 及间接业务入口仍未执行。",
          "impact_ids": ["IMP-CORE-001"],
-         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+         "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-CORE019-20261010", "EV-B02-CORE019-CURRENT-20261011", "EV-B02-CORE019-HTTP-20261012", "EV-B02-CORE019-ROLE-20261012", "EV-B02-CORE019-DEFAULT-ROLE-20261013", "EV-B02-CORE019-IDENTITY-20261013", "EV-B02-CORE-CREDENTIAL-20261014", "EV-B02-CORE019-POLICY-INIT-20261016", "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016"],
          "required_environment": "已在专用测试库和 Redis DB 5 运行用户停用、用户编辑撤权、缺失 ROLE_USER、身份解绑、凭据、策略、首次初始化及会话策略收紧跨进程的正式 Spring HTTP、Mapper、行锁、Session；后续还需自然时间失效、实际 Redis 停启、独立错误码及间接业务入口。"
       },
       {
@@ -76773,14 +76557,11 @@
         "issue_ids": [
           "DIAG-CORE-020"
         ],
-         "state": "resolved",
+         "state": "passed",
          "scenario": "空格/大小写变体分散账户猜测计数；规范身份桶与成功清理应统一。",
          "validation": "真实测试 Redis DB 5 双独立连接并发变体、锁定阈值、跨连接运维清理和成功登录清理通过；长标识、空白/未确认、Redis 清理失败单测通过；全后端 271 项选定测试与质量门禁通过。2026-10-16 增加正式 HTTP 证据：大小写/空白变体错误密码归并到同一身份桶、达阈值后正确密码也被锁定拒绝并记录锁定日志、成功登录清理同一桶（3/3，含运维端口定向清理）、以及两个独立应用 JVM 跨进程失败累计到同一身份桶并锁定（共享状态专项 1/1）。necessary_acceptance 已具备证据，整项置为 passed。",
          "impact_ids": ["IMP-CORE-005"],
-         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+         "evidence_ids": ["EV-B02-CORE020-20261011", "EV-B02-CORE020-HTTP-20261016", "EV-B02-CORE020-023-TWO-PROCESS-20261016", "EV-B02-CORE020-OPS-CLEAR-20261016"],
          "required_environment": "正式 HTTP 登录、运维/缓存管理端口定向清理与两个独立应用进程共享桶均已运行；RegionServiceTest 和 OA/Workflow 行为测试未由此证据覆盖。"
       },
       {
@@ -76788,14 +76569,11 @@
         "issue_ids": [
           "DIAG-CORE-021"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "导入真实数据与结果状态不一致，重启/抢先执行也无持久恢复；需版本/终态CAS和受理持久领取。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76803,14 +76581,11 @@
         "issue_ids": [
           "DIAG-CORE-022"
         ],
-         "state": "resolved",
+         "state": "passed",
          "scenario": "当前 Assembler 已检查 maxAgeDays；以可控 Clock 验证 changedAt、到期边界、策略变化、创建/重置/改密及明确过期反馈。",
           "validation": "固定时钟 Core 6 项与 Framework 401 响应协作者 1 项通过；2026-10-14 补充正式 HTTP 超龄 401、管理员重置、必须改密统一 403、本人改密与重新登录，专用 PostgreSQL 凭证写入及 Redis Session 撤销成功，Root 整组 8/8、八模块 clean verify 317/317。2026-10-16 增加两个独立应用 JVM 的正式 Core 登录与改密跨进程凭据重载（旧 Access 两端 401、旧 Refresh 第二进程 401、新口令第二进程登录 200）、Access 自然失效跨进程重载（两端 401、仍有效的 Refresh 跨进程轮换，两进程整组 4/4），以及隔离 Redis 停启下的 fail-closed 与恢复（登录 503 → 重启 200）。",
          "impact_ids": ["IMP-CORE-005"],
-         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+         "evidence_ids": ["EV-B02-CORE022-20261011", "EV-B02-CORE-CREDENTIAL-20261014", "EV-B02-CORE022-TWO-PROCESS-20261016", "EV-B02-CORE022-NATURAL-20261016", "EV-B02-BASE003-FAULT-RECOVERY-20261016"],
          "required_environment": "已使用 mise test 的专用 PostgreSQL/Redis 运行正式凭据写入、HTTP 登录/改密、Session 撤销、双进程改密凭据重载、Access 自然失效重载及隔离 Redis 停启恢复。"
       },
       {
@@ -76818,14 +76593,11 @@
         "issue_ids": [
           "DIAG-CORE-023"
         ],
-        "state": "resolved",
+        "state": "partially_executed",
          "scenario": "已登录账号可并行猜短验证码，需用户/用途/地址绑定及原子耗尽失效；外层限流需共同核对。",
          "validation": "Core 绑定用例与通知失败测试、Framework 限流策略和真实 Redis DB 5 双连接并发/跨用户/重放/耗尽/无 TTL/命令失败/丢回复测试通过；完整后端 verify 通过。2026-10-16 增加正式 HTTP 证据：绑定验证码按地址/用户绑定、预算内正确码成功、达上限原子失效且随后正确码被拒（专项 1/1），以及两个独立应用 JVM 跨进程累计尝试并共享预算（共享状态专项 1/1）。外部通知投递仍未执行。",
          "impact_ids": ["IMP-CORE-005"],
-         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+         "evidence_ids": ["EV-B02-CORE023-20261011", "EV-B02-CORE023-HTTP-20261016", "EV-B02-CORE020-023-TWO-PROCESS-20261016"],
          "required_environment": "已使用 mise test 的专用 Redis DB 5 与 PostgreSQL 测试库；绑定验证码正式 HTTP 与两个独立应用进程共享预算已运行；仍需通知投递联动。"
       },
       {
@@ -76833,14 +76605,11 @@
         "issue_ids": [
           "DIAG-CORE-024"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "解绑旧地址可能撤销新活动联系方式，新身份仍可登录但通知不可达。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76848,14 +76617,11 @@
         "issue_ids": [
           "DIAG-CORE-025"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "正常创建顶层部门Preview失败，需仅对既存部门检查自身。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76863,14 +76629,11 @@
         "issue_ids": [
           "DIAG-CORE-026"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "打开审计CSV时可能触发表格公式；需明确安全导出契约及危险前缀验证。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76878,14 +76641,11 @@
         "issue_ids": [
           "DIAG-CORE-027"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "导航孤儿与角色菜单关系残留，需要明确目录删除策略和并发不变量。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76893,14 +76653,11 @@
         "issue_ids": [
           "DIAG-CORE-028"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "诊断可永久PENDING并阻止后续创建；多实例文件与任务归属需协议化处理。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76908,14 +76665,11 @@
         "issue_ids": [
           "DIAG-CORE-029"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "应用入口与持久化/编排职责界限不统一，按真实用例调整，不机械为所有内部Worker加接口。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76923,14 +76677,11 @@
         "issue_ids": [
           "DIAG-CORE-030"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "执行历史终态可能错误；需真实DB明确竞争验证，当前是SQL静态确认缺少谓词。",
         "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76938,14 +76689,11 @@
         "issue_ids": [
           "DIAG-CORE-031"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "Tencent通知正常发送路径不可用；Provider健康、管理页、验证码发送和失败恢复均受影响。受限header异常已隔离复现，未验证云服务实际协议。",
         "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证"
       },
       {
@@ -76953,14 +76701,11 @@
         "issue_ids": [
           "DIAG-CORE-032"
         ],
-        "state": "resolved",
+        "state": "partially_executed",
         "scenario": "具有该角色assignment的用户可能无法登录或加载权限；公共授权、部门合并重组、OA/Workflow受众及权限检查受影响。需真实DB验证事务、撤权及重登录。",
          "validation": "专用 PostgreSQL 随机 schema 四项清理、回滚与行锁竞争测试通过；正式 Core HTTP 登录、角色缩权并发 Apply 200/409、旧 Access 撤销与重新登录快照 1/1，通过 Permission/GrantablePermission、Boundary 与 Scope 断言；八模块 clean verify 315/315 和静态门禁通过。2026-10-16 增加两个独立应用 JVM：首进程角色缩权后第二进程旧 Access 401、重新登录快照收缩，整组 2/2。部门重组与 OA/Workflow 受众业务入口仍未运行。",
          "impact_ids": ["IMP-CORE-007"],
-         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+         "evidence_ids": ["EV-B02-CORE032-20261011", "EV-B02-CORE032-HTTP-20261012", "EV-B02-CORE032-TWO-PROCESS-20261016"],
          "required_environment": "已使用 mise test 的 devops00_spectra_db_test 与 Redis DB 5 完成单进程与两进程角色变更 HTTP；仍需部门合并重组及受影响 OA/Workflow 业务入口验证"
       },
       {
@@ -76968,14 +76713,11 @@
         "issue_ids": [
           "DIAG-CORE-033"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "DB/Redis运行故障期间业务和后台任务仍可进入各自用例，行为依赖偶然调用失败；恢复也无统一校验。涉及Launch、Framework、全部Core端口、Web就绪反馈及暂缓OA/Workflow后台任务。",
         "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证"
       },
       {
@@ -76983,16 +76725,16 @@
         "issue_ids": [
           "DIAG-CORE-034"
         ],
-        "state": "resolved",
+        "state": "inconclusive",
         "scenario": "通知普通管理端口与后台运行端口边界混用；OA/Workflow后台受众及未来内部调用必须迁移显式运行身份，不能靠空上下文扩大权限。",
         "validation": "CORE-034 当前源码要求普通目录查询具备认证身份；显式系统身份仅允许登记的来源、用途、模板与明确用户 ID。Core 定点 10/10（含匿名/已认证并行隔离）、八模块测试编译和改动范围格式通过；全量格式、verify 与全量测试失败或跳过下游模块，不标整项 passed。",
         "impact_ids": [
           "IMP-CORE-007"
         ],
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-B02-CORE034-20261009",
+          "EV-B02-CORE034-GATES-20261009"
+        ],
         "required_environment": "真实隔离 HTTP 通知/受控发送、OA 合同 Quartz、Workflow 流程实例与数据库投递事务仍未运行；同影响图的 DataScope 后台拒绝、角色快照和基础设施恢复待各自专项处理。"
       },
       {
@@ -77000,14 +76742,11 @@
         "issue_ids": [
           "DIAG-CORE-035"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "正常重试后的SENT可能被旧FAILED覆写；请求聚合、用户反馈、后台恢复和外部重复发送风险需真实并发/乱序验证。",
         "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证"
       },
       {
@@ -77015,14 +76754,11 @@
         "issue_ids": [
           "DIAG-CORE-036"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "用户免打扰窗口可能在错误时区生效；Web偏好、时区配置及OA/Workflow定时通知均需时间边界联动验证。",
         "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证"
       },
       {
@@ -77030,14 +76766,11 @@
         "issue_ids": [
           "DIAG-CORE-037"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "模板版本增长时管理分页及引用入口没有资源预算，需DB分组/分页契约及Web版本列表联动。",
         "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证"
       },
       {
@@ -77045,14 +76778,11 @@
         "issue_ids": [
           "DIAG-CORE-038"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "路径指向A而versionId属于B仍可能发布/退役B；需统一契约删除别名并验证对象归属，Web秘密版本管理调用方同步迁移。",
         "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证"
       },
       {
@@ -77060,14 +76790,11 @@
         "issue_ids": [
           "DIAG-CORE-039"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "用户批量删除可部分生效而前端误报全部成功，需全量目标验证与事务结果协议。",
         "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "evidence_ids": [],
         "required_environment": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证"
       },
       {
@@ -77075,35 +76802,31 @@
         "issue_ids": [
           "DIAG-CORE-040"
         ],
-        "state": "resolved",
+        "state": "passed",
         "scenario": "通知中间请求接收可变集合后立即形成稳定快照；调用方继续修改或经访问器修改均不能改变收件人、渠道、地址及参数容器；null/非法值遵守既有契约。",
         "validation": "Common 5 项 JUnit 快照及并发回归、Common verify 的 SpotBugs 0 和八模块测试编译通过。",
         "impact_ids": [
           "IMP-CORE-008"
         ],
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-B02-COMMON14-20261010"
+        ],
         "required_environment": "无需外部依赖；实际投递、完整门禁及其他通知业务行为另验。"
       },
       {
         "required_environment": "隔离PostgreSQL，实际服务用例与HTTP409/error_code",
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "相同读取version并发更新安全实体：一项成功、一项原子拒绝；显式Wrapper与MP updateById各覆盖",
         "id": "BC-MODEL-001",
         "issue_ids": [
           "DIAG-MODEL-001"
         ],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "required_environment": "隔离DB/真实绑定与生成映射，Web编辑恢复",
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "字典、菜单、区域、配置完整提交陈旧version/NULL备注或父级：版本拒绝、合法清空持久化且返回值检查",
         "id": "BC-MODEL-002",
         "issue_ids": [
@@ -77111,56 +76834,44 @@
           "DIAG-CORE-004"
         ],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "required_environment": "当前生成器可复现运行与Jackson契约",
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "引用行id与业务referenceId使用不同UUID，转换与snake_case序列化分别保持",
         "id": "BC-MODEL-003",
         "issue_ids": [
           "DIAG-MODEL-002"
         ],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "required_environment": "隔离DB及授权上下文",
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "软删除部门/组织合并后活动与历史includeDescendants读/计数保持明确范围；重建回滚完整",
         "id": "BC-MODEL-004",
         "issue_ids": [
           "DIAG-MODEL-003"
         ],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "required_environment": "可控时间与实际HTTP序列化",
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "夏令时/有效用户和系统时区、Instant响应偏移、字符串输入严格解析；空集合/可省略字段保持现状",
         "id": "BC-MODEL-005",
         "issue_ids": [
           "DIAG-BASE-008"
         ],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "required_environment": "隔离DB、可控时间、明确竞争",
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "待领取通知跨到期进入终态；历史finish和abandon并发不覆盖终态",
         "id": "BC-MODEL-006",
         "issue_ids": [
@@ -77168,22 +76879,16 @@
           "DIAG-CORE-030"
         ],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "required_environment": "隔离DB与Service关系校验",
-        "state": "resolved",
+        "state": "not_run",
         "scenario": "User成员分页与自动count同范围；空IN/批量预算入口守卫；JSON字段实际读写；分片旧attempt/状态竞争",
         "id": "BC-MODEL-007",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "scenario": "创建/普通修改手机邮箱，联系信息和登录身份替换/清空/拒绝创建专用字段语义",
@@ -77192,12 +76897,9 @@
         "issue_ids": [
           "DIAG-ADDITIONAL-001"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "scenario": "LOCAL/S3 Range正常/超长/越界/非法数字/存储故障，核对status、Content-Length/Content-Range与实际bytes",
@@ -77207,12 +76909,9 @@
           "DIAG-ADDITIONAL-002",
           "DIAG-BASE-010"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "scenario": "无效静态上传配置按启用条件拒绝绑定/启动，边界预算有效",
@@ -77221,14 +76920,13 @@
         "issue_ids": [
           "DIAG-ADDITIONAL-003"
         ],
-        "state": "resolved",
+        "state": "passed",
         "impact_ids": [
           "IMP-ADDITIONAL-003"
         ],
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+          "EV-B03-BASELINE-20261016"
+        ]
       },
       {
         "scenario": "同分片多次target、旧attempt confirm/迟到预签名写入、错误ETag、最终校验失败不产生READY资产",
@@ -77237,12 +76935,9 @@
         "issue_ids": [
           "DIAG-ADDITIONAL-004"
         ],
-        "state": "resolved",
+        "state": "partially_executed",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": ["EV-B05-ATTEMPT-20261016"]
       },
       {
         "scenario": "内部管理调用缺身份拒绝，省略/陈旧编辑版本拒绝，重入职清空departedAt；安全实体两个并发updateById",
@@ -77254,12 +76949,9 @@
           "DIAG-CORE-004",
           "DIAG-MODEL-001"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "scenario": "重启/多实例校验任务恢复与READY分片清理，慢cleanup旧租约不得破坏新领取状态",
@@ -77269,12 +76961,9 @@
           "DIAG-CORE-005",
           "DIAG-CORE-009"
         ],
-        "state": "resolved",
+        "state": "partially_executed",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": ["EV-B05-RECOVERY-20261016","EV-B05-LIFECYCLE-20261016"]
       },
       {
         "scenario": "用户onboarding批量移除授权边界/最后Root保护、导入任务提交后领取、已提交行最终状态一致、owner结果隔离",
@@ -77285,12 +76974,9 @@
           "DIAG-CORE-019",
           "DIAG-CORE-021"
         ],
-        "state": "resolved",
+        "state": "not_run",
         "impact_ids": [],
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ]
+        "evidence_ids": []
       },
       {
         "id": "BC-IMPACT-IMP-PLUGIN-001-1",
@@ -77302,11 +76988,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77319,11 +77002,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77336,11 +77016,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77353,11 +77030,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77370,11 +77044,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77387,11 +77058,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77404,11 +77072,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77421,11 +77086,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77440,11 +77102,8 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77459,11 +77118,8 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77478,11 +77134,8 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77497,11 +77150,8 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77516,11 +77166,8 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77535,11 +77182,8 @@
         "impact_ids": [
           "IMP-SCRIPTS-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77555,11 +77199,8 @@
         "impact_ids": [
           "IMP-ENGINEERING-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77575,11 +77216,8 @@
         "impact_ids": [
           "IMP-ENGINEERING-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77595,11 +77233,8 @@
         "impact_ids": [
           "IMP-ENGINEERING-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77615,11 +77250,8 @@
         "impact_ids": [
           "IMP-ENGINEERING-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77632,11 +77264,8 @@
         "impact_ids": [
           "IMP-BASE-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77649,11 +77278,8 @@
         "impact_ids": [
           "IMP-BASE-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77670,11 +77296,8 @@
         "impact_ids": [
           "IMP-BASE-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "partially_executed",
+        "evidence_ids": ["EV-B02-BASE003-CORE-20261011", "EV-B02-BASE003-TWO-PROCESS-20261012", "EV-B02-CORE032-HTTP-20261012", "EV-B02-BASE004-CURRENT-20261011", "EV-B02-BASE006-20261010", "EV-B02-BASE007-20261009", "EV-B02-BASE018-20261009"],
         "required_environment": "隔离 Redis DB 5 的重放、撤销、配额、null/empty 与失败计数专项已有证据；两个独立应用进程的 HTTP Access 撤销和单进程正式 Core 角色事务已通过，Refresh 自然失效与角色变更跨进程、实际 Redis 停启恢复未执行。"
       },
       {
@@ -77689,11 +77312,8 @@
         "impact_ids": [
           "IMP-BASE-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77707,11 +77327,8 @@
         "impact_ids": [
           "IMP-BASE-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77726,11 +77343,8 @@
         "impact_ids": [
           "IMP-BASE-006"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77751,11 +77365,8 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77776,11 +77387,8 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77801,11 +77409,8 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77826,11 +77431,8 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77851,11 +77453,8 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77870,11 +77469,8 @@
         "impact_ids": [
           "IMP-WEB-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77889,11 +77485,8 @@
         "impact_ids": [
           "IMP-WEB-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77908,11 +77501,8 @@
         "impact_ids": [
           "IMP-WEB-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77927,11 +77517,8 @@
         "impact_ids": [
           "IMP-WEB-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77943,11 +77530,8 @@
         "impact_ids": [
           "IMP-WEB-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77959,11 +77543,8 @@
         "impact_ids": [
           "IMP-WEB-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77975,11 +77556,8 @@
         "impact_ids": [
           "IMP-WEB-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -77991,11 +77569,8 @@
         "impact_ids": [
           "IMP-WEB-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78020,11 +77595,8 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78049,11 +77621,8 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78078,11 +77647,8 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78107,11 +77673,8 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78136,11 +77699,8 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78165,11 +77725,8 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78194,11 +77751,8 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78217,11 +77771,8 @@
         "impact_ids": [
           "IMP-CORE-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78240,11 +77791,8 @@
         "impact_ids": [
           "IMP-CORE-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78263,11 +77811,8 @@
         "impact_ids": [
           "IMP-CORE-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78286,11 +77831,8 @@
         "impact_ids": [
           "IMP-CORE-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78304,11 +77846,8 @@
         "impact_ids": [
           "IMP-CORE-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78322,11 +77861,8 @@
         "impact_ids": [
           "IMP-CORE-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78340,11 +77876,8 @@
         "impact_ids": [
           "IMP-CORE-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78358,11 +77891,8 @@
         "impact_ids": [
           "IMP-CORE-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78380,11 +77910,8 @@
         "impact_ids": [
           "IMP-CORE-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78402,11 +77929,8 @@
         "impact_ids": [
           "IMP-CORE-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78424,11 +77948,8 @@
         "impact_ids": [
           "IMP-CORE-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78446,11 +77967,8 @@
         "impact_ids": [
           "IMP-CORE-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78468,11 +77986,8 @@
         "impact_ids": [
           "IMP-CORE-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78490,11 +78005,8 @@
         "impact_ids": [
           "IMP-CORE-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78511,11 +78023,8 @@
         "impact_ids": [
           "IMP-CORE-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78532,11 +78041,8 @@
         "impact_ids": [
           "IMP-CORE-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78553,11 +78059,8 @@
         "impact_ids": [
           "IMP-CORE-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78574,11 +78077,8 @@
         "impact_ids": [
           "IMP-CORE-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78595,11 +78095,8 @@
         "impact_ids": [
           "IMP-CORE-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78616,11 +78113,8 @@
         "impact_ids": [
           "IMP-CORE-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78637,11 +78131,8 @@
         "impact_ids": [
           "IMP-CORE-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78660,11 +78151,8 @@
         "impact_ids": [
           "IMP-CORE-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "partially_executed",
+        "evidence_ids": ["EV-B02-CORE020-20261011"],
         "required_environment": "身份变体双连接真实 Redis 与 Core 单元场景已通过；仍需实际 HTTP、双应用进程和 IMP-CORE-005 其余关联场景。"
       },
       {
@@ -78683,11 +78171,8 @@
         "impact_ids": [
           "IMP-CORE-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "partially_executed",
+        "evidence_ids": ["EV-B02-CORE023-20261011"],
         "required_environment": "CORE-023 绑定码真实 Redis 双连接耗尽、状态异常和丢回复拒绝通过；登录验证码及其他关联问题、实际 HTTP、双应用进程和 Redis 停启仍待验证。"
       },
       {
@@ -78706,11 +78191,8 @@
         "impact_ids": [
           "IMP-CORE-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78729,11 +78211,8 @@
         "impact_ids": [
           "IMP-CORE-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78752,11 +78231,8 @@
         "impact_ids": [
           "IMP-CORE-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78775,11 +78251,8 @@
         "impact_ids": [
           "IMP-CORE-005"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78796,11 +78269,8 @@
         "impact_ids": [
           "IMP-CORE-006"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78817,11 +78287,8 @@
         "impact_ids": [
           "IMP-CORE-006"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78838,11 +78305,8 @@
         "impact_ids": [
           "IMP-CORE-006"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78859,11 +78323,8 @@
         "impact_ids": [
           "IMP-CORE-006"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78877,11 +78338,8 @@
         "impact_ids": [
           "IMP-CORE-007"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78895,11 +78353,8 @@
         "impact_ids": [
           "IMP-CORE-007"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78913,11 +78368,8 @@
         "impact_ids": [
           "IMP-CORE-007"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78931,11 +78383,8 @@
         "impact_ids": [
           "IMP-CORE-007"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78949,11 +78398,8 @@
         "impact_ids": [
           "IMP-CORE-007"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78965,11 +78411,8 @@
         "impact_ids": [
           "IMP-ADDITIONAL-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78982,11 +78425,8 @@
         "impact_ids": [
           "IMP-ADDITIONAL-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -78998,11 +78438,8 @@
         "impact_ids": [
           "IMP-ADDITIONAL-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79014,11 +78451,8 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79030,11 +78464,8 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79046,11 +78477,8 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79062,11 +78490,8 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79078,11 +78503,8 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79095,11 +78517,8 @@
         "impact_ids": [
           "IMP-SYSTEM-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79112,11 +78531,8 @@
         "impact_ids": [
           "IMP-SYSTEM-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79129,11 +78545,8 @@
         "impact_ids": [
           "IMP-SYSTEM-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79146,11 +78559,8 @@
         "impact_ids": [
           "IMP-SYSTEM-002"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79162,11 +78572,8 @@
         "impact_ids": [
           "IMP-SYSTEM-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79178,11 +78585,8 @@
         "impact_ids": [
           "IMP-SYSTEM-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79194,11 +78598,8 @@
         "impact_ids": [
           "IMP-SYSTEM-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79210,11 +78611,8 @@
         "impact_ids": [
           "IMP-SYSTEM-003"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79226,11 +78624,8 @@
         "impact_ids": [
           "IMP-SYSTEM-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79242,11 +78637,8 @@
         "impact_ids": [
           "IMP-SYSTEM-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79258,11 +78650,8 @@
         "impact_ids": [
           "IMP-SYSTEM-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -79274,18 +78663,15 @@
         "impact_ids": [
           "IMP-SYSTEM-004"
         ],
-        "state": "resolved",
-        "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+        "state": "not_run",
+        "evidence_ids": [],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       }
     ],
     "historical_reconciliation": [
       {
         "id": "R6",
-        "state": "resolved",
+        "state": "merged_pending",
         "issue_ids": [
           "DIAG-DOC-001",
           "DIAG-SCRIPT-001"
@@ -79437,81 +78823,74 @@
         "old_id": "C15",
         "conclusion": "当前调用链仍传POJO，Foundation确认脱敏缺口并认领，Core不重复编号",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-CORE-004"
+        ],
         "deferred": false
       },
       {
         "old_id": "C01/C02/C04/C05/C06/C07/C08/C09/C10/C11/C12/C13/C14/CX01",
         "conclusion": "已按当前具体源码控制体/SQL复核，分别关联DIAG-CORE-008/011/013/014/006/005/028/010/009/015/026/016/027/007；行为未经真实依赖测试",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-CORE-001"
+        ],
         "deferred": false
       },
       {
         "old_id": "ID01/ID02/ID04/ID05/ID06/ID08/ID09/ID10",
         "conclusion": "当前关键源码复核成立，分别关联020/017/018/019/021/024/023/025；待完整其他域复核",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-CORE-001",
+          "EV-CORE-004"
+        ],
         "deferred": false
       },
       {
         "old_id": "ID03",
         "conclusion": "当前角色persist与snapshot loader全文确认，登记DIAG-CORE-032；真实角色删权限后重登录尚未验证",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-CORE-005"
+        ],
         "deferred": false
       },
       {
         "old_id": "ID07",
         "conclusion": "当前Assembler/凭证/策略全文确认密码maxAgeDays未消费，DIAG-CORE-022从候选改为当前静态确认；时间行为待验证",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-CORE-005"
+        ],
         "deferred": false
       },
       {
         "old_id": "ID11",
         "conclusion": "本轮Additional agent全文确认create同步ProvisionedContacts，modify只更新user及密码identifier，不同步phone/email contact/identity；由DIAG-ADDITIONAL-001认领，主代理合并稳定证据，Core不重复编号",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-CORE-005"
+        ],
         "deferred": false
       },
       {
         "old_id": "C03",
         "conclusion": "当前Tencent request构造仍设置受限Host，当前mise JDK两次合成构造均报错，登记DIAG-CORE-031；未发送真实云请求",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-CORE-005",
+          "EV-CORE-006"
+        ],
         "deferred": false
       },
       {
         "old_id": "CX02",
         "conclusion": "保持排除正常路径缺陷：SystemGuideServiceImpl155、DepartmentRestructureServiceImpl509当前Short合法类型经toString写入；不把字符串存储本身当漏洞。模型/生成转换由models包复核，坏持久值行为未验证",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-CORE-005"
+        ],
         "deferred": false
       },
       {
         "old_id": "CX03",
         "conclusion": "当前读取ContractReminderQuartzJob45→ContractReminderJob.sendDueMilestoneReminders→ContractServiceImpl383 getById；Contract声明@DataScope，Framework DataScopeInnerInterceptor107无当前userId抛错；QuartzFactory只装配bean不建立身份。公共后台身份缺口仍成立，应随共享授权运行端口必要一致迁移；未执行Quartz/SQL，不独立重构暂缓OA",
         "evidence_ids": [
-        "EV-MODEL-004",
-        "EV-B04-PROTOCOL-20261017"
-      ],
+          "EV-CORE-005"
+        ],
         "deferred": false,
         "independent_business_deferred": true,
         "required_shared_consistency": true,
