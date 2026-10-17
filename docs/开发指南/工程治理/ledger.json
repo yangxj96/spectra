@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "c804e6ff65a6fe57d09cb63f5dc7696a7128f9508a1d362e083d3a8b400dc837",
+      "content_sha256": "fcb1b0c64c555fa1393dea3a3848969cf87e572c3c50d826a89d50cc9fb5efd9",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "474dfe81e314eec9bbccebe780da5ebf055c9afa25cd5360f6cbde46ef04025a",
+      "content_sha256": "3bbe816d759d9e331658c07f8847d0cc0f92481db2e71bf575497b8f94534074",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5197,7 +5197,8 @@
         "EV-B03-CLOCK-20261016",
         "EV-B03-TIMEZONE-20261016",
         "EV-B03-TIMEPARSE-20261016",
-        "EV-B03-ATTEMPT-20261016"
+        "EV-B03-ATTEMPT-20261016",
+        "EV-B03-OFFSET-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11964,7 +11965,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "fc26ffb265bdc5c6a0b606f4de60f026004071d1bbcfc1a36a25e2bb6003403a",
+      "content_sha256": "1ea931657c1109b07bd3d7e7cbd3b0889238f1edfb7d2df380236714c4e5ab2c",
       "reviewed_rules": ["04§6", "04§13"],
       "issue_ids": ["DIAG-BASE-008"],
       "evidence_ids": ["EV-B03-TIMEPARSE-20261016"],
@@ -15184,7 +15185,7 @@
       "role": "后端 spectra-common / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ad16e8c347a076c98369672f1f54b8c4663c5877033271c2108014b66876c1af",
+      "content_sha256": "de725fd2224c3ab604a1fbbb27e27823fe7c545f924b80a074c16843c97734d0",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -18639,7 +18640,7 @@
       "role": "后端 spectra-framework / mapper",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b45bdadaada086fe9f91f7a360c6cac5c025f1b0d1ee3750b59c57b6b7014b64",
+      "content_sha256": "e0822a17051767769f0eec2b2cbc716c550e74fa5f7b5a1b98b7bde2c0ace519",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -40225,7 +40226,7 @@
       "role": "后端 spectra-core / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "78e749c0a84c5c5f18f65e52d988ec93aed67a16fd991535816e065ea664b793",
+      "content_sha256": "6b862e0edc61ab839415b3be65cb3ddb9842ac8738339bf374e1b3a8dabe9b22",
       "reviewed_rules": [
         "04§4",
         "04§5",
@@ -40255,7 +40256,7 @@
       "role": "后端 spectra-core / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "70936aed26c065a25c430df83a0344b69a57f22d0522ac3a7d000c9e32b51d42",
+      "content_sha256": "344c802361b410636035053329a3509fc55d311564bed6b5aa74ecc4dae9a0dd",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -64833,7 +64834,7 @@
         }
       ],
       "finding": "共享映射输出LocalDateTime去掉offset；无日期时间补LocalDate.now，String尝试多格式猜测；非法用户/系统ZoneId返回null并回退。",
-      "impact": "Core在线会话/审计/通知/Quartz及暂缓OA合同与Workflow任务的同一时间点无法形成统一offset协议；非法时区不显式失败。2026-10-16 已让已配置但非法的用户/系统时区显式失败（EV-B03-TIMEZONE-20261016），String 多格式猜测收敛为严格 ISO 日期时间（EV-B03-TIMEPARSE-20261016）；LocalDateTime 输出去 offset 与 toInstant(LocalTime) 补当天仍待统一接口时间协议。",
+      "impact": "Core在线会话/审计/通知/Quartz及暂缓OA合同与Workflow任务的同一时间点无法形成统一offset协议；非法时区不显式失败。2026-10-16 已让已配置但非法的用户/系统时区显式失败（EV-B03-TIMEZONE-20261016），String 多格式猜测收敛为严格 ISO 日期时间（EV-B03-TIMEPARSE-20261016）；在线用户 VO 与 TimeMapper 增加 OffsetDateTime 保留偏移（EV-B03-OFFSET-20261016）；其余大量 VO 仍去 offset，toInstant(LocalTime) 仍补当天，待统一接口时间协议。",
       "priority": "P2",
       "disposition": "required_fix",
       "state": "in_progress",
@@ -64841,7 +64842,9 @@
       "evidence_ids": [
         "EV-BASE-001",
         "EV-MODEL-001",
-        "EV-B03-TIMEZONE-20261016"
+        "EV-B03-TIMEZONE-20261016",
+        "EV-B03-TIMEPARSE-20261016",
+        "EV-B03-OFFSET-20261016"
       ],
       "supporting_locations": [
         {
@@ -73170,6 +73173,28 @@
         ".temp/b03/b03-attempt-static.log"
       ],
       "limits": "S3 confirmExternalPart 仍未通过存储读取验证 ETag/大小；最终整文件校验分工未变。DIAG-ADDITIONAL-004 维持 in_progress。"
+    },
+    {
+      "id": "EV-B03-OFFSET-20261016",
+      "scope": "B03 DIAG-BASE-008 在线用户时间保留 offset",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=TimeMapperTest' test -> 退出 0，5/5；toOffsetDateTime(Long) 保留用户偏移并等值原 Instant",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS",
+        "spectra-admin: '-pl spectra-framework -am -Dspectra.test.real-deps=true clean test' -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "UserOnlineVO.loginTime 与在线会话/分页 VO 改为 OffsetDateTime，TimeMapper 新增 toOffsetDateTime(Long)，MapStruct 转换保留用户偏移。",
+      "artifacts": [
+        "spectra-admin/spectra-common/src/main/java/com/devops00/spectra/common/port/security/UserOnlineVO.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/user/javabean/vo/OnlineSessionVO.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/user/javabean/vo/OnlineUserPageVO.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/serialization/mapper/TimeMapper.java",
+        ".temp/b03/b03-offset-static.log",
+        ".temp/b03/b03-offset-framework.log"
+      ],
+      "limits": "仅在线用户相关 VO 保留 offset；其余大量 VO 仍使用 LocalDateTime（toLocalDateTime）。toInstant(LocalTime) 仍补当天。"
     },
     {
       "id": "EV-IMPORT-MOCK-20261004",
