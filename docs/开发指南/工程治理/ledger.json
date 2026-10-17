@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "adc360a3fd05d94c7c3a28e0d2c47d5a20970a443de9c6a23b1cb64daf1308c6",
+      "content_sha256": "52202d109bab2c6b71c24f0b8a4aa6eccc7b67db89d70c29f80d14ea6fbee0e2",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ce3f8ff9d5ac21352d38ca3eea03d3f658dd945c78f69ec2d4eb26458822c34d",
+      "content_sha256": "30157c716c8ec15dd64242a1d91d6bd8d5c18f88525aa79d42a50fdba8bebc9b",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5202,7 +5202,8 @@
         "EV-B03-CONTACT-20261016",
         "EV-B03-S3-20261016",
         "EV-B03-RUNTIMEROLE-20261016",
-        "EV-B03-SCOPE-20261016"
+        "EV-B03-SCOPE-20261016",
+        "EV-B03-PROTOCOL-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11745,7 +11746,7 @@
       "role": "运行期就绪请求门",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "2406e3331ad181ab59cd740d9c7ccbfaa42fad00ed5f8c19a22c31b09f0728cf",
+      "content_sha256": "fb46e2136541d8f053247f52a44a8dd4cd8d113c86c80f37a53d96d99c4f310a",
       "reviewed_rules": ["04 §8 必需基础设施", "04 §9 运行恢复", "04 §13 验证"],
       "issue_ids": ["DIAG-CORE-033"],
       "evidence_ids": ["EV-B03-READINESS-20261016"],
@@ -11889,7 +11890,7 @@
       "role": "稳定对外错误码",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "da850f3d2eb336e8953434ea942d0f0d192d8dabe3c51a21b56776baeb22709c",
+      "content_sha256": "5608bf23468c7071e86da926d991bf1d11c8822dbf9c860b58733e2c4d0bc556",
       "reviewed_rules": ["04§5", "04§13"],
       "issue_ids": ["DIAG-BASE-010"],
       "evidence_ids": ["EV-B03-ERRORCODE-20261016"],
@@ -12043,6 +12044,38 @@
       "review_limits": ["验证权限模型与启动，不覆盖全部业务写路径。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-BASE-004"]
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/health/readiness/ReadinessGateFilterTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "90d5e22bf94e7330880d9025890a73278cc749982dd17d4afc58e5f32d3a11f1",
+      "reviewed_rules": ["04§5", "04§9", "04§13"],
+      "issue_ids": [],
+      "evidence_ids": ["EV-B03-PROTOCOL-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "未就绪 503 携带 error_code=DEPENDENCY_NOT_READY 且不进入业务链；就绪与 actuator 探测放行。",
+      "review_limits": ["过滤单元测试。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/security/advice/RestSecurityErrorResponseTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "27cca9753bddca877e137fb5a2963716c039c2d898b5f6e14d28df8cdcbcc6ba",
+      "reviewed_rules": ["04§5", "04§13"],
+      "issue_ids": [],
+      "evidence_ids": ["EV-B03-PROTOCOL-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "401 未登录→UNAUTHENTICATED、密码错误→AUTHENTICATION_FAILED；403→ACCESS_DENIED，状态与 body error_code 一致。",
+      "review_limits": ["单元层级，未启动安全过滤链。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-001"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -17021,7 +17054,7 @@
       "role": "后端 spectra-framework / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b0610c32e41fb4101b4abda85aa0aeaf30c35ded3296ba74d1102e3beccdf709",
+      "content_sha256": "e27ea0a76acbc3e509dc1d4ee27dea92d155532a82457093b8dd348b048a9df5",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -17050,7 +17083,7 @@
       "role": "后端 spectra-framework / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "124f64ee552e2d0c030b3a96c08bdb7c8334fd4f36d2ce29fa5693407488f6ea",
+      "content_sha256": "aff68052728b5bfc0f5b59df706bbe2a12672823df06290125f2339da2601cf2",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -73325,6 +73358,26 @@
       "limits": "单元级策略验证，未对每个 OA/Workflow 实体逐一做真实 SQL 断言。"
     },
     {
+      "id": "EV-B03-PROTOCOL-20261016",
+      "scope": "B03 BC-BASE-006 401/403/503 状态与 error_code 一致性",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=ReadinessGateFilterTest,RestSecurityErrorResponseTest' test -> 退出 0，6/6；503→DEPENDENCY_NOT_READY（且不进入业务链）、401 未登录/密码错误、403 ACCESS_DENIED",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "安全边界与就绪门响应补齐 error_code：401 UNAUTHENTICATED/AUTHENTICATION_FAILED、403 ACCESS_DENIED、503 DEPENDENCY_NOT_READY，状态码与 body 一致。",
+      "artifacts": [
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/security/advice/RestAuthenticationEntryPoint.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/security/advice/RestAccessDeniedHandler.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/health/readiness/ReadinessGateFilter.java",
+        ".temp/b03/b03-protocol.log",
+        ".temp/b03/b03-protocol-static.log"
+      ],
+      "limits": "409（SQL 冲突/版本冲突）已有 resolver 单测但未做真实 HTTP；NON_NULL OpenAPI 类型同步未做。BC-BASE-006 维持 partially_executed。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74805,7 +74858,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1624,
+      "included": 1626,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74831,7 +74884,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1638,
+    "reviewed_included": 1640,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -75172,15 +75225,15 @@
       {
         "id": "BC-BASE-006",
         "name": "API协议",
-        "status": "not_executed",
+        "status": "partially_executed",
         "necessary_acceptance": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
-        "boundary": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
+        "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 的 SQL/版本冲突有 resolver 单测但未做真实 HTTP；NON_NULL OpenAPI 类型同步未做。",
         "scenario": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
-        "state": "not_run",
-        "issue_ids": [],
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。"
+        "state": "partially_executed",
+        "issue_ids": ["DIAG-BASE-010"],
+        "impact_ids": ["IMP-BASE-001"],
+        "evidence_ids": ["EV-B03-ERRORCODE-20261016", "EV-B03-PROTOCOL-20261016"],
+        "required_environment": "401/403/503 已单元验证；409 真实 HTTP 与 OpenAPI 类型同步待执行；不读取本机秘密或误连开发库。"
       },
       {
         "id": "BC-BASE-007",
