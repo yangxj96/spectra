@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4654a57beca4df62a3b652e959380a192db53fd4aded2d896fb7e54ff998855d",
+      "content_sha256": "64e7c4e3c21220927b2dcebc3f1bcc71d241ca6be7f8dc1ffeef6e9000737452",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -12230,6 +12230,22 @@
       "impact_state": null,
       "review_summary": "创建者可引用；持有引用该资产的就绪会话的上传者可引用去重资产；无关操作者与缺失操作者均被拒绝。",
       "review_limits": ["单元测试，未走真实 HTTP。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-CORE-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/UploadSessionStorageIdentityTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "8b26fcd769bd8858812f57af943ce1d521e49022ffaa82ded4729bd34cae3444",
+      "reviewed_rules": ["04§5", "04§7", "04§10"],
+      "issue_ids": ["DIAG-CORE-008"],
+      "evidence_ids": ["EV-B05-LOCAL-ID-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "LOCAL 会话写入的 providerUploadId 与会话 id 一致；分片目标地址使用该标识并指向可解析的上传入口。",
+      "review_limits": ["未启动真实 HTTP 服务；S3 直传路径未覆盖。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-CORE-003"]
     },
@@ -39195,7 +39211,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "3be70cc74ce6e1e60168242b80cf254e42cf9ab22d3c32e034f3f93667fe74be",
+      "content_sha256": "3eebdbd21c315501f67a1dd72642bddc823eb8a52996f74234a005970229d80c",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -66789,13 +66805,14 @@
         }
       ],
       "finding": "LOCAL分片target URL使用providerUploadId；创建storageSessionId随机UUID与数据库session.id独立生成。HTTP content按URL uploadId查数据库归属，响应地址不对应会话。",
-      "impact": "默认LOCAL标准分片上传响应地址无法使用。",
+      "impact": "默认LOCAL标准分片上传响应地址无法使用。2026-10-16 创建会话时预生成会话 id，并同时用作 LOCAL providerUploadId（EV-B05-LOCAL-ID-20261016）。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B05-LOCAL-ID-20261016"
       ],
       "impact_ids": [
         "IMP-CORE-003"
@@ -73810,6 +73827,25 @@
       "limits": "未走真实 HTTP；管理员是否应额外放行未定义。"
     },
     {
+      "id": "EV-B05-LOCAL-ID-20261016",
+      "scope": "B05 DIAG-CORE-008 LOCAL 分片标识协议",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=UploadSessionStorageIdentityTest' test -> 退出 0，2/2；会话 id 与 providerUploadId 一致，分片目标地址可由上传入口解析",
+        "spectra-admin: 核心模块全量测试（排除 RootGovernancePostgresTest）-> BUILD SUCCESS",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "创建会话时预生成会话 id 并同时用于存储分区键与 LOCAL providerUploadId，目标地址中的 uploadId 即会话 id。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/UploadSessionService.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/UploadSessionStorageIdentityTest.java",
+        ".temp/b05/b05-identity-test.log"
+      ],
+      "limits": "未启动真实 HTTP 服务；S3 预签名直传路径未覆盖。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75290,7 +75326,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1635,
+      "included": 1636,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -75316,7 +75352,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1649,
+    "reviewed_included": 1650,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
