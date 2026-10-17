@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1e748a59e866c654229b29ba4d6a281de3427e2b03514e0ef4416a18e48b873a",
+      "content_sha256": "1b00ef7dd8b1a698625e03980a516ffe2a3b33a31f9ed7de9fe17972668ad042",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "7c9a570afc4fa81759aeb334cd83dd6323b449f03743ae9da482ec3ec9a8e5fc",
+      "content_sha256": "50931a5fe24cebfcc85177981b3b0f1e3513979e821273cb3234f6a0efb6f695",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5208,7 +5208,8 @@
         "EV-B03-TIMEPROTO-20261016",
         "EV-B03-TTL-20261016",
         "EV-B03-GATECAL-20261016",
-        "EV-B03-CONFLICT-20261016"
+        "EV-B03-CONFLICT-20261016",
+        "EV-B03-BOUNDARY-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -73544,6 +73545,25 @@
       "limits": "未走完整 MVC/真实 SQL 触发的 409；NON_NULL OpenAPI 类型同步未做。BC-BASE-006 维持 partially_executed。"
     },
     {
+      "id": "EV-B03-BOUNDARY-20261016",
+      "scope": "B03 BC-BASE-011 模块反向依赖校准",
+      "command_or_scenario": [
+        "pwsh -NoProfile -File scripts/check-module-boundaries.ps1 -RootPath . -> 退出 0，PASS: module boundary check",
+        "pwsh -NoProfile -File scripts/tests/module-boundaries.tests.ps1 -> 退出 0；自测在临时目录注入 common→core 反向 import，断言检查脚本退出 1 后删除"
+      ],
+      "environment": "原生 Windows PowerShell 7.6；临时目录合成样例，不读取业务库；未输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "模块边界检查通过；自测故意注入 common→core 反向依赖并被判定失败，等价覆盖 ArchUnit 反向依赖校准。",
+      "artifacts": [
+        "scripts/check-module-boundaries.ps1",
+        "scripts/tests/module-boundaries.tests.ps1",
+        ".temp/b03/b03-boundary.log",
+        ".temp/b03/b03-boundary-selftest.log"
+      ],
+      "limits": "项目未引入 ArchUnit 依赖，使用既有边界脚本自测；formatter 冷/热/断网 timeout 未找到对应工具/脚本。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75521,13 +75541,13 @@
         "name": "门禁校准",
         "status": "partially_executed",
         "necessary_acceptance": "PMD普通路径15/200/嵌套3/参数5对样例校准；DI构造/DTO结构型例外逐符号证据；formatter冷/热/断网timeout退出码；ArchUnit故意反向依赖失败。",
-        "boundary": "2026-10-16 运行 config/pmd/calibration：Cyclomatic>15、NPath>200、参数>5、if 嵌套≥4 均触发，边界样例不触发（cyclo15 仅因顺序 if 触发 NPath，预期；params5/npath200 未触发），EV-B03-GATECAL-20261016。DI 构造/DTO 结构型例外在 ledger exceptions 逐符号登记。formatter 冷/热/断网 timeout 退出码与 ArchUnit 反向依赖失败未执行。",
+        "boundary": "2026-10-16 运行 config/pmd/calibration：Cyclomatic>15、NPath>200、参数>5、if 嵌套≥4 均触发，边界样例不触发（cyclo15 仅因顺序 if 触发 NPath，预期；params5/npath200 未触发），EV-B03-GATECAL-20261016。DI 构造/DTO 结构型例外在 ledger exceptions 逐符号登记。模块反向依赖已用 check-module-boundaries.ps1 + 自测校准（故意注入 common→core 反向 import 被判定失败，EV-B03-BOUNDARY-20261016）；项目未引入 ArchUnit 依赖。formatter 冷/热/断网 timeout 未找到对应工具/脚本，未执行。",
         "scenario": "PMD普通路径15/200/嵌套3/参数5对样例校准；DI构造/DTO结构型例外逐符号证据；formatter冷/热/断网timeout退出码；ArchUnit故意反向依赖失败。",
         "state": "partially_executed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": ["EV-B03-GATECAL-20261016"],
-        "required_environment": "PMD 校准已完成；formatter 离线/超时与 ArchUnit 反向依赖待执行。"
+        "evidence_ids": ["EV-B03-GATECAL-20261016", "EV-B03-BOUNDARY-20261016"],
+        "required_environment": "PMD 校准与反向依赖自测已完成；formatter 离线/超时无对应工具，未执行。"
       },
       {
         "id": "BC-BASE-012",
