@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "9ae5a06a970312b3543355cee8c7739f66e7cca9232c2434af5bb89e6ba22ae2",
+      "content_sha256": "c804e6ff65a6fe57d09cb63f5dc7696a7128f9508a1d362e083d3a8b400dc837",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "53565fb99398fb9d14421a4a72d764ed275cb760d11c083f0c73d900090cf4f7",
+      "content_sha256": "474dfe81e314eec9bbccebe780da5ebf055c9afa25cd5360f6cbde46ef04025a",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5196,7 +5196,8 @@
         "EV-B03-RANGE416-20261016",
         "EV-B03-CLOCK-20261016",
         "EV-B03-TIMEZONE-20261016",
-        "EV-B03-TIMEPARSE-20261016"
+        "EV-B03-TIMEPARSE-20261016",
+        "EV-B03-ATTEMPT-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11973,6 +11974,22 @@
       "review_limits": ["单元层级，未覆盖所有调用方输入。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-BASE-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/UploadPartServiceAttemptTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "f28917741014c9db05e9013c5e06d9c81275e8898a566f3a2916b6a0a0b9dcce",
+      "reviewed_rules": ["04§7", "04§8", "04§13"],
+      "issue_ids": ["DIAG-ADDITIONAL-004"],
+      "evidence_ids": ["EV-B03-ATTEMPT-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "分片当前 attempt=2 时，携带 attempt=1 的确认返回 FILE_UPLOAD_CONFLICT，证明旧尝试回调被拒绝。",
+      "review_limits": ["单元层级；未覆盖 S3 外部确认的存储侧校验。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-ADDITIONAL-002"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -38369,7 +38386,7 @@
       "role": "后端 spectra-core / mapper",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "2c9f64d684c213f9271a30c521582ea8611e8391e17cf25fbdd2f092c08e029a",
+      "content_sha256": "1ed04f4cd72bcb0c5c32cc199e9aa6ea23f4fe55384492dc22a380ed8e6463c6",
       "reviewed_rules": [
         "04§4",
         "04§5",
@@ -38900,7 +38917,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b671749f18b969cddc56cfc1422cfb2763f3005c6711536c05341600a1e3c18b",
+      "content_sha256": "bb47aea479a2654201d8b39c228b7d6fb25bab983c44e663dec7badc398beb90",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -39339,7 +39356,7 @@
       "role": "后端 spectra-core / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f782e43b2c539d2ca991556bf1dc42c4f7a89bdabfb93ebec027e345aa949ce7",
+      "content_sha256": "60d245bf11f83d7953bbfa304495250f555da08ba315bc7c30f06025fc7fcb04",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -42996,7 +43013,7 @@
       "role": "后端资源、运行配置或映射输入",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ecece5f051cb5490a5d04a6b548fed0883e74b8084e3e45410819caa146cefd1",
+      "content_sha256": "f3c792f0ff1e3752f0ecaf8bc92cb280c8ad24393a75ef3c79263aef7829642a",
       "reviewed_rules": [
         "04§4",
         "04§5",
@@ -64497,12 +64514,13 @@
       "disposition": "随相关整改同步事实清单/生成链路；当前正式治理记录明确目标、历史证据、本轮执行和未执行边界，R6归并。",
       "state": "pending",
       "exception_ids": [],
-      "evidence_ids": [
-        "EV-ROOT-DOC-20261004"
-      ],
-      "impact_ids": [
-        "IMP-ENGINEERING-001"
-      ]
+  "evidence_ids": [
+    "EV-ADDITIONAL-004",
+    "EV-B03-ATTEMPT-20261016"
+  ],
+  "impact_ids": [
+    "IMP-ADDITIONAL-002"
+  ]
     },
     {
       "id": "DIAG-BUILD-002",
@@ -67680,8 +67698,8 @@
       ]
     },
     {
-      "state": "pending",
-      "id": "DIAG-ADDITIONAL-004",
+  "state": "in_progress",
+  "id": "DIAG-ADDITIONAL-004",
       "locations": [
         {
           "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/UploadPartService.java",
@@ -67701,7 +67719,7 @@
       ],
       "priority": "P2",
       "disposition": "定义attempt有效性与旧预签名能力失效语义，验证同分片连续target和迟到confirm/PUT的实际行为",
-      "impact": "旧分片回调或迟到写入可能影响最新尝试状态，S3错误ETag直到完成才暴露；需明确尝试幂等/隔离与最终校验分工。",
+      "impact": "旧分片回调或迟到写入可能影响最新尝试状态，S3错误ETag直到完成才暴露；需明确尝试幂等/隔离与最终校验分工。2026-10-16 已在 confirm 与 markUploaded/markConfirmed/markExternalConfirmed 加入 upload_attempt 谓词，旧尝试的迟到确认/写入被拒绝（EV-B03-ATTEMPT-20261016）；S3 外部确认的存储侧 ETag 校验仍待实现。",
       "rule": "04§7原子状态、04§8外部副作用未知与重试",
       "verification_state": "static_candidate_runtime_pending",
       "impact_ids": [
@@ -73133,6 +73151,27 @@
       "limits": "LocalDateTime 输出仍去 offset、toInstant(LocalTime) 仍补当天；需统一接口时间类型后处理。"
     },
     {
+      "id": "EV-B03-ATTEMPT-20261016",
+      "scope": "B03 DIAG-ADDITIONAL-004 分片 attempt 隔离与迟到回调拒绝",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=UploadPartServiceAttemptTest' test -> 退出 0，1/1；当前 attempt=2、请求 attempt=1 返回 FILE_UPLOAD_CONFLICT",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS；PMD/SpotBugs/Checkstyle 通过（StoredPart 参数化并拆解 confirm 复杂度）"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "confirm 校验 request.attempt 与当前 upload_attempt 一致，markUploaded/markConfirmed/markExternalConfirmed 的 SQL 谓词加入 upload_attempt，旧尝试的迟到写入/确认被拒绝。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/UploadPartService.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/mapper/FileUploadPartMapper.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/resources/mapper/upload/FileUploadPartMapper.xml",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/storage/StoredPart.java",
+        ".temp/b03/b03-attempt.log",
+        ".temp/b03/b03-attempt-static.log"
+      ],
+      "limits": "S3 confirmExternalPart 仍未通过存储读取验证 ETag/大小；最终整文件校验分工未变。DIAG-ADDITIONAL-004 维持 in_progress。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74613,7 +74652,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1620,
+      "included": 1621,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74639,7 +74678,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1634,
+    "reviewed_included": 1635,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
