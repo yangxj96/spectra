@@ -1474,7 +1474,7 @@
       "role": "Core 用户与审计分页入口正式 HTTP 排序字段与固定排序边界集成测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "39c2905dc5a1557459cd547ba41bd962ecdecdee24ad847bbce5491ff01e89f5",
+      "content_sha256": "d99b87b2b4a9da887a59f82bdc93ceccce752ea4a10f4912a884c8e03135c9c5",
       "reviewed_rules": ["04 §5 排序输入", "04 §7 授权与数据范围", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-BASE-002"],
       "evidence_ids": ["EV-B02-BASE008-CORE-PAGE-20261016"],
@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "2d0403c9468f031406913e2aed4c4c6dd608604a7dc9cc8ae3b0792660e1e620",
+      "content_sha256": "36fbc792c9b21ad9c4a79c2d0e3a4ecae1d339813022062e41d763ad7331aeb0",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "806177587e7c88b8bb259eaef04b0e6062f393d29cea80ac7ba7d12b4a7a0c42",
+      "content_sha256": "e72bb28470a26f3ce5d0551338cdbd444e20f87dc09f2baa4183feb7e951cd2f",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -73615,7 +73615,7 @@
       "id": "EV-B03-PAGE-20261016",
       "scope": "B03 BC-BASE-008 角色分页排序拒绝",
       "command_or_scenario": [
-        "spectra-admin: '-Dtest=CorePaginationHttpTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；用户/审计/角色/Quartz 任务/通知请求/通知任务/通知投递/文件类型/上传管理九个分页入口的注册字段、恶意表达式与未注册排序行为符合预期",
+        "spectra-admin: '-Dtest=CorePaginationHttpTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；用户/审计/角色/Quartz 任务/通知请求/通知任务/通知投递/文件类型/上传管理/OA 会议·公告·资产/Workflow 待办十三个分页入口的注册字段、恶意表达式与未注册排序行为符合预期",
         "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
       ],
       "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；隔离 PostgreSQL/Redis DB5；未输出凭据。",
@@ -75523,7 +75523,7 @@
         "name": "排序与范围",
         "status": "partially_executed",
         "necessary_acceptance": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
-         "boundary": "排序当前版 86 项专项通过；范围别名与方法名候选先复现再修复，合成 PostgreSQL/单测 10/10；OA 会议与采购收货正式 Mapper 的专用 PostgreSQL 查询 2/2；会议分页正式 Service/Controller 的 standalone MVC 与 PostgreSQL 2/2。新增会议分页完整应用 HTTP、Redis Session 与正式 Flyway V1–V8 测试 1/1，Core 用户加载和快照使用合成提供者；固定测试库与 Root 最小表夹具需要分段运行。2026-10-16 又用正式 Core 身份（真实登录）验证用户与审计两个会议以外分页入口：用户分页接受注册字段、拒绝恶意与未注册字段，审计固定排序入口拒绝客户端排序，专项 1/1；同轮新增角色分页：无排序 200、客户端排序与恶意表达式 400；Quartz 任务分页无排序 200、客户端排序 400；通知请求/任务/投递、文件类型、上传管理分页接受注册字段、拒绝未注册与恶意排序（EV-B03-PAGE-20261016）。会议以外的其余业务入口与浏览器仍未执行，整体不可标 passed。",
+         "boundary": "排序当前版 86 项专项通过；范围别名与方法名候选先复现再修复，合成 PostgreSQL/单测 10/10；OA 会议与采购收货正式 Mapper 的专用 PostgreSQL 查询 2/2；会议分页正式 Service/Controller 的 standalone MVC 与 PostgreSQL 2/2。新增会议分页完整应用 HTTP、Redis Session 与正式 Flyway V1–V8 测试 1/1，Core 用户加载和快照使用合成提供者；固定测试库与 Root 最小表夹具需要分段运行。2026-10-16 又用正式 Core 身份（真实登录）验证用户与审计两个会议以外分页入口：用户分页接受注册字段、拒绝恶意与未注册字段，审计固定排序入口拒绝客户端排序，专项 1/1；同轮新增角色分页：无排序 200、客户端排序与恶意表达式 400；Quartz 任务分页无排序 200、客户端排序 400；通知请求/任务/投递、文件类型、上传管理、OA 会议/公告/资产、Workflow 待办分页接受注册字段、拒绝未注册与恶意排序（EV-B03-PAGE-20261016）。会议以外的其余业务入口与浏览器仍未执行，整体不可标 passed。",
          "scenario": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
          "state": "inconclusive",
          "issue_ids": [
