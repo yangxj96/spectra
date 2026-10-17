@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "42176e106f286769ece8c4d08f6e53684834687b027faf01db734ca2775c2dd3",
+      "content_sha256": "2c122bfa6925bf912340df7a407275b1221c1f9e12223251b87c5127a3bde7c0",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -12262,6 +12262,22 @@
       "impact_state": null,
       "review_summary": "过期校验会话逐条重新投递并统计；无候选时不投递。",
       "review_limits": ["未覆盖线程池拒绝路径。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-CORE-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/storage/local/LocalFileStorageProviderCompleteTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "a0761b53bc318a67ae47ff3feb071eefd51da23881e28403019f1f36957d0eb2",
+      "reviewed_rules": ["04§10", "04§13"],
+      "issue_ids": ["DIAG-CORE-009"],
+      "evidence_ids": ["EV-B05-LIFECYCLE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "LOCAL 拼接成功后合并内容正确且暂存分片目录被删除。",
+      "review_limits": ["仅覆盖成功路径；删除失败降级由就绪会话清理代码审查覆盖。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-CORE-003"]
     },
@@ -38720,7 +38736,7 @@
       "role": "后端 spectra-core / mapper",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "60ca51b1fd7b196d46edee4bf7e5a8402cd5c3330e6d0f3ea7d747dba75c6db1",
+      "content_sha256": "4b881d4438aa96f9ec8b591f0388e2b4204571a95ae4cb5fca5f14bfdb60522a",
       "reviewed_rules": [
         "04§4",
         "04§5",
@@ -39083,7 +39099,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "121dea9078f867a63d58e4cb6761602c21b6dec6c4d5e4b934e2dcb175623f62",
+      "content_sha256": "898224fccbdcae232a5f2d3ae85ab3868d616129ee16f9f879b92030d9fe0473",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -39294,7 +39310,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "db0623276cef863a4d41bf64723adc04d02e73b6da78d2c187eb8d368f1b3e71",
+      "content_sha256": "50e03508e3dfac30cb76118e951488eb9043d56ff08fa124b3db616aa2d23a37",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -39393,7 +39409,7 @@
       "role": "后端 spectra-core / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "89da4dae2f1e2d416a3a024aaac42b8292f8ff14c0dd3cfebb3f53dd0be0651b",
+      "content_sha256": "a10e206e34b2d005d5b7727e071be27c9a4a2103b7bd8ce75d0e285b7b9ca924",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -43346,7 +43362,7 @@
       "role": "后端资源、运行配置或映射输入",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4c0e925f66561c4b7cde85c00fd0efdd1851927379c0591d9915247f73e8093d",
+      "content_sha256": "8e3933b0c4c4d0c047af229ce3af7c3db65d783be7576f41e92289eeb8a3a9d2",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -44033,7 +44049,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1830885acb18794d412bada35125777ce2fbcf0f30304400a55283b592f9725c",
+      "content_sha256": "21cd10bbe5cac3e055bec4d6ed060c251631deb451d8eb4ab28c5b3d01a31b8f",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -66888,13 +66904,14 @@
         }
       ],
       "finding": "LOCAL完成拼接后不删除staging sourceDirectory；成功READY session不在清理候选。成功上传分片内容永久保留，删除最终资产也不删除对应分片。",
-      "impact": "长期正常上传持续重复占用磁盘，需要READY会话/分片保留期限和可靠可重试清理。",
+      "impact": "长期正常上传持续重复占用磁盘，需要READY会话/分片保留期限和可靠可重试清理。2026-10-16 LOCAL 拼接后即删暂存目录，READY 会话按保留期清理分片与记录（EV-B05-LIFECYCLE-20261016）。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B05-LIFECYCLE-20261016"
       ],
       "supporting_locations": [
         {
@@ -73916,6 +73933,27 @@
       "limits": "未在真实 Quartz 集群与进程重启场景验证；线程池拒绝路径仅代码审查。"
     },
     {
+      "id": "EV-B05-LIFECYCLE-20261016",
+      "scope": "B05 DIAG-CORE-009 上传暂存与就绪会话生命周期",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=LocalFileStorageProviderCompleteTest,FileUploadCleanupServiceTest' test -> 退出 0，3/3",
+        "spectra-admin: 核心模块全量测试（排除 RootGovernancePostgresTest）-> BUILD SUCCESS",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "LOCAL 拼接成功后立即删除暂存分片目录；READY 会话按保留期进入清理候选，清理时 LOCAL 幂等删除暂存目录并删除分片和会话记录，S3 就绪会话跳过 multipart abort。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/storage/local/LocalFileStorageProvider.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/UploadVerificationWorker.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/resources/mapper/upload/FileUploadSessionMapper.xml",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/FileUploadCleanupService.java",
+        ".temp/b05/b05-lifecycle-test.log"
+      ],
+      "limits": "未在真实存储与长时间保留周期上验证；删除失败重试路径仅单测模拟。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75396,7 +75434,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1639,
+      "included": 1640,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -75422,7 +75460,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1653,
+    "reviewed_included": 1654,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
