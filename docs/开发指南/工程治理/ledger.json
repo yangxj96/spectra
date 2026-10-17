@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "26d2e1e84f5b7f97c0a89cbed40cb212011e8234e910bca77e193c000dcc31b4",
+      "content_sha256": "e4ed764259971a31ccb40f1e7da863288166ec4c2762cadc985bafd4c534fde6",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "0974db99a197b1edc2cc641366b8c7da43e6f5fb92898ca2092cf521499b57d0",
+      "content_sha256": "4fdb52eff3e9551231994e01db2698e15526a04cac3ac4e313a1e6cf439ba6e7",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5199,7 +5199,8 @@
         "EV-B03-TIMEPARSE-20261016",
         "EV-B03-ATTEMPT-20261016",
         "EV-B03-OFFSET-20261016",
-        "EV-B03-CONTACT-20261016"
+        "EV-B03-CONTACT-20261016",
+        "EV-B03-S3-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11990,6 +11991,38 @@
       "impact_state": null,
       "review_summary": "分片当前 attempt=2 时，携带 attempt=1 的确认返回 FILE_UPLOAD_CONFLICT，证明旧尝试回调被拒绝。",
       "review_limits": ["单元层级；未覆盖 S3 外部确认的存储侧校验。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-ADDITIONAL-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/storage/s3/S3FileStorageProviderConfirmTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "c4154ef2365b4882549651bbfccedf42ea75002469face06173db74b1211a63b",
+      "reviewed_rules": ["04§7", "04§8", "04§13"],
+      "issue_ids": ["DIAG-ADDITIONAL-004"],
+      "evidence_ids": ["EV-B03-S3-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "ListParts 实际大小/ETag 匹配才接受；大小或 ETag 不一致→FILE_PART_HASH_MISMATCH；分片缺失→FILE_PART_INVALID。",
+      "review_limits": ["Mock S3Client，未访问真实存储。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-ADDITIONAL-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/storage/s3/S3FileStorageProviderRealTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "0877c5c48a74efb8e83251635e7aa838b52bcd90d2ad8298ed8c11238d36978f",
+      "reviewed_rules": ["04§7", "04§8", "04§13"],
+      "issue_ids": ["DIAG-ADDITIONAL-004"],
+      "evidence_ids": ["EV-B03-S3-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "真实 S3 兼容存储：预签名 PUT 上传分片后 confirmExternalPart 以 ListParts 校验大小/ETag，错误 ETag 被拒，最后 abort 清理。",
+      "review_limits": ["依赖测试环境 S3 凭据与可达 bucket。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-ADDITIONAL-002"]
     },
@@ -39156,7 +39189,7 @@
       "role": "后端 spectra-core / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "58de774c0a08e9de391d56aee6eaf6d975ee743c9a75e49b8971c2472ae31edc",
+      "content_sha256": "cfb55dd33753494ecdc3f816ce92abe8cd1746bb718ee088c511b9f706c5c4c6",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -64518,7 +64551,8 @@
       "exception_ids": [],
   "evidence_ids": [
     "EV-ADDITIONAL-004",
-    "EV-B03-ATTEMPT-20261016"
+    "EV-B03-ATTEMPT-20261016",
+    "EV-B03-S3-20261016"
   ],
   "impact_ids": [
     "IMP-ADDITIONAL-002"
@@ -67703,7 +67737,7 @@
       ]
     },
     {
-  "state": "in_progress",
+  "state": "resolved",
   "id": "DIAG-ADDITIONAL-004",
       "locations": [
         {
@@ -67724,7 +67758,7 @@
       ],
       "priority": "P2",
       "disposition": "定义attempt有效性与旧预签名能力失效语义，验证同分片连续target和迟到confirm/PUT的实际行为",
-      "impact": "旧分片回调或迟到写入可能影响最新尝试状态，S3错误ETag直到完成才暴露；需明确尝试幂等/隔离与最终校验分工。2026-10-16 已在 confirm 与 markUploaded/markConfirmed/markExternalConfirmed 加入 upload_attempt 谓词，旧尝试的迟到确认/写入被拒绝（EV-B03-ATTEMPT-20261016）；S3 外部确认的存储侧 ETag 校验仍待实现。",
+      "impact": "旧分片回调或迟到写入可能影响最新尝试状态，S3错误ETag直到完成才暴露；需明确尝试幂等/隔离与最终校验分工。2026-10-16 已在 confirm 与 markUploaded/markConfirmed/markExternalConfirmed 加入 upload_attempt 谓词，旧尝试的迟到确认/写入被拒绝（EV-B03-ATTEMPT-20261016）；S3 外部确认已改为 ListParts 读取存储侧大小/ETag 并拒绝不一致（EV-B03-S3-20261016）；分片内容 SHA-256 仍由最终整文件校验覆盖。",
       "rule": "04§7原子状态、04§8外部副作用未知与重试",
       "verification_state": "static_candidate_runtime_pending",
       "impact_ids": [
@@ -73215,6 +73249,28 @@
       "limits": "未新增联系方式变更的授权/验证/撤销入口；Web 编辑表单不发送 phone/email，未做端到端 HTTP 断言。"
     },
     {
+      "id": "EV-B03-S3-20261016",
+      "scope": "B03 DIAG-ADDITIONAL-004 S3 分片存储侧大小/ETag 校验",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=S3FileStorageProviderConfirmTest' test -> 退出 0，4/4；ListParts 匹配接受、大小/ETag 不一致拒绝、分片缺失拒绝",
+        "spectra-admin: '-Dtest=S3FileStorageProviderRealTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；真实 S3 预签名 PUT 后 ListParts 校验成功，错误 ETag 被拒",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test（spectra-admin/.mise.test.toml 提供 S3_ENDPOINT/S3_BUCKET/凭据）、JDK 25、项目 Maven Wrapper；测试后 abort 清理临时分片；未输出凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "S3 confirmExternalPart 改为调用 ListParts 读取存储侧实际大小与 ETag，与声明不一致时拒绝；真实预签名上传 + 确认验证通过。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/storage/s3/S3FileStorageProvider.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/storage/s3/S3FileStorageProviderConfirmTest.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/storage/s3/S3FileStorageProviderRealTest.java",
+        ".temp/b03/b03-s3-test.log",
+        ".temp/b03/b03-s3-real.log",
+        ".temp/b03/b03-s3-static3.log"
+      ],
+      "limits": "分片级仍无法验证内容 SHA-256（S3 不暴露），由最终整文件校验覆盖；未测试网络中断/超时重试。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74695,7 +74751,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1621,
+      "included": 1623,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74721,7 +74777,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1635,
+    "reviewed_included": 1637,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -75233,11 +75289,11 @@
       {
         "id": "BC-BASE-014",
         "name": "部署资源候选",
-        "status": "partially_executed",
+        "status": "passed",
         "necessary_acceptance": "compose PostgreSQL18挂载入口须官方容器来源核验；Redis不持久化重启对failclosed/重放锁定事实源的语义；Docker4004映射实际验证。",
-        "boundary": "2026-10-16 修正 compose 中 PostgreSQL 18 卷挂载：官方 18 镜像 PGDATA 迁到 /var/lib/postgresql，卷改挂该父目录（原 /var/lib/postgresql/data 不持久化数据）；Dockerfile EXPOSE 由 8888 改为 4004，与两 profile 一致。Redis 非持久化按 fail-closed 有意为之并加注释。容器实际映射与 Redis 重启语义未运行。",
+        "boundary": "2026-10-16 修正 compose 中 PostgreSQL 18 卷挂载：官方 18 镜像 PGDATA 迁到 /var/lib/postgresql，卷改挂该父目录（原 /var/lib/postgresql/data 不持久化数据）；Dockerfile EXPOSE 由 8888 改为 4004，与两 profile 一致。Redis 非持久化按 fail-closed 有意为之并加注释，停启 fail-closed/恢复由 BC-BASE-003 覆盖。用户决定不运行 Docker 容器实际映射验证，按静态资源修正标记完成。",
         "scenario": "compose PostgreSQL18挂载入口须官方容器来源核验；Redis不持久化重启对failclosed/重放锁定事实源的语义；Docker4004映射实际验证。",
-        "state": "partially_executed",
+        "state": "passed",
         "issue_ids": [
           "DIAG-BASE-017"
         ],
@@ -75247,7 +75303,7 @@
         "evidence_ids": [
           "EV-B03-BASELINE-20261016"
         ],
-        "required_environment": "静态与配置修正已登记；Docker 容器实际端口映射与 Redis 停启语义未运行（Docker 不纳入当前验收）。"
+        "required_environment": "静态与配置修正已登记；Docker 容器实际端口映射按用户决定不验证（标记完成），Redis 停启语义由 BC-BASE-003 覆盖。"
       },
       {
         "id": "BC-BASE-015",
