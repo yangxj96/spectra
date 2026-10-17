@@ -1474,7 +1474,7 @@
       "role": "Core 用户与审计分页入口正式 HTTP 排序字段与固定排序边界集成测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ba8a4895dab23e548b946461f3a19d6c829d5f0bc6a856b0a3e6c157ac47a8d3",
+      "content_sha256": "aa21400ec6cf8b7db07073eb7452681d7630ca4fc25958c57011db6be9ccd02f",
       "reviewed_rules": ["04 §5 排序输入", "04 §7 授权与数据范围", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-BASE-002"],
       "evidence_ids": ["EV-B02-BASE008-CORE-PAGE-20261016"],
@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "609f38f7562a6446e674dadefc4e89c06d6d07c13c95f84212b08e28fcfffad0",
+      "content_sha256": "4ce24366754785fa564c3d0c217901e96547f08dacc6861493d6b3ad471fad7e",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "c19133307c71231a048b7f0594654e0475a380bb15b019f803a09f9cc6fa54c5",
+      "content_sha256": "dcf31a02a904c61ab5f24ad92e1a4c3441d68f4b3c7640fa991280577eb538cd",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -73615,7 +73615,7 @@
       "id": "EV-B03-PAGE-20261016",
       "scope": "B03 BC-BASE-008 角色分页排序拒绝",
       "command_or_scenario": [
-        "spectra-admin: '-Dtest=CorePaginationHttpTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；用户/审计/角色三个分页入口的注册字段、恶意表达式与未注册排序行为符合预期",
+        "spectra-admin: '-Dtest=CorePaginationHttpTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；用户/审计/角色/Quartz 任务四个分页入口的注册字段、恶意表达式与未注册排序行为符合预期",
         "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
       ],
       "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；隔离 PostgreSQL/Redis DB5；未输出凭据。",
@@ -75523,7 +75523,7 @@
         "name": "排序与范围",
         "status": "partially_executed",
         "necessary_acceptance": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
-         "boundary": "排序当前版 86 项专项通过；范围别名与方法名候选先复现再修复，合成 PostgreSQL/单测 10/10；OA 会议与采购收货正式 Mapper 的专用 PostgreSQL 查询 2/2；会议分页正式 Service/Controller 的 standalone MVC 与 PostgreSQL 2/2。新增会议分页完整应用 HTTP、Redis Session 与正式 Flyway V1–V8 测试 1/1，Core 用户加载和快照使用合成提供者；固定测试库与 Root 最小表夹具需要分段运行。2026-10-16 又用正式 Core 身份（真实登录）验证用户与审计两个会议以外分页入口：用户分页接受注册字段、拒绝恶意与未注册字段，审计固定排序入口拒绝客户端排序，专项 1/1；同轮新增角色分页：无排序 200、客户端排序与恶意表达式 400（EV-B03-PAGE-20261016）。会议以外的其余业务入口与浏览器仍未执行，整体不可标 passed。",
+         "boundary": "排序当前版 86 项专项通过；范围别名与方法名候选先复现再修复，合成 PostgreSQL/单测 10/10；OA 会议与采购收货正式 Mapper 的专用 PostgreSQL 查询 2/2；会议分页正式 Service/Controller 的 standalone MVC 与 PostgreSQL 2/2。新增会议分页完整应用 HTTP、Redis Session 与正式 Flyway V1–V8 测试 1/1，Core 用户加载和快照使用合成提供者；固定测试库与 Root 最小表夹具需要分段运行。2026-10-16 又用正式 Core 身份（真实登录）验证用户与审计两个会议以外分页入口：用户分页接受注册字段、拒绝恶意与未注册字段，审计固定排序入口拒绝客户端排序，专项 1/1；同轮新增角色分页：无排序 200、客户端排序与恶意表达式 400；Quartz 任务分页无排序 200、客户端排序 400（EV-B03-PAGE-20261016）。会议以外的其余业务入口与浏览器仍未执行，整体不可标 passed。",
          "scenario": "各分页endpoint仅允许注册字段，恶意expression拒绝；范围关系SQL别名和insert/create/add名称拦截候选检查。",
          "state": "inconclusive",
          "issue_ids": [
