@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "9fe7e84f9c0ded269498370e9b5484f980b9d812b51a6cbc9148b722231c99da",
+      "content_sha256": "f5e1854f41e25938931b20d373967a5704931dbfac75b12d992669bd1e2aa47b",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "010b3718e22e9ade23d7b8e3fa685c1925271cbc1774fe1c392faf9a0a3c17ec",
+      "content_sha256": "ea04012a7465ce6cdae3930591452167cde43f8f14de0567969dd90f3fcac5e0",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5193,7 +5193,8 @@
         "EV-B03-KEYGEN-20261016",
         "EV-B03-RANGE-20261016",
         "EV-B03-ERRORCODE-20261016",
-        "EV-B03-RANGE416-20261016"
+        "EV-B03-RANGE416-20261016",
+        "EV-B03-CLOCK-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11940,6 +11941,22 @@
       "impact_ids": ["IMP-ADDITIONAL-002"]
     },
     {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/persistence/mybatis/MetaObjectHandlerImplTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "cd9e27702f34f1eca030bddb97326b47d8a97f09c3fc3af8020ecc941b797655",
+      "reviewed_rules": ["04§6", "04§13"],
+      "issue_ids": ["DIAG-BASE-009"],
+      "evidence_ids": ["EV-B03-CLOCK-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "固定 Clock 下断言 insertFill/updateFill 写入 createdAt/updatedAt=注入时刻，证明审计时间可控。",
+      "review_limits": ["单元层级，未覆盖真实数据库时区会话。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-002"]
+    },
+    {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
       "role": "工程说明与规则入口",
       "scope": "included",
@@ -16488,7 +16505,7 @@
       "role": "后端 spectra-framework / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1449eba457bfdbf75448ecbe08e8ad15497eacccc31ba26696fdf9987bd7b533",
+      "content_sha256": "209a7e65ca329ae6fe40c91e6b2ebc1607500de6316cd485522dd35e6f652be0",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -16549,7 +16566,7 @@
       "role": "后端 spectra-framework / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "aaf56023b14be4a5455022de33e4ec97616d156fc507139eafbe39dab1f5e4be",
+      "content_sha256": "71aff30b5684ae055b70051908f9bfde7f4da73dd5c63a2349de1dfb31a930e4",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -19486,7 +19503,7 @@
       "role": "构建、依赖、工具链、部署或质量入口",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "0e3a60519a55045da430a579b66d7ebb2a0fc3a48be1996aa930a3bae0287c84",
+      "content_sha256": "5cf18e0af6fe95c036615c0d8cbd9c8c0afbaadb728edebb2ed653ba028f9475",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -19606,7 +19623,7 @@
       "role": "后端 spectra-launch / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b004d759ff8119461d508e6128ba49f3e49f3532e394e70a53c012c7ccd7fa5e",
+      "content_sha256": "9882028f4a2007c473faf488aa7548725772667803d274867c5be8e8c8e22b94",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -19970,7 +19987,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ed226a6e9808a31812936b765dc440d25af7099b54daa7b1fa518a7777ed32ed",
+      "content_sha256": "4ddcf18bdaef94a5b2c1af931b4bd95c0696bcce3f8b5a176e04e038fba7d1de",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界"
@@ -64851,13 +64868,14 @@
         }
       ],
       "finding": "UTC Clock bean存在，但公共审计/元数据和Session仍直接Instant.now/System.currentTimeMillis；Launch/Docker没有固定JVM UTC。",
-      "impact": "跨时区运行/测试无法控制关键业务时钟，Clock配置不构成UTC JVM与数据库连接会话的验收证据。",
+      "impact": "跨时区运行/测试无法控制关键业务时钟，Clock配置不构成UTC JVM与数据库连接会话的验收证据。2026-10-16 已让 MetaObjectHandlerImpl 注入 Clock、复核 Session 已使用 Clock、启动与 Docker 固定 UTC（EV-B03-CLOCK-20261016）；数据库连接会话时区仍未显式断言。",
       "priority": "P2",
       "disposition": "required_fix",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-BASE-001"
+        "EV-BASE-001",
+        "EV-B03-CLOCK-20261016"
       ],
       "supporting_locations": [
         {
@@ -68125,7 +68143,7 @@
       "required_changes": [
         "同步实体/VO/OpenAPI类型与Web/插件日期消费；非法timezone、DST、date/time语义需要对应分场景验收。"
       ],
-      "deferred_boundary": "只公共影响读取暂缓源，不升级为OA/Workflow独立重构完成。",
+      "deferred_boundary": "只公共影响读取暂缓源，不升级为OA/Workflow独立重构完成。DIAG-BASE-009 已完成（EV-B03-CLOCK-20261016），DIAG-BASE-008 时间模型仍待处理。",
       "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
@@ -73036,6 +73054,27 @@
       "limits": "未验证真实 HTTP/浏览器断点续传；S3 起点越界由 service 预校验覆盖，provider 层未单独断言。"
     },
     {
+      "id": "EV-B03-CLOCK-20261016",
+      "scope": "B03 DIAG-BASE-009 审计元数据可控制 Clock 与启动固定 UTC",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=MetaObjectHandlerImplTest' test -> 退出 0，2/2；注入固定 Clock 后 createdAt/updatedAt 等于注入时刻",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS；启动类与 Dockerfile 编译/静态检查通过"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "MetaObjectHandlerImpl 改为注入 Clock 并以其时刻填充审计字段；LaunchApplication 启动设置 user.timezone/默认时区 UTC；Dockerfile 增加 ENV TZ=UTC 与 -Duser.timezone=UTC；SecuritySessionIssueService 已使用 Clock（复核）。",
+      "artifacts": [
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/persistence/mybatis/MetaObjectHandlerImpl.java",
+        "spectra-admin/spectra-framework/src/main/java/com/devops00/spectra/framework/persistence/configuration/MyBatisPlusConfiguration.java",
+        "spectra-admin/spectra-launch/src/main/java/com/devops00/spectra/launch/LaunchApplication.java",
+        "spectra-admin/spectra-launch/Dockerfile",
+        ".temp/b03/b03-clock-test.log",
+        ".temp/b03/b03-clock-static.log"
+      ],
+      "limits": "未显式设置 PostgreSQL 连接会话时区（依赖实例/角色配置）；未做跨时区真实部署验证。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74516,7 +74555,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1618,
+      "included": 1619,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74542,7 +74581,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1632,
+    "reviewed_included": 1633,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
