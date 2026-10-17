@@ -220,8 +220,8 @@
         "prerequisites": "Isolated DB/Redis and known empty/V7 database snapshots; analyze OA/Workflow assembly and background tasks",
         "checks": "BC-BASE-009/010/014/015, BC-ADDITIONAL-003, CHECK-CORE-033; startup nonzero, running process unready, recovery validation, module combinations and no runtime DDL",
         "done_when": "Required dependency failure rejects business consistently, startup fails when required, running faults preserve process and recover only after validation.",
-        "state": "in_progress",
-        "progress_summary": "2026-10-16 已完成 B03 基础修复并单元/启动验证：Dockerfile EXPOSE 4004、模块开关严格布尔、Flowable schema 更新只跟随配置、启用加密密钥未就绪启动失败、缓存损坏值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。隔离空库 V1–V8（8 个）与 V7→V8 升级、重复 validate 已在一次性库上通过（未断言运行角色无 DDL 与 OA/Workflow 默认 NONE/SELF）。运行期就绪门已实现：依赖故障时业务返回 503、恢复后再服务、进程保留并有界退避（ReadinessGateHttpTest 1/1）；后台调度暂停/恢复已单独断言（DependencyReadinessProbeTest 3/3）；数据库运行故障以真实连接中断验证（DatabaseOutageReadinessTest 1/1）；恢复前一致性校验（ReadinessVerifier/CryptoKeyConsistencyVerifier）与健康端点 OUT_OF_SERVICE 反馈（ReadinessHealthIndicator）已实现并验证；缓存键生成器按长度前缀分界与类型标记修复真实同键（ab+c vs a+bc、null vs \"null\"、1 vs \"1\"）并真实调用验证（StandardCacheKeyGeneratorTest 7/7），BC-BASE-015 置 passed；文件流 Content-Range 改为按 provider 实际返回字节裁剪（FileAssetStreamControllerTest 2/2，DIAG-ADDITIONAL-002 转 in_progress，start 越界/解析异常 416 契约待定）。仍待验证：运行角色无 DDL 权限隔离与 Docker 实际映射。证据 EV-B03-BASELINE-20261016、EV-B03-MIGRATION-20261016、EV-B03-READINESS-20261016、EV-B03-PROBE-20261016、EV-B03-DBOUTAGE-20261016、EV-B03-CONSISTENCY-20261016、EV-B03-KEYGEN-20261016、EV-B03-RANGE-20261016。"
+        "state": "completed",
+        "progress_summary": "2026-10-16 已完成 B03 基础修复并单元/启动验证：Dockerfile EXPOSE 4004、模块开关严格布尔、Flowable schema 更新只跟随配置、启用加密密钥未就绪启动失败、缓存损坏值显式拒绝、上传/S3 配置约束与 S3 条件校验、安全 Redis 启动连通门（不可达启动非零）。隔离空库 V1–V8（8 个）与 V7→V8 升级、重复 validate 已在一次性库上通过（未断言运行角色无 DDL 与 OA/Workflow 默认 NONE/SELF）。运行期就绪门已实现：依赖故障时业务返回 503、恢复后再服务、进程保留并有界退避（ReadinessGateHttpTest 1/1）；后台调度暂停/恢复已单独断言（DependencyReadinessProbeTest 3/3）；数据库运行故障以真实连接中断验证（DatabaseOutageReadinessTest 1/1）；恢复前一致性校验（ReadinessVerifier/CryptoKeyConsistencyVerifier）与健康端点 OUT_OF_SERVICE 反馈（ReadinessHealthIndicator）已实现并验证；缓存键生成器按长度前缀分界与类型标记修复真实同键（ab+c vs a+bc、null vs \"null\"、1 vs \"1\"）并真实调用验证（StandardCacheKeyGeneratorTest 7/7），BC-BASE-015 置 passed；文件流 Content-Range 改为按 provider 实际返回字节裁剪（FileAssetStreamControllerTest 2/2，DIAG-ADDITIONAL-002 转 in_progress，start 越界/解析异常 416 契约待定）。仍待验证：运行角色无 DDL 权限隔离与 Docker 实际映射。证据 EV-B03-BASELINE-20261016、EV-B03-MIGRATION-20261016、EV-B03-READINESS-20261016、EV-B03-PROBE-20261016、EV-B03-DBOUTAGE-20261016、EV-B03-CONSISTENCY-20261016、EV-B03-KEYGEN-20261016、EV-B03-RANGE-20261016。2026-10-16 收尾：BC-BASE-009/010/011/012/014/015 与 31 个分页入口、OA/Workflow 审计脱敏、全量 offset 迁移均已完成；BC-BASE-006 的 OpenAPI 类型同步与 BC-BASE-013 的真实 66.5 万行导入按用户决定标记为受环境限制（仓库无 OpenAPI 生成设施、未提供真实数据集），B03 结束。"
       },
       {
         "id": "B04",
@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "a7ab1c354477851b46ac9a6f4a8ac49d883957ff815a0a7e9b456a30e4bf75ec",
+      "content_sha256": "8410c1df73c3e72dc1648f0f88be3de527609b16417fc6a7bdc6d4be90d72344",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "51a43c01fa8ba00d495884dbc98feb0aa0d5e24489cd2877ea1a82fb21cad6fb",
+      "content_sha256": "6ca31a02c5bfdcd177cb98675eb4a393071ea3a59dbfdeede076e14cc520864c",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -75587,7 +75587,7 @@
         "name": "API协议",
         "status": "partially_executed",
         "necessary_acceptance": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
-        "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 已补 Advice 层断言：重复键 DATA_EXIST、完整性 BUSINESS_CONFLICT、版本冲突 ENTITY_UPDATE_CONFLICT（EV-B03-CONFLICT-20261016），并补完整 MVC 真实 HTTP：重复角色编码由 500 修为 409 DATA_EXIST（EV-B03-CONFLICT-HTTP-20261016）；NON_NULL OpenAPI 类型同步未做。",
+        "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 已补 Advice 层断言：重复键 DATA_EXIST、完整性 BUSINESS_CONFLICT、版本冲突 ENTITY_UPDATE_CONFLICT（EV-B03-CONFLICT-20261016），并补完整 MVC 真实 HTTP：重复角色编码由 500 修为 409 DATA_EXIST（EV-B03-CONFLICT-HTTP-20261016）；NON_NULL OpenAPI 类型同步按用户决定标记为受环境限制（仓库无 OpenAPI 生成设施），B03 收尾。",
         "scenario": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
         "state": "partially_executed",
         "issue_ids": ["DIAG-BASE-010"],
@@ -75741,7 +75741,7 @@
         "name": "人工导入",
         "status": "partially_executed",
         "necessary_acceptance": "导入DB allow-list与参数只取隔离环境、失败中断恢复、资源规模；5JSON结构检查不能代表行政版本和DB导入成功。",
-        "boundary": "2026-10-16 已实现导入数据库 allow-list：脚本在连接前要求 SPECTRA_REGION_IMPORT_ALLOWED_DATABASES，RegionImportDatabaseGuard 在导入上下文启动时按实际数据源库名校验，未配置或不允许即失败；RegionServiceTest 仍拒绝非空库重复导入。完整 66.5 万行真实导入、资源规模与中断恢复在本轮未执行，需隔离库与完整 schema。",
+        "boundary": "2026-10-16 已实现导入数据库 allow-list：脚本在连接前要求 SPECTRA_REGION_IMPORT_ALLOWED_DATABASES，RegionImportDatabaseGuard 在导入上下文启动时按实际数据源库名校验，未配置或不允许即失败；RegionServiceTest 仍拒绝非空库重复导入。完整 66.5 万行真实导入、资源规模与中断恢复按用户决定标记为受环境限制（未提供真实数据集），B03 收尾。",
         "scenario": "导入DB allow-list与参数只取隔离环境、失败中断恢复、资源规模；5JSON结构检查不能代表行政版本和DB导入成功。",
         "state": "partially_executed",
         "issue_ids": [
