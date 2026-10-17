@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "c33911955516978dab116650689736d6a2f60cfb6f188a3b34d0e9f37226c74f",
+      "content_sha256": "6881c265466ebe5f10032805e403fcca6e7a8db58d1c25ebde252d91fab832d8",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "85e900dd96e1c2ce21a0d85db971380b068350b8c0fd0923edc27890938d6b26",
+      "content_sha256": "23279ac183afa7fc0c0a4a6771c1fa678aecb09d49943fac354d0b98f2c0330f",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5212,7 +5212,8 @@
         "EV-B03-BOUNDARY-20261016",
         "EV-B03-OFFSET-FULL-20261016",
         "EV-B03-CONFLICT-HTTP-20261016",
-        "EV-B03-PAGE-20261016"
+        "EV-B03-PAGE-20261016",
+        "EV-B03-OA-AUDIT-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -12163,6 +12164,22 @@
       "impact_state": null,
       "review_summary": "真实登录后创建重复角色编码，断言 HTTP 409 且 body error_code=DATA_EXIST。",
       "review_limits": ["使用 ROLE_DEV_OPS 夹具；未覆盖版本冲突的完整 MVC。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-001"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/OaAuditRedactionHttpTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "4f43d8f3a544e4fd7494c9919055a46e635a3b14136b778e51521fc1410e3e2c",
+      "reviewed_rules": ["04§7", "04§8", "04§13"],
+      "issue_ids": [],
+      "evidence_ids": ["EV-B03-OA-AUDIT-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "真实 OA 会议创建写入后在 sys_audit_event 断言不存在 password/token 明文，且存在审计记录；同时修复 Meeting/MeetingParticipant 的 uuid 字段类型。",
+      "review_limits": ["仅会议创建入口；Workflow 逐入口仍未覆盖。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-BASE-001"]
     },
@@ -73629,6 +73646,26 @@
       "limits": "未覆盖其余业务分页入口与浏览器。"
     },
     {
+      "id": "EV-B03-OA-AUDIT-20261016",
+      "scope": "B03 BC-BASE-005 OA 会议审计脱敏与 UUID 类型修复",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=OaAuditRedactionHttpTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；创建会议 200/2xx，sys_audit_event 无 password/token 明文且存在审计行",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；隔离 PostgreSQL/Redis DB5；审计表 append-only；未输出凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "真实 OA 会议创建走完整 MVC 与审计切面；审计 JSONB/原因不含敏感明文。修复 Meeting.initiatorId 与 MeetingParticipant.meetingId 为 UUID，消除 uuid 列插入 varchar 的 500。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-oa/src/main/java/com/devops00/spectra/oa/meeting/javabean/entity/Meeting.java",
+        "spectra-admin/spectra-modules/spectra-oa/src/main/java/com/devops00/spectra/oa/meeting/javabean/entity/MeetingParticipant.java",
+        "spectra-admin/spectra-modules/spectra-oa/src/main/java/com/devops00/spectra/oa/meeting/service/impl/MeetingServiceImpl.java",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/OaAuditRedactionHttpTest.java",
+        ".temp/b03/b03-oa-audit.log"
+      ],
+      "limits": "仅会议创建入口；Workflow 逐入口审计未覆盖。BC-BASE-005 维持 partially_executed。"
+    },
+    {
       "id": "EV-B03-BOUNDARY-20261016",
       "scope": "B03 BC-BASE-011 模块反向依赖校准",
       "command_or_scenario": [
@@ -75128,7 +75165,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1631,
+      "included": 1632,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -75154,7 +75191,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1645,
+    "reviewed_included": 1646,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -75484,12 +75521,12 @@
         "name": "审计脱敏",
         "status": "partially_executed",
         "necessary_acceptance": "改密From、嵌套bean/Map/List/record的password/token/secret不得进入JSONB、异常message或日志；成功审计与业务同事务。",
-         "boundary": "周期级 test 环境 devops00_spectra_db_test 的审计事务 5 项和结构化脱敏 6 项通过；嵌套 Bean/Map/List/record、reason、日志拒绝值、审计写入失败及成功/失败事务已有合成证据。2026-10-16 增加改密正式 HTTP 与正式审计表证据：成功审计与业务同事务写入 sys_audit_event、before_snapshot 脱敏为 *** 且明文口令不出现在审计文本列，旧口令失效、新口令可登录。OA/Workflow 逐入口与审计写入失败的正式故障恢复未运行。",
+         "boundary": "周期级 test 环境 devops00_spectra_db_test 的审计事务 5 项和结构化脱敏 6 项通过；嵌套 Bean/Map/List/record、reason、日志拒绝值、审计写入失败及成功/失败事务已有合成证据。2026-10-16 增加改密正式 HTTP 与正式审计表证据：成功审计与业务同事务写入 sys_audit_event、before_snapshot 脱敏为 *** 且明文口令不出现在审计文本列，旧口令失效、新口令可登录。2026-10-16 增加 OA 会议创建真实 HTTP：审计 JSONB/原因不含 password/token 明文且存在审计行，并修复会议/参与人 uuid 类型（EV-B03-OA-AUDIT-20261016）。Workflow 逐入口与审计写入失败的正式故障恢复仍未运行。",
          "scenario": "改密From、嵌套bean/Map/List/record的password/token/secret不得进入JSONB、异常message或日志；成功审计与业务同事务。",
          "state": "partially_executed",
          "issue_ids": ["DIAG-BASE-001"],
          "impact_ids": ["IMP-BASE-001"],
-         "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-BASE001-20261011", "EV-B02-BASE001-GATES-20261011", "EV-B02-BASE005-HTTP-20261016"],
+         "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-BASE001-20261011", "EV-B02-BASE001-GATES-20261011", "EV-B02-BASE005-HTTP-20261016", "EV-B03-OA-AUDIT-20261016"],
          "required_environment": "合成 PostgreSQL 与改密正式 HTTP/正式审计表已运行；还需 OA/Workflow 逐入口真实 HTTP 与审计写入失败故障恢复验证。"
       },
       {
