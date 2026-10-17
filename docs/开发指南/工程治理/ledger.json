@@ -295,7 +295,10 @@
         "change_scope": "Core asset authorization, upload IDs/attempts, durable verification and cleanup, local/S3 range and staging; Web upload controls, retries, cancellation and identity isolation; OA attachment callers",
         "prerequisites": "Agree operation intent and unknown-result handling; isolated storage, DB and two app instances",
         "checks": "CHECK-CORE-005..010, BC-ADDITIONAL-004/006, BEH-WEB-003; foreign asset rejection, real multipart URL, late attempt, crash/restart and two-instance recovery",
-        "done_when": "Accepted uploads have recoverable outcomes, no cross-user asset access, correct bytes/IDs, and verified file cleanup."
+        "done_when": "Accepted uploads have recoverable outcomes, no cross-user asset access, correct bytes/IDs, and verified file cleanup.",
+      "state": "completed",
+      "completed_at": "2026-10-16",
+      "progress_summary": "2026-10-16 已完成 B05：创建资产显式继承会话所有者；引用资产校验创建者或就绪会话所有者；LOCAL 会话 id 与分片地址标识统一；新增 file.upload.verification-recovery 作业按心跳与租约持久重领过期校验；LOCAL 拼接后即删暂存目录，READY 会话按保留期清理分片与记录；预览/下载按 FileType 开关拒绝普通用户并保留管理员例外；Web 上传 Hook 卸载释放客户端、恢复键按用户隔离、验证轮询有总期限、控制请求带 AbortSignal、分片失败终止并发且 complete 拒绝收敛 FAILED、重试按错误分类并有总预算。证据 EV-B05-OWNER-20261016、EV-B05-REF-20261016、EV-B05-LOCAL-ID-20261016、EV-B05-RECOVERY-20261016、EV-B05-LIFECYCLE-20261016、EV-B05-POLICY-20261016、EV-B05-ATTEMPT-20261016、EV-B05-WEB-LIFECYCLE-20261016。受环境限制未执行：真实进程重启/双实例抢占、真实 S3 错误 ETag 组合时序、真实浏览器 IndexedDB 与身份切换端到端；对应 CHECK-CORE-005、BC-ADDITIONAL-004/006、BEH-WEB-003 标记 partially_executed，其余 B05 检查通过。"
       },
       {
         "id": "B06",
@@ -4194,7 +4197,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "48a4909ac643702e490626f6d323d40bc0d9024675901a74cd4b4413cb146417",
+      "content_sha256": "3259081b23f122c640c1c76f8971fde3b172f7cfb9d8b5f666cbe7be24459239",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4250,7 +4253,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f98255bed6533f2814299d67f428c22950b59787dce8aac4f2340d5daa1e1f6c",
+      "content_sha256": "d8851deb1bd2fb63da4a6acc94ba38dbff32ea98f09fc7dbbdde76f9a23e8872",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5023,7 +5026,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "6811cc3f2c610e2d232370c9a9a5ace7f4908c72822363c72f1f0136a043436b",
+      "content_sha256": "a5dd446d5485d419390501e283eb55097830d196dc0adcdaf7d3dc29a83b8e2a",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5126,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "6ca31a02c5bfdcd177cb98675eb4a393071ea3a59dbfdeede076e14cc520864c",
+      "content_sha256": "8939670da6e5b7f6c04a186209a9baabc7d80a85bdf92cf893b31db64f0f0947",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -12296,6 +12299,38 @@
       "review_limits": ["未走真实 HTTP 与 Web 端到端。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-CORE-003"]
+    },
+    {
+      "path": "spectra-ui/src/views/Devops/File/Upload/file-upload-retry.ts",
+      "role": "Web views 源码或类型",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "b310507bed0420136b9cb03656c38282ad635d57dbca8a18ddaabb26ebc1cc1b",
+      "reviewed_rules": ["04 §11 Web组织、类型与反馈", "04 §5 API、错误与类型契约"],
+      "issue_ids": ["DIAG-WEB-018"],
+      "evidence_ids": ["EV-B05-WEB-LIFECYCLE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "仅网络错误、5xx、408 和 429 允许重试；取消与 4xx 直接失败，供分片重试在总预算内使用。",
+      "review_limits": ["分类依据请求层错误 status；未覆盖代理自定义错误结构。"],
+      "review_kind": "source_responsibility_and_failure_path_review",
+      "impact_ids": ["IMP-WEB-005"]
+    },
+    {
+      "path": "spectra-ui/tests/upload/file-upload-lifecycle.test.ts",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "d5ebd68811323f5b03ce037e9939de22453f9e1163f7ca18343cf4c1ac17f280",
+      "reviewed_rules": ["04 §11 Web组织、类型与反馈", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-WEB-017", "DIAG-WEB-018"],
+      "evidence_ids": ["EV-B05-WEB-LIFECYCLE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "恢复键包含会话所有者；重试分类拒绝取消与 4xx，允许网络、5xx、408、429。",
+      "review_limits": ["Node 环境测试，未覆盖 IndexedDB 实际读写和浏览器卸载。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-WEB-005"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -57744,7 +57779,7 @@
       "role": "Web api 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "9c8eb9755e9970a17bbcbc103a2c6f7276177dbfbc0eb133c894dcc375aaf62c",
+      "content_sha256": "8f85e8a61241058de51a52e5d183237f78a6d1db1e2185f07baf3b773cbbe2c0",
       "reviewed_rules": [
         "§5 API/类型契约",
         "§11 薄API与请求反馈"
@@ -60080,7 +60115,7 @@
       "role": "Web views 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "785e890036e00cba63e07c7c073df0b5713633b3867a0c0aca8b77de90e0b2ed",
+      "content_sha256": "fcb8361666268273b86eb5bf334be46ad7867a93a041100746f75bac088ac9d4",
       "reviewed_rules": [
         "04 §11 Web组织、类型与反馈",
         "04 §5 API、错误与类型契约",
@@ -60113,7 +60148,7 @@
       "role": "Web views 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "0456eecf58c1c12a214f30358ed8e31299890eb9405ab16708b1dfc9db8993d4",
+      "content_sha256": "f91015908edb13e2ccf7b6c1dfa21a131d93b5248273a62e66b4a9ff6999836b",
       "reviewed_rules": [
         "04 §11 Web组织、类型与反馈",
         "04 §5 API、错误与类型契约",
@@ -60145,7 +60180,7 @@
       "role": "Web views 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "37b9710b7bfc8cfa2a75a352b715eff099c42344f38a4b2c3a53e32cbcdf3a86",
+      "content_sha256": "91e00543689b53c617c9daedd09284f12afe65740d3ecb546c5b545b8b9b223a",
       "reviewed_rules": [
         "04 §11 Web组织、类型与反馈",
         "04 §5 API、错误与类型契约",
@@ -60173,7 +60208,7 @@
       "role": "Web views 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "554a4d0caf40d5b7f28048fb1eea3f542c15cbac9f0386c8f119efa4ef51e2b9",
+      "content_sha256": "c9862541063b77a13b88f1873a3b82cdfa899814c4567ad7a7ce0e90ec8efa9c",
       "reviewed_rules": [
         "04 §11 Web组织、类型与反馈",
         "04 §5 API、错误与类型契约",
@@ -66034,10 +66069,11 @@
       "impact": "离开上传页或更换身份后旧任务继续控制请求/轮询；下一身份能看到前身份文件名与upload_id并尝试恢复。后端权限结果不能代替前端状态隔离。",
       "priority": "P1",
       "disposition": "生命周期绑定取消/暂停及有界轮询；恢复记录按身份隔离并统一Session清理",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66067,10 +66103,11 @@
       "impact": "错误可能停留CREATING/UPLOADING并仍发其他分片；重复写确认的安全边界需后端上传attempt/幂等契约共同验证，不能声明已安全通过。",
       "priority": "P1",
       "disposition": "分层收敛工作流终态并终止并发任务；仅在明确分类及幂等契约下有界重试",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66095,10 +66132,11 @@
       "impact": "筛选重置与实际查询不一致；UI显示全部但仍返回旧筛选结果。",
       "priority": "P2",
       "disposition": "保持稳定查询对象或让Hook接收Reactive/Ref获取最新值",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66123,10 +66161,11 @@
       "impact": "组件离开后计时器继续；诊断轮询可跨页继续并叠请求/未处理拒绝，身份切换放大公共请求会话竞态。",
       "priority": "P1",
       "disposition": "绑定卸载取消/世代失效，轮询互斥及有界错误策略",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66151,10 +66190,11 @@
       "impact": "显示的确认资料与实际previewRequest可能脱节；旧预览令牌不是保证页面确认对象一致的替代，部门重组需绑定稳定快照。",
       "priority": "P1",
       "disposition": "输入变更取消/失效预览，响应按序列校验；确认与apply捕获同一不可变预览对象",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66179,10 +66219,11 @@
       "impact": "用户回上一步核对基础信息后授权编辑被静默重置；最终统一提交可能包含旧服务端授权。",
       "priority": "P1",
       "disposition": "草稿提升至稳定宿主或保持编辑器挂载；验证前进/返回/重入流程",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66212,10 +66253,11 @@
       "impact": "草稿通常仍在内存，但用户缺少安全恢复路径，重试会继续提交旧版本；不能把版本参数存在等同于完整冲突体验。",
       "priority": "P1",
       "disposition": "结合后端error_code建立版本冲突分类；保留草稿及原始快照，加载最新版本比较后明确重提交",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66255,10 +66297,11 @@
       "impact": "页面展示和用户当前编辑内容可能与实际预览令牌指向的操作不同；后端令牌绑定不能代替页面确认对象一致性。",
       "priority": "P1",
       "disposition": "输入变化失效旧预览，响应核对世代，确认和提交捕获同一不可变对象；覆盖返回编辑/输入变化/两次预览乱序",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66288,10 +66331,11 @@
       "impact": "离开页面或切换身份后残留轮询/Blob资源，迟到响应可能继续使用新会话取旧任务；未验证实际网络时序。",
       "priority": "P1",
       "disposition": "卸载取消并失效所有异步continuation；timer/BlobURL有稳定所有者与释放，轮询设置截止期限",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66326,10 +66370,11 @@
       "impact": "快速重入和确认窗口并发可产生多次写入；默认请求去重只在相同payload同时在途有效，不能证明后台业务幂等或结果未知时安全重试。",
       "priority": "P1",
       "disposition": "函数入口锁定操作意图和稳定payload；具有外部副作用的操作对齐后端幂等键、原结果查询与结果未知反馈，页面取消仅取消等待",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66349,10 +66394,11 @@
       "impact": "发送后查看请求进入普通列表，无法定位刚提交结果，尤其在结果未知后阻碍核对。",
       "priority": "P2",
       "disposition": "导航到已注册详情路由并传入它实际消费的id参数",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66372,10 +66418,11 @@
       "impact": "再次打开会沿用敏感值，增加内存持有时间及误用旧密码/版本内容风险。",
       "priority": "P2",
       "disposition": "关闭/成功/卸载明确清理敏感草稿，保留编辑只针对非敏感内容",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66400,10 +66447,11 @@
       "impact": "保存或刷新一个区域可静默覆盖其他区域草稿。",
       "priority": "P2",
       "disposition": "按编辑对象保存/更新，外部刷新保留dirty草稿并提示比较",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66423,10 +66471,11 @@
       "impact": "验证函数自身不能拒绝重复项；当前选择UI一般去重，但导入/后续程序更新draft时不能依赖该校验。",
       "priority": "P2",
       "disposition": "改为has后add，并验证独立重复输入场景",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B05-WEB-LIFECYCLE-20261016"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -66466,7 +66515,7 @@
       "impact": "需要为管理用例建立最终授权；区分可信系统运行端口与管理端口，防止任意内部调用读取密钥/修改配置/调度。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-CORE-001"
@@ -73991,6 +74040,44 @@
       "limits": "未走真实 HTTP/Web 端到端；未验证管理端策略变更后的缓存与即时生效。"
     },
     {
+      "id": "EV-B05-WEB-LIFECYCLE-20261016",
+      "scope": "B05 DIAG-WEB-017/018 上传生命周期、身份隔离与失败收敛",
+      "command_or_scenario": [
+        "spectra-ui: pnpm run type-check -> 退出 0",
+        "spectra-ui: pnpm exec eslint src/views/Devops/File/Upload tests/upload -> 退出 0",
+        "spectra-ui: pnpm run test -> 9 个文件、23 项通过；新增恢复键身份隔离与重试分类用例"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise 管理 Node/pnpm、Vitest node 环境；未连接真实后端。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "Hook 卸载调用 dispose 停止分析/传输/轮询且不再推送旧快照；恢复键包含用户 id；验证轮询有总期限；控制请求携带 AbortSignal；分片失败终止并发、complete 拒绝收敛为 FAILED；重试仅限网络/5xx/408/429 且有总预算。",
+      "artifacts": [
+        "spectra-ui/src/views/Devops/File/Upload/file-upload-client.ts",
+        "spectra-ui/src/views/Devops/File/Upload/file-upload-store.ts",
+        "spectra-ui/src/views/Devops/File/Upload/use-file-upload.ts",
+        "spectra-ui/src/views/Devops/File/Upload/file-upload-retry.ts",
+        "spectra-ui/tests/upload/file-upload-lifecycle.test.ts",
+        ".temp/b05/b05-web-vitest3.log"
+      ],
+      "limits": "未在真实浏览器、IndexedDB、多标签与真实网络故障下验证；未做两人身份切换端到端。"
+    },
+    {
+      "id": "EV-B05-ATTEMPT-20261016",
+      "scope": "B05 分片旧 attempt 确认拒绝",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=UploadPartServiceAttemptTest'（随核心模块全量测试执行）-> BUILD SUCCESS，旧 attempt confirm 返回 FILE_UPLOAD_CONFLICT"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "分片当前 attempt 大于回调 attempt 时 confirm 拒绝，避免旧预签名写入确认当前上传。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/UploadPartServiceAttemptTest.java",
+        ".temp/b05/b05-core-test5.log"
+      ],
+      "limits": "未覆盖真实 S3 错误 ETag、迟到预签名 PUT 与多客户端竞争时序。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75471,7 +75558,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1641,
+      "included": 1643,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -75497,7 +75584,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1655,
+    "reviewed_included": 1657,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -76068,10 +76155,10 @@
       {
         "scenario": "未执行写重试幂等及结果未知",
         "id": "BEH-WEB-003",
-        "state": "not_run",
+        "state": "partially_executed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": ["EV-B05-WEB-LIFECYCLE-20261016"],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
@@ -76226,11 +76313,11 @@
         "issue_ids": [
           "DIAG-CORE-005"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "scenario": "正常受理上传无法兑现校验结果，多实例/重启丢任务；必须持久意图、领取、租约和分类恢复。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "单元测试验证过期 VERIFYING 会话按心跳与租约持久重领并重新投递；未执行真实进程重启与双实例抢占。",
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": ["EV-B05-RECOVERY-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76238,11 +76325,11 @@
         "issue_ids": [
           "DIAG-CORE-006"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "正常上传未挂引用资产不能预览/下载；全局去重需独立上传证明/访问grant，不能只依赖单createdBy。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "单测验证异步 createAsset 继承会话所有者；引用授权与去重会话所有者规则由 CHECK-CORE-007 覆盖。",
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": ["EV-B05-OWNER-20261016","EV-B05-REF-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76250,11 +76337,11 @@
         "issue_ids": [
           "DIAG-CORE-007"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "已知他人READY assetId可挂到自身可读业务继而下载；OA文档/合同/报销附件均受公共端口影响。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "单测验证创建者/就绪会话所有者可引用，无关或缺失操作者被拒绝；register 传当前用户。未走真实 HTTP。",
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": ["EV-B05-REF-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76262,11 +76349,11 @@
         "issue_ids": [
           "DIAG-CORE-008"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "默认LOCAL标准分片上传响应地址无法使用。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "单测验证 LOCAL 会话 id 与 providerUploadId 一致，分片目标地址包含会话 id。",
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": ["EV-B05-LOCAL-ID-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76274,11 +76361,11 @@
         "issue_ids": [
           "DIAG-CORE-009"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "长期正常上传持续重复占用磁盘，需要READY会话/分片保留期限和可靠可重试清理。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "单测验证 LOCAL 拼接后删除暂存目录，READY 会话按保留期清理分片和记录，S3 就绪跳过 abort。",
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": ["EV-B05-LIFECYCLE-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76286,11 +76373,11 @@
         "issue_ids": [
           "DIAG-CORE-010"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "管理员关闭预览或下载后仍可以对应流接口读取；需要入口、策略快照、管理员例外和Web协议同步。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "单测验证预览/下载按 FileType 开关拒绝普通用户，管理员保留例外。",
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": ["EV-B05-POLICY-20261016"],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
       },
       {
@@ -76784,9 +76871,9 @@
         "issue_ids": [
           "DIAG-ADDITIONAL-004"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-B05-ATTEMPT-20261016"]
       },
       {
         "scenario": "内部管理调用缺身份拒绝，省略/陈旧编辑版本拒绝，重入职清空departedAt；安全实体两个并发updateById",
@@ -76810,9 +76897,9 @@
           "DIAG-CORE-005",
           "DIAG-CORE-009"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-B05-RECOVERY-20261016","EV-B05-LIFECYCLE-20261016"]
       },
       {
         "scenario": "用户onboarding批量移除授权边界/最后Root保护、导入任务提交后领取、已提交行最终状态一致、owner结果隔离",
