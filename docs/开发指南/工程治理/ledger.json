@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "e4ed764259971a31ccb40f1e7da863288166ec4c2762cadc985bafd4c534fde6",
+      "content_sha256": "d9b2200ed47c671373568b6afac702a52a7d8526c3a5b58dd781575cc6d7c353",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4fdb52eff3e9551231994e01db2698e15526a04cac3ac4e313a1e6cf439ba6e7",
+      "content_sha256": "ae3ff3d32602490fa433689118d47944a962848cba14ec6d2279213d821bfcd4",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5200,7 +5200,8 @@
         "EV-B03-ATTEMPT-20261016",
         "EV-B03-OFFSET-20261016",
         "EV-B03-CONTACT-20261016",
-        "EV-B03-S3-20261016"
+        "EV-B03-S3-20261016",
+        "EV-B03-RUNTIMEROLE-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -12025,6 +12026,22 @@
       "review_limits": ["依赖测试环境 S3 凭据与可达 bucket。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-ADDITIONAL-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/RestrictedRuntimeRolePostgresTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "0a27f2c1c9e8e46f47f7ab2cb5abcbe0c0438c85c59d0054f93cb4c72914c099",
+      "reviewed_rules": ["04§8", "04§9", "04§13"],
+      "issue_ids": ["DIAG-BASE-017"],
+      "evidence_ids": ["EV-B03-RUNTIMEROLE-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "超级用户迁移后创建无 CREATE 的运行角色，应用以该角色启动并返回 401，且该角色执行 CREATE TABLE 被拒绝。",
+      "review_limits": ["验证权限模型与启动，不覆盖全部业务写路径。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-BASE-004"]
     },
     {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
@@ -73271,6 +73288,24 @@
       "limits": "分片级仍无法验证内容 SHA-256（S3 不暴露），由最终整文件校验覆盖；未测试网络中断/超时重试。"
     },
     {
+      "id": "EV-B03-RUNTIMEROLE-20261016",
+      "scope": "B03 BC-BASE-010 应用以无 DDL 运行角色启动",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=RestrictedRuntimeRolePostgresTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；超级用户 Flyway 迁移后创建 NOSUPERUSER/NOCREATEDB/NOCREATEROLE 角色，应用以该角色启动、业务请求 401，CREATE TABLE 被数据库拒绝",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；隔离库 devops00_spectra_db_test；角色仅授予 spectra_* 与 public 的 USAGE 及 DML；测试后 DROP OWNED/ROLE；未输出凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "应用可仅靠 DML 权限启动并服务，运行角色执行 DDL 被拒；证明运行期不需要 DDL 权限。",
+      "artifacts": [
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/RestrictedRuntimeRolePostgresTest.java",
+        ".temp/b03/b03-runtime-role.log",
+        ".temp/b03/b03-runtime-role-static.log"
+      ],
+      "limits": "未验证 OA/Workflow 默认数据范围 NONE/SELF；未覆盖所有业务写路径与 Quartz 任务实际执行。BC-BASE-010 维持 partially_executed。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74751,7 +74786,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1623,
+      "included": 1624,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74777,7 +74812,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1637,
+    "reviewed_included": 1638,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -75227,7 +75262,7 @@
         "name": "迁移装配",
         "status": "partially_executed",
         "necessary_acceptance": "隔离空库和V7→V8 upgrade、重复validate、OA/Workflow相关引用与默认NONE/SELF；最终Flowableupdatefalse和运行角色无DDL。",
-        "boundary": "2026-10-16 在隔离一次性库 devops00_spectra_db_migration_check 上用 Flyway 验证：空库应用 V1–V8（8 个）并重复 validate 通过；V7→V8 升级仅应用 V8、最终 8 个且末位为 V8；结束删除临时库。Flowable 最终 update=false 由 WorkflowConfiguration 改为跟随配置（缺省 false）覆盖。运行角色无 DDL 的数据库权限隔离与 OA/Workflow 默认 NONE/SELF 数据未单独断言。",
+        "boundary": "2026-10-16 在隔离一次性库 devops00_spectra_db_migration_check 上用 Flyway 验证：空库应用 V1–V8（8 个）并重复 validate 通过；V7→V8 升级仅应用 V8、最终 8 个且末位为 V8；结束删除临时库。Flowable 最终 update=false 由 WorkflowConfiguration 改为跟随配置（缺省 false）覆盖。2026-10-16 以超级用户迁移后创建无 DDL 运行角色，应用成功启动并返回 401，角色执行 CREATE TABLE 被拒（EV-B03-RUNTIMEROLE-20261016）。OA/Workflow 默认 NONE/SELF 数据仍未单独断言。",
         "scenario": "隔离空库和V7→V8 upgrade、重复validate、OA/Workflow相关引用与默认NONE/SELF；最终Flowableupdatefalse和运行角色无DDL。",
         "state": "partially_executed",
         "issue_ids": [
@@ -75237,9 +75272,10 @@
           "IMP-BASE-004"
         ],
         "evidence_ids": [
-          "EV-B03-MIGRATION-20261016"
+          "EV-B03-MIGRATION-20261016",
+          "EV-B03-RUNTIMEROLE-20261016"
         ],
-        "required_environment": "空库 V1–V8 与 V7→V8 升级已在一次性隔离库执行；运行角色无 DDL 权限隔离与默认范围数据未断言。"
+        "required_environment": "空库 V1–V8 与 V7→V8 升级已执行；无 DDL 运行角色启动已验证；默认范围 NONE/SELF 数据未断言。"
       },
       {
         "id": "BC-BASE-011",
