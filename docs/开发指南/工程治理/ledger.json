@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "7a385fc01babab30bb093e76840ce65d394585e1bfb701621095203a79a11bd3",
+      "content_sha256": "8d3b2aa9859111d70e82c4969a93ece09b555fff58a8ffd723527f5e489db945",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "72dc2363cef15c7cddf1ebe0bdf911da7027e1564216b4c21aefa7de4781d70f",
+      "content_sha256": "f998a8a03db8104895ce08ee93a9abc7f6f9643f2adfa7c487b708753abb388b",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5204,7 +5204,8 @@
         "EV-B03-RUNTIMEROLE-20261016",
         "EV-B03-SCOPE-20261016",
         "EV-B03-PROTOCOL-20261016",
-        "EV-B03-REDACT-20261016"
+        "EV-B03-REDACT-20261016",
+        "EV-B03-TIMEPROTO-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -11971,7 +11972,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1ea931657c1109b07bd3d7e7cbd3b0889238f1edfb7d2df380236714c4e5ab2c",
+      "content_sha256": "bb02e6d11bb2cb40c3d337121b78aff6c7d88312fcf19ff25bbacb305aaa1b5c",
       "reviewed_rules": ["04§6", "04§13"],
       "issue_ids": ["DIAG-BASE-008"],
       "evidence_ids": ["EV-B03-TIMEPARSE-20261016"],
@@ -19791,7 +19792,7 @@
       "role": "后端资源、运行配置或映射输入",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ada9702d7373d17a8e1a86690f001cbec8265a2f5d6214fa5ea8f568f0af44e5",
+      "content_sha256": "a68cc43a339454838e1bebf3098534eb9d176fdf8ecf786c872f514bb7666435",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -73415,6 +73416,28 @@
       "limits": "未逐一审计所有外部日志配置与代理采集。"
     },
     {
+      "id": "EV-B03-TIMEPROTO-20261016",
+      "scope": "B03 BC-BASE-007 时间协议：UTC 会话、offset、DST 与严格解析",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=TimeMapperTest' test -> 退出 0，8/8；ISO 输出含 +08:00、DST gap 解析为 07:30Z、DST overlap 取较早偏移、仅日期/仅时间拒绝",
+        "spectra-admin: '-Dtest=ReadinessGateHttpTest' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；Hikari connection-init-sql SET TIME ZONE 'UTC' 下应用正常启动",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；隔离 PostgreSQL/Redis；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "dev/prod 数据源增加 connection-init-sql SET TIME ZONE 'UTC'；应用启动与业务请求正常；TimeMapper 严格 ISO 解析、offset 输出与 DST gap/overlap 确定性已断言。",
+      "artifacts": [
+        "spectra-admin/spectra-launch/src/main/resources/application-dev.yml",
+        "spectra-admin/spectra-launch/src/main/resources/application-prod.yml",
+        "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/serialization/mapper/TimeMapperTest.java",
+        ".temp/b03/b03-timeproto.log",
+        ".temp/b03/b03-timeproto-http.log",
+        ".temp/b03/b03-timeproto-static.log"
+      ],
+      "limits": "DST 行为由 JDK ZoneId 规则决定；未覆盖所有业务时区。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -73982,7 +74005,7 @@
         },
         {
           "path": "spectra-admin/spectra-launch/src/main/resources/application-prod.yml",
-          "content_sha256": "2c5f5693d9345a9415965583c83ac2f3cb45521be0882431ba2493addbb62f06",
+      "content_sha256": "05d935059ed8cb9b74a1b61a3840d6b839e6d7a065a4702e6d400166ccd9b043",
           "review_boundary": "仅审查相关公共调用/控制体/依赖配置，不代替对应域逐文件审查；未执行业务"
         }
       ],
@@ -75275,15 +75298,15 @@
       {
         "id": "BC-BASE-007",
         "name": "时间协议",
-        "status": "not_executed",
+        "status": "passed",
         "necessary_acceptance": "UTC JVM/连接会话，Instant带offset；非法timezone显式失败，DST gap/overlap与date/time字段不补today不猜格式。",
-        "boundary": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
+        "boundary": "2026-10-16 启动/Docker 固定 UTC（EV-B03-CLOCK-20261016），dev/prod 数据源 connection-init-sql 固定会话 UTC 并启动验证；TimeMapper 严格 ISO、offset 输出、DST gap/overlap 确定性已断言，非法时区显式失败（EV-B03-TIMEPROTO-20261016、EV-B03-TIMEZONE-20261016）。",
         "scenario": "UTC JVM/连接会话，Instant带offset；非法timezone显式失败，DST gap/overlap与date/time字段不补today不猜格式。",
-        "state": "not_run",
-        "issue_ids": [],
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。"
+        "state": "passed",
+        "issue_ids": ["DIAG-BASE-008", "DIAG-BASE-009"],
+        "impact_ids": ["IMP-BASE-002"],
+        "evidence_ids": ["EV-B03-CLOCK-20261016", "EV-B03-TIMEZONE-20261016", "EV-B03-TIMEPARSE-20261016", "EV-B03-OFFSET-20261016", "EV-B03-TIMEPROTO-20261016"],
+        "required_environment": "UTC 会话与 DST 行为已用隔离 PostgreSQL 与单元测试验证。"
       },
       {
         "id": "BC-BASE-008",
