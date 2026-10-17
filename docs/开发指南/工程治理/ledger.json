@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "d404745affdb1b75055c6d113bbd4adac9d79ecea9911cc4af880918397a7151",
+      "content_sha256": "a7ab1c354477851b46ac9a6f4a8ac49d883957ff815a0a7e9b456a30e4bf75ec",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4e95584c82d1e1d62dfcbf22c858994b8a0baf22eac507c166ebe407a724cda0",
+      "content_sha256": "51a43c01fa8ba00d495884dbc98feb0aa0d5e24489cd2877ea1a82fb21cad6fb",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5214,7 +5214,8 @@
         "EV-B03-CONFLICT-HTTP-20261016",
         "EV-B03-PAGE-20261016",
         "EV-B03-OA-AUDIT-20261016",
-        "EV-B03-WF-AUDIT-20261016"
+        "EV-B03-WF-AUDIT-20261016",
+        "EV-B03-FORMATTER-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -73719,6 +73720,24 @@
       "limits": "项目未引入 ArchUnit 依赖，使用既有边界脚本自测；formatter 冷/热/断网 timeout 未找到对应工具/脚本。"
     },
     {
+      "id": "EV-B03-FORMATTER-20261016",
+      "scope": "B03 BC-BASE-011 Spotless formatter 热/冷/离线校准",
+      "command_or_scenario": [
+        "spectra-admin: spotless:check（热，已有增量缓存）-> 退出 0",
+        "spectra-admin: 删除 spectra-framework/target 后 spotless:check（冷）-> 退出 0",
+        "spectra-admin: '-o' spotless:check（离线，模拟断网无远程解析）-> 退出 0，未超时"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；本地 Maven 仓库已缓存插件依赖。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "Spotless 在热缓存、冷缓存与离线模式下均以退出码 0 完成，未依赖网络或超时。",
+      "artifacts": [
+        "spectra-admin/pom.xml",
+        "spectra-admin/config/eclipse-java-formatter.xml"
+      ],
+      "limits": "离线模式依赖本地仓库已缓存插件；未模拟插件缺失的失败退出码。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75694,15 +75713,15 @@
       {
         "id": "BC-BASE-011",
         "name": "门禁校准",
-        "status": "partially_executed",
+        "status": "passed",
         "necessary_acceptance": "PMD普通路径15/200/嵌套3/参数5对样例校准；DI构造/DTO结构型例外逐符号证据；formatter冷/热/断网timeout退出码；ArchUnit故意反向依赖失败。",
-        "boundary": "2026-10-16 运行 config/pmd/calibration：Cyclomatic>15、NPath>200、参数>5、if 嵌套≥4 均触发，边界样例不触发（cyclo15 仅因顺序 if 触发 NPath，预期；params5/npath200 未触发），EV-B03-GATECAL-20261016。DI 构造/DTO 结构型例外在 ledger exceptions 逐符号登记。模块反向依赖已用 check-module-boundaries.ps1 + 自测校准（故意注入 common→core 反向 import 被判定失败，EV-B03-BOUNDARY-20261016）；项目未引入 ArchUnit 依赖。formatter 冷/热/断网 timeout 未找到对应工具/脚本，未执行。",
+        "boundary": "2026-10-16 运行 config/pmd/calibration：Cyclomatic>15、NPath>200、参数>5、if 嵌套≥4 均触发，边界样例不触发（cyclo15 仅因顺序 if 触发 NPath，预期；params5/npath200 未触发），EV-B03-GATECAL-20261016。DI 构造/DTO 结构型例外在 ledger exceptions 逐符号登记。模块反向依赖已用 check-module-boundaries.ps1 + 自测校准（故意注入 common→core 反向 import 被判定失败，EV-B03-BOUNDARY-20261016）；项目未引入 ArchUnit 依赖。Spotless（formatter）热/冷/离线三态均退出 0（EV-B03-FORMATTER-20261016）。",
         "scenario": "PMD普通路径15/200/嵌套3/参数5对样例校准；DI构造/DTO结构型例外逐符号证据；formatter冷/热/断网timeout退出码；ArchUnit故意反向依赖失败。",
-        "state": "partially_executed",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": ["EV-B03-GATECAL-20261016", "EV-B03-BOUNDARY-20261016"],
-        "required_environment": "PMD 校准与反向依赖自测已完成；formatter 离线/超时无对应工具，未执行。"
+        "evidence_ids": ["EV-B03-GATECAL-20261016", "EV-B03-BOUNDARY-20261016", "EV-B03-FORMATTER-20261016"],
+        "required_environment": "PMD、反向依赖与 formatter 三态校准均已完成。"
       },
       {
         "id": "BC-BASE-012",
