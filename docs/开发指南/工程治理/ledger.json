@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "52202d109bab2c6b71c24f0b8a4aa6eccc7b67db89d70c29f80d14ea6fbee0e2",
+      "content_sha256": "7a385fc01babab30bb093e76840ce65d394585e1bfb701621095203a79a11bd3",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "30157c716c8ec15dd64242a1d91d6bd8d5c18f88525aa79d42a50fdba8bebc9b",
+      "content_sha256": "72dc2363cef15c7cddf1ebe0bdf911da7027e1564216b4c21aefa7de4781d70f",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5203,7 +5203,8 @@
         "EV-B03-S3-20261016",
         "EV-B03-RUNTIMEROLE-20261016",
         "EV-B03-SCOPE-20261016",
-        "EV-B03-PROTOCOL-20261016"
+        "EV-B03-PROTOCOL-20261016",
+        "EV-B03-REDACT-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -12078,6 +12079,22 @@
       "impact_ids": ["IMP-BASE-001"]
     },
     {
+      "path": "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/security/SensitiveObjectToStringTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "f597e4ff65d94d0fcb7e95443477ec12b9de35d48ef22cf3149aed927f109e4c",
+      "reviewed_rules": ["04§5", "04§13"],
+      "issue_ids": [],
+      "evidence_ids": ["EV-B03-REDACT-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "RuntimeSecret.toString 不含 value；SecurityToken.toString 不含 access/refresh token，同时保留非敏感字段。",
+      "review_limits": ["仅诊断输出，未覆盖所有日志调用点。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": []
+    },
+    {
       "path": "spectra-admin/config/checkstyle/checkstyle.xml",
       "role": "工程说明与规则入口",
       "scope": "included",
@@ -14774,7 +14791,7 @@
       "role": "后端 spectra-common / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f99ae7199cf92c2f428fa96d152845c5854abf428ee437743699ef996d05252a",
+      "content_sha256": "1d3c2aa788898ae01483c4a92d41b4fc3cc2a2d5dc0b08779346de836206ead7",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -15105,7 +15122,7 @@
       "role": "后端 spectra-common / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "31a507a7e3e41a7215b93a7707ab0848e612ff991c42e8d9683e27ba32ffc200",
+      "content_sha256": "8135d6dc481ddb9a8050f145ed65b62a32c8bb91bd484d18e193d11788fa631f",
       "reviewed_rules": [
         "04 §2 职责与模块边界",
         "04 §3 复杂度/例外边界",
@@ -73378,6 +73395,26 @@
       "limits": "409（SQL 冲突/版本冲突）已有 resolver 单测但未做真实 HTTP；NON_NULL OpenAPI 类型同步未做。BC-BASE-006 维持 partially_executed。"
     },
     {
+      "id": "EV-B03-REDACT-20261016",
+      "scope": "B03 BC-BASE-012 敏感对象 toString 脱敏",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=SensitiveObjectToStringTest' test -> 退出 0，2/2；RuntimeSecret 不含 value、SecurityToken 不含 access/refresh token",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "RuntimeSecret 覆写 toString 隐藏 value；SecurityToken 的 accessToken/refreshToken 标记 @ToString.Exclude；检索未发现直接记录这两个对象的日志 sink。",
+      "artifacts": [
+        "spectra-admin/spectra-common/src/main/java/com/devops00/spectra/common/port/security/RuntimeSecret.java",
+        "spectra-admin/spectra-common/src/main/java/com/devops00/spectra/common/port/security/SecurityToken.java",
+        "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/security/SensitiveObjectToStringTest.java",
+        ".temp/b03/b03-redact.log",
+        ".temp/b03/b03-redact-static.log"
+      ],
+      "limits": "未逐一审计所有外部日志配置与代理采集。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -74858,7 +74895,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1626,
+      "included": 1627,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -74884,7 +74921,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1640,
+    "reviewed_included": 1641,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
@@ -75366,15 +75403,15 @@
       {
         "id": "BC-BASE-012",
         "name": "敏感对象输出候选",
-        "status": "not_executed",
+        "status": "passed",
         "necessary_acceptance": "RuntimeSecret record与SecurityToken Lombok toString当前包含敏感字段倾向，搜全调用与日志sink确认，不用候选替代真实泄漏证据。",
-        "boundary": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。",
+        "boundary": "2026-10-16 已修复：RuntimeSecret 覆写 toString 隐藏 value，SecurityToken 的 access/refresh token 标记 @ToString.Exclude；单元断言输出不含明文，检索未发现直接记录这两个对象的日志 sink（EV-B03-REDACT-20261016）。",
         "scenario": "RuntimeSecret record与SecurityToken Lombok toString当前包含敏感字段倾向，搜全调用与日志sink确认，不用候选替代真实泄漏证据。",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "只审查；需纯合成/隔离基础设施验收，不读取本机秘密或误连开发库。"
+        "evidence_ids": ["EV-B03-REDACT-20261016"],
+        "required_environment": "脱敏行为已单元验证；未审计外部日志代理配置。"
       },
       {
         "id": "BC-BASE-013",
