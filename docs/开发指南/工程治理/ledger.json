@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "2c122bfa6925bf912340df7a407275b1221c1f9e12223251b87c5127a3bde7c0",
+      "content_sha256": "6811cc3f2c610e2d232370c9a9a5ace7f4908c72822363c72f1f0136a043436b",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -11886,7 +11886,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8c6d2c2aeeff86a11410fc9d6d13e1746823a1dd0f70b14dd52cdbc79d817a4e",
+      "content_sha256": "d77cfa62afc28acb35eb6e70b27af71762860ecbef758362212beaf6efc7c7da",
       "reviewed_rules": ["04§5", "04§13"],
       "issue_ids": ["DIAG-ADDITIONAL-002"],
       "evidence_ids": ["EV-B03-RANGE-20261016"],
@@ -12278,6 +12278,22 @@
       "impact_state": null,
       "review_summary": "LOCAL 拼接成功后合并内容正确且暂存分片目录被删除。",
       "review_limits": ["仅覆盖成功路径；删除失败降级由就绪会话清理代码审查覆盖。"],
+      "review_kind": "test_fixture_review",
+      "impact_ids": ["IMP-CORE-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/FileAssetAccessPolicyTest.java",
+      "role": "测试与夹具",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "548cc154582070dfaf2d50d8a3876e29db5b85ea7e486a7332bd840486d1afd9",
+      "reviewed_rules": ["04§7", "04§10", "04§13"],
+      "issue_ids": ["DIAG-CORE-010"],
+      "evidence_ids": ["EV-B05-POLICY-20261016"],
+      "scope_reason": null,
+      "impact_state": null,
+      "review_summary": "关闭预览禁止普通用户预览流，关闭下载禁止普通用户下载流；管理员持有 file:admin:read 时绕过类型策略。",
+      "review_limits": ["未走真实 HTTP 与 Web 端到端。"],
       "review_kind": "test_fixture_review",
       "impact_ids": ["IMP-CORE-003"]
     },
@@ -37464,7 +37480,7 @@
       "role": "后端 spectra-core / controller",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "6cab978f7b12eb5b5818008a77d3295ee6278ef5b5bbc8461ebb11f5d526db9f",
+      "content_sha256": "27bf03434ac478bbd5fce9d690fdd2938e7477a2fda78411a61df478215118e3",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -38913,7 +38929,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "54f667a58475fc73aa8ffff68365705ce4c30e4710906c75738b0ac99fca7610",
+      "content_sha256": "42683d3384f7e9fcc7887d1e90ed26903d4d080431ad055f8df923abcb3e4112",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -66935,13 +66951,14 @@
         }
       ],
       "finding": "流访问服务没有访问操作类型且没有消费FileType previewEnabled/downloadEnabled；全Core getPreviewEnabled/getDownloadEnabled仅管理保存端使用。",
-      "impact": "管理员关闭预览或下载后仍可以对应流接口读取；需要入口、策略快照、管理员例外和Web协议同步。",
+      "impact": "管理员关闭预览或下载后仍可以对应流接口读取；需要入口、策略快照、管理员例外和Web协议同步。2026-10-16 预览/下载入口传入操作类型并按类型策略拒绝，管理员保留例外（EV-B05-POLICY-20261016）。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B05-POLICY-20261016"
       ],
       "supporting_locations": [
         {
@@ -73954,6 +73971,26 @@
       "limits": "未在真实存储与长时间保留周期上验证；删除失败重试路径仅单测模拟。"
     },
     {
+      "id": "EV-B05-POLICY-20261016",
+      "scope": "B05 DIAG-CORE-010 预览与下载策略",
+      "command_or_scenario": [
+        "spectra-admin: '-Dtest=FileAssetAccessPolicyTest,FileAssetStreamControllerTest' test -> 退出 0，6/6",
+        "spectra-admin: 核心模块全量测试（排除 RootGovernancePostgresTest）-> BUILD SUCCESS",
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；单元测试；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass",
+      "summary": "预览/下载入口把操作类型传入服务，按 FileType.previewEnabled/downloadEnabled 拒绝普通用户；管理员持有 file:admin:read 时保留例外；公共端口 open 按下载策略执行。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/service/FileAssetApplicationService.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/upload/controller/FileAssetStreamController.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/FileAssetAccessPolicyTest.java",
+        ".temp/b05/b05-policy-test.log"
+      ],
+      "limits": "未走真实 HTTP/Web 端到端；未验证管理端策略变更后的缓存与即时生效。"
+    },
+    {
       "id": "EV-IMPORT-MOCK-20261004",
       "scope": "现有行政区划脚本mock回归",
       "command_or_scenario": [
@@ -75434,7 +75471,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1640,
+      "included": 1641,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
@@ -75460,7 +75497,7 @@
     "started_at": "2026-10-04",
     "completed_at": "2026-10-05",
     "method": "Current-source responsibility/failure-path review, whole-workspace public-boundary analysis, historical reconciliation, separated behavior evidence.",
-    "reviewed_included": 1654,
+    "reviewed_included": 1655,
     "current_review_state": "partial_refresh_for_B02_sorting_and_security; reviewed_included counts coverage rows labeled reviewed and does not imply current whole-file digest revalidation",
     "deferred_public_inputs": 438,
     "behavior_checks": [
