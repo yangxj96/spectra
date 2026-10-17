@@ -5023,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "fcb1b0c64c555fa1393dea3a3848969cf87e572c3c50d826a89d50cc9fb5efd9",
+      "content_sha256": "26d2e1e84f5b7f97c0a89cbed40cb212011e8234e910bca77e193c000dcc31b4",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5123,7 +5123,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "3bbe816d759d9e331658c07f8847d0cc0f92481db2e71bf575497b8f94534074",
+      "content_sha256": "0974db99a197b1edc2cc641366b8c7da43e6f5fb92898ca2092cf521499b57d0",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5198,7 +5198,8 @@
         "EV-B03-TIMEZONE-20261016",
         "EV-B03-TIMEPARSE-20261016",
         "EV-B03-ATTEMPT-20261016",
-        "EV-B03-OFFSET-20261016"
+        "EV-B03-OFFSET-20261016",
+        "EV-B03-CONTACT-20261016"
       ],
       "scope_reason": null,
       "impact_state": null,
@@ -41322,7 +41323,7 @@
       "role": "后端 spectra-core / service",
       "scope": "included",
       "state": "stale",
-      "content_sha256": "0f4d16e00f9c35c88b9d42dea2eb176b579bbf5a6fd2dda19306cab55000a786",
+      "content_sha256": "13872664016d48eba85be9a4313246cf66529de6f0b833e380e8fa409d40abcd",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -65430,12 +65431,13 @@
       "disposition": "按有效用户/显式系统时区转换和严格字段语义校验",
       "state": "pending",
       "exception_ids": [],
-      "evidence_ids": [
-        "EV-WEB-READ"
-      ],
-      "impact_ids": [
-        "IMP-WEB-003"
-      ]
+  "evidence_ids": [
+    "EV-ADDITIONAL-002",
+    "EV-B03-CONTACT-20261016"
+  ],
+  "impact_ids": [
+    "IMP-ADDITIONAL-001"
+  ]
     },
     {
       "id": "DIAG-WEB-007",
@@ -67614,8 +67616,8 @@
       ]
     },
     {
-      "state": "pending",
-      "id": "DIAG-ADDITIONAL-001",
+  "state": "resolved",
+  "id": "DIAG-ADDITIONAL-001",
       "locations": [
         {
           "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/user/service/impl/UserServiceImpl.java",
@@ -67640,7 +67642,7 @@
       ],
       "priority": "P2",
       "disposition": "明确创建与联系信息变更职责，迁移共享From及调用方，验证旧身份撤销与新身份建立/清空原子性",
-      "impact": "管理员用户编辑不能按请求变更联系方式及其登录事实，旧地址身份继续有效；不能仅补MapStruct字段，应定义联系人与登录身份变更的安全授权/验证/撤销契约。",
+      "impact": "管理员用户编辑不能按请求变更联系方式及其登录事实，旧地址身份继续有效；不能仅补MapStruct字段，应定义联系人与登录身份变更的安全授权/验证/撤销契约。2026-10-16 采用显式输入契约：modify 检测到非空 phone/email 即拒绝，消除静默忽略（EV-B03-CONTACT-20261016）；专用变更入口仍属后续能力而非缺陷。",
       "rule": "04§4转换与职责、04§5完整编辑字段契约",
       "impact_ids": [
         "IMP-ADDITIONAL-001"
@@ -73195,6 +73197,22 @@
         ".temp/b03/b03-offset-framework.log"
       ],
       "limits": "仅在线用户相关 VO 保留 offset；其余大量 VO 仍使用 LocalDateTime（toLocalDateTime）。toInstant(LocalTime) 仍补当天。"
+    },
+    {
+      "id": "EV-B03-CONTACT-20261016",
+      "scope": "B03 DIAG-ADDITIONAL-001 用户编辑显式拒绝联系方式变更",
+      "command_or_scenario": [
+        "spectra-admin: '-DskipTests' '-Dspotless.ratchetFrom=NONE' verify -> BUILD SUCCESS；UserServiceImpl 编译与静态检查通过"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、项目 Maven Wrapper；未读取或输出本机凭据。",
+      "checked_at": "2026-10-16",
+      "result": "pass_with_declared_limits",
+      "summary": "UserServiceImpl.modify 在鉴权后检测非空 phone/email 并抛 BusinessRuleViolationException，明确编辑入口不修改联系方式/验证码登录身份，避免静默忽略。",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/user/service/impl/UserServiceImpl.java",
+        ".temp/b03/b03-contact-static.log"
+      ],
+      "limits": "未新增联系方式变更的授权/验证/撤销入口；Web 编辑表单不发送 phone/email，未做端到端 HTTP 断言。"
     },
     {
       "id": "EV-IMPORT-MOCK-20261004",
