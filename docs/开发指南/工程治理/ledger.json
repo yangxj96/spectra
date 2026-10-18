@@ -189,10 +189,17 @@
         "EV-B02-FULL-GATE-20261016",
         "EV-B02-CORE019-ERROR-CODE-20261018",
         "EV-B02-CORE019-NATURAL-20261018",
-        "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018"
+        "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018",
+        "EV-B02-CORE019-REDIS-FAULT-20261018",
+        "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018",
+        "EV-B02-CORE019-ONE-END-REDIS-20261018",
+        "EV-B02-CORE019-OA-WORKFLOW-20261018",
+        "EV-B02-CORE023-DELIVERY-20261018",
+        "EV-B02-CORE034-QUARTZ-20261018",
+        "EV-B02-CORE034-CONTROLLED-HTTP-20261018"
         ],
         "state": "in_progress",
-      "progress_summary": "2026-10-16 首轮收口将 BC-BASE-001/002/003、CHECK-CORE-020/022 置为 passed，八模块真实依赖分段 clean verify 317/317 与静态门禁通过。2026-10-18 补 CHECK-CORE-019 的独立 Root error_code：Framework 11/11、合成 PostgreSQL Root 19/19。授权关系和凭据按真实时间自然到期的单进程正式 HTTP：有效 Root 人数 2→1、旧 Access 失权 403 或凭据到期 401、剩余 Root 停用 409，Root 整组 10/10。随后两个独立应用 JVM 复核相同自然到期语义：新增定点 1/1、双进程整组 6/6，两个进程均拒绝过期 Root 权限和过期凭据 Access，第二进程拒绝旧 Refresh，剩余 Root 停用仍 409。八模块单元与静态 clean verify 退出 0，发现 478 项、跳过真实依赖等 133 项、执行 345 项。此前真实依赖混跑因 Core 合成简化 schema 与 Launch 正式 Flyway schema 冲突退出 1，按分段证据记录。仍未完成：CHECK-CORE-019 实际故障恢复及 OA/Workflow 间接入口；CHECK-CORE-023 通知投递联动；CHECK-CORE-032 部门重组与受众业务；CHECK-CORE-034 真实通知/OA Quartz/Workflow；以及旧格式会话、非原子故障窗口、B08 浏览器与其他影响范围。B02 保持 in_progress，未满足 done_when。"
+      "progress_summary": "2026-10-16 首轮收口将 BC-BASE-001/002/003、CHECK-CORE-020/022 置为 passed，八模块真实依赖分段 clean verify 317/317 与静态门禁通过。2026-10-18 补 CHECK-CORE-019 的独立 Root error_code：Framework 11/11、合成 PostgreSQL Root 19/19。授权关系和凭据按真实时间自然到期的单进程正式 HTTP：人数 2→1、旧 Access 失权或 401、最后 Root 停用 409，Root 整组 10/10；两个独立应用 JVM 自然失效整组 6/6。单实例唯一 Root 隔离 Redis 停启整组 2/2；随后两个独立应用共同隔离 Redis 停启验证两端 503、数据库状态/人数保持、分别恢复后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409，双进程整组 7/7。八模块单元与静态 clean verify 复跑退出 0，发现 480 项、跳过真实依赖等 135 项、执行 345 项。此前真实依赖混跑因 Core 合成简化 schema 与 Launch 正式 Flyway schema 冲突退出 1，按分段证据记录。单端 TCP 转发器隔离一端连接又验证失联端上下文/登录/停用 503、直连端原 Session 200 与 Root 下限 409、恢复后原 Session 两端继续可用，定点 1/1；八模块单元与静态 clean verify 最终退出 0。OA 通讯录和 Workflow 流程定义的两个双 JVM 正式读取入口随 Root 角色/凭据自然失效分别 200→403/401，仍有效 Root 保持 200，双进程整组 8/8、八模块门禁复跑退出 0。2026-10-18 CHECK-CORE-023 补 MOCK 日志脱敏、正式 HTTP 渠道不可用拒绝/Redis 清理及入队到 Delivery 单次投递，单元 2/2、真实依赖 1/1、八模块门禁 347/347 执行通过；该检查置 passed。仍未完成：CHECK-CORE-019 OA/Workflow 数据范围、写入与后台间接入口；CHECK-CORE-032 部门重组与受众业务；CHECK-CORE-034 OA 合同 Quartz/Workflow 流程实例、双实例调度与受控发送服务层权限；以及旧格式会话、非原子故障窗口、B08 浏览器与其他影响范围。本轮通知 Quartz 和服务监控系统身份两类真实依赖整组 4/4，八模块最终 clean verify 发现 486、跳过 139、执行 347；CHECK-CORE-034 受控发送正式 HTTP 1/1，匿名/错误令牌/受众变化拒绝、同步并发 Apply 唯一请求及重放通过；本轮八模块 clean verify 发现 487、跳过 140、执行 347。CHECK-CORE-034 维持 partially_executed。B02 保持 in_progress，未满足 done_when。"
       },
       {
         "id": "B03",
@@ -1454,14 +1461,42 @@
       "role": "Core 绑定验证码用途/地址/用户绑定与原子尝试预算的真实 HTTP/PostgreSQL/Redis 集成测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "d6d8407a8b0047836f69e9ae73ed62df027587f5b73c752bac63fb7c1fbef314",
+      "content_sha256": "c89707ffaa48ed55a530dd305c2e0a78e6f13431f5227cc351aa6670524430ed",
       "reviewed_rules": ["04 §8 安全 Redis", "04 §9 原子状态迁移", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-CORE-023"],
-      "evidence_ids": ["EV-B02-CORE023-HTTP-20261016"],
-      "review_summary": "正式绑定端点验证预算内正确验证码成功并落库 EMAIL 身份、错误验证码达 maxAttempts 原子失效且随后正确码被拒、按地址绑定的跨地址提交不消耗本地址预算；以 master-key 启动并发布验证码 HMAC 密钥。",
-      "review_limits": ["单应用进程；未覆盖双进程共享预算、Redis 停启恢复或通知投递。"],
+      "evidence_ids": ["EV-B02-CORE023-HTTP-20261016", "EV-B02-CORE023-DELIVERY-20261018"],
+      "review_summary": "正式绑定端点验证预算、地址和用户绑定；新增渠道不可用拒绝及 Redis 键清理、MOCK 健康后入队、Worker 单次投递和 Delivery 唯一记录。",
+      "review_limits": ["投递联动为单应用进程和 MOCK Provider；外部供应商投递未验收。"],
       "review_kind": "isolated_postgres_redis_binding_code_budget_full_http_test_review",
       "impact_ids": ["IMP-CORE-005"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/NotificationSystemActorQuartzFullHttpTest.java",
+      "role": "B02 通知显式系统身份与 Quartz 后台投递真实依赖测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "ef515ef3a07d9e1ae015113f805cb4a4bb062c6b41ecf33ce1e983947a6615e5",
+      "reviewed_rules": ["04 §7 后台身份与数据范围", "04 §9 通知状态竞争", "04 §13 真实依赖与门禁"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-QUARTZ-20261018"],
+      "review_summary": "无登录身份普通通知与错误系统身份拒绝；登记的服务监控系统身份入队，Quartz 写收件箱与 Delivery，重复触发不重投。",
+      "review_limits": ["单应用实例与合成站内信；OA 合同、Workflow、跨实例调度竞争及受控发送未覆盖。"],
+      "review_kind": "isolated_postgres_redis_quartz_system_actor_test_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/NotificationControlledSendFullHttpTest.java",
+      "role": "B02 通知受控发送 Preview/Apply 正式 HTTP、PostgreSQL/Redis 与并发消费测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "c96fa46a37f2cdbf50d08e4daa207726f5fef62397dcbeab3028d9398c19e3ef",
+      "reviewed_rules": ["04 §7 后台身份与数据范围", "04 §9 状态竞争", "04 §13 真实依赖与门禁"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-CONTROLLED-HTTP-20261018"],
+      "review_summary": "真实 HTTP 验证匿名、错误令牌与受众变更拒绝；同步并发 Apply 只创建一个逻辑 Request/Task，重放返回同一结果。",
+      "review_limits": ["单应用进程；跨实例消费和脱离 Controller 的服务层权限未覆盖。"],
+      "review_kind": "isolated_postgres_redis_controlled_send_full_http_test_review",
+      "impact_ids": ["IMP-CORE-007"]
     },
     {
       "path": "docs/开发指南/工程治理/2026-10-16-B02绑定验证码预算正式HTTP验证.md",
@@ -1476,6 +1511,48 @@
       "review_limits": ["单应用进程与在线依赖。"],
       "review_kind": "documented_binding_code_budget_http_evidence_review",
       "impact_ids": ["IMP-CORE-005"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-18-B02绑定验证码通知投递联动验证.md",
+      "role": "B02 CHECK-CORE-023 通知投递联动实现与验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "bb81ef19969fb4a4af47c0d99c64cc751faaeae76836bd0741b8d921397d8077",
+      "reviewed_rules": ["04 §7 敏感数据", "04 §8 安全 Redis", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-023"],
+      "evidence_ids": ["EV-B02-CORE023-DELIVERY-20261018"],
+      "review_summary": "记录渠道不可用拒绝、MOCK 入队到 Delivery、日志脱敏、隔离依赖和实际门禁边界。",
+      "review_limits": ["单应用进程、MOCK Provider；外部供应商和调度器联动仍待验收。"],
+      "review_kind": "documented_binding_code_delivery_evidence_review",
+      "impact_ids": ["IMP-CORE-005", "IMP-CORE-007"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-18-B02通知Quartz后台身份验证.md",
+      "role": "B02 CHECK-CORE-034 通知 Quartz 与显式系统身份实际验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "534c7aea209c40b597c06519b7a7415b8820aedad11ef79dd8f41a49927d1f72",
+      "reviewed_rules": ["04 §7 后台身份与数据范围", "04 §9 状态迁移", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-QUARTZ-20261018"],
+      "review_summary": "记录通知 Quartz 注册、投递、阻断恢复及服务监控系统身份的合成真实依赖测试，声明 OA/Workflow 与受控发送未验收。",
+      "review_limits": ["单应用实例、MOCK 邮件和站内信；不代表整个 CHECK-CORE-034 或 B02 完成。"],
+      "review_kind": "documented_notification_quartz_system_actor_evidence_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-18-B02受控发送正式HTTP验证.md",
+      "role": "B02 CHECK-CORE-034 受控发送正式 HTTP 验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "f2368ed0ad72f20cfb421db82a83138c8e2cf4af27e4916079e45afa19a85196",
+      "reviewed_rules": ["04 §7 授权与数据范围", "04 §9 状态竞争", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-CONTROLLED-HTTP-20261018"],
+      "review_summary": "记录通知受控发送的合成正式 HTTP 成功、拒绝、受众漂移、并发和重放验证及未覆盖边界。",
+      "review_limits": ["单应用进程；不代表整个 CHECK-CORE-034 或 B02 完成。"],
+      "review_kind": "documented_controlled_send_http_evidence_review",
+      "impact_ids": ["IMP-CORE-007"]
     },
     {
       "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/CorePaginationHttpTest.java",
@@ -1510,12 +1587,12 @@
       "role": "两个独立应用 JVM 的正式 Core 凭据重载、客户端/踢旧撤销与会话策略跨进程集成测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "d560850fa294d09baffdd69dc587891f58fb00f91f28afa3ed5eb1b24c553864",
+      "content_sha256": "3d5795c9e0c0272f6326db595bbddf205dc0852c99e5708a686fed722260fe93",
       "reviewed_rules": ["04 §7 有效 Root", "04 §8 安全 Redis", "04 §10 会话生命周期", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-CORE-022", "DIAG-BASE-003", "DIAG-CORE-019"],
-      "evidence_ids": ["EV-B02-CORE022-TWO-PROCESS-20261016", "EV-B02-BASE002-CLIENT-REVOKE-20261016", "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016", "EV-B02-CORE022-NATURAL-20261016", "EV-B02-BASE002-EXPIRED-CLIENT-20261016", "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018"],
-      "review_summary": "两个真实应用 JVM 共享 PostgreSQL/Redis：改密后旧 Access 两端 401、旧 Refresh 第二进程 401；客户端、用户、在线句柄撤销及 KICK_OLD 跨进程生效；Session 策略收紧和 Access 自然到期后旧 Access 两端拒绝。2026-10-18 新增 Root 授权关系与凭据自然到期：两端 Root 权限收缩或 Access 401、第二进程旧 Refresh 401、最后 Root 停用 409；双进程整组 6/6。",
-      "review_limits": ["真实 Core 身份；未覆盖管理员重置、实际 Redis 停启与 OA/Workflow 间接业务。"],
+      "evidence_ids": ["EV-B02-CORE022-TWO-PROCESS-20261016", "EV-B02-BASE002-CLIENT-REVOKE-20261016", "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016", "EV-B02-CORE022-NATURAL-20261016", "EV-B02-BASE002-EXPIRED-CLIENT-20261016", "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018", "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018", "EV-B02-CORE019-ONE-END-REDIS-20261018", "EV-B02-CORE019-OA-WORKFLOW-20261018"],
+      "review_summary": "两个真实应用 JVM 共享 PostgreSQL/Redis：改密后旧 Access 两端 401、旧 Refresh 第二进程 401；客户端、用户、在线句柄撤销及 KICK_OLD 跨进程生效；Session 策略收紧和 Access 自然到期后旧 Access 两端拒绝。2026-10-18 新增 Root 授权关系与凭据自然到期，以及共同隔离 Redis 停启：两端 503 拒绝、分别恢复后旧 Access/Refresh 两端 401、新 Access 两端可用、最后 Root 停用 409；双进程整组 7/7；单端 TCP 连接隔离时失联端 503、直连端可用、恢复后原 Session 可用，定点 1/1；OA/Workflow 两读取入口双 JVM 授权到期 403、凭据到期 401，整组 8/8。",
+      "review_limits": ["真实 Core 身份；未覆盖管理员重置、真实跨主机网络隔离、非原子撤销窗口与 OA/Workflow 的数据范围、写入及后台任务。"],
       "review_kind": "isolated_postgres_redis_two_process_core_http_test_review",
       "impact_ids": ["IMP-CORE-005", "IMP-CORE-001"]
     },
@@ -1577,15 +1654,15 @@
     },
     {
       "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/RedisFaultRecoveryHttpTest.java",
-      "role": "隔离 Redis 停启下正式 HTTP fail-closed 与恢复集成测试",
+      "role": "隔离 Redis 停启下普通用户及唯一有效 Root 的正式 HTTP fail-closed 与恢复集成测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "5ac9f7b2ba7a245f6555b536b43c4047a7a2e6c36f29994781070319b39bf161",
-      "reviewed_rules": ["04 §8 安全 Redis", "04 §13 真实依赖与门禁"],
-      "issue_ids": ["DIAG-BASE-007", "DIAG-BASE-018"],
-      "evidence_ids": ["EV-B02-BASE003-FAULT-RECOVERY-20261016"],
-      "review_summary": "自启隔离 redis-server 并 orient 应用 Redis URL；停用时受保护请求非 200、登录 503（SecurityRedisUnavailable），重启后登录恢复 200。",
-      "review_limits": ["单实例 Redis；未覆盖双实例交错故障窗口、旧格式会话或显式就绪门。"],
+      "content_sha256": "557cde1ebd3c7bfaa0351630d4e10fdb50abd1cadd7b940540ba5358778329c3",
+      "reviewed_rules": ["04 §7 有效 Root", "04 §8 安全 Redis", "04 §13 真实依赖与门禁"],
+      "issue_ids": ["DIAG-BASE-007", "DIAG-BASE-018", "DIAG-CORE-019"],
+      "evidence_ids": ["EV-B02-BASE003-FAULT-RECOVERY-20261016", "EV-B02-CORE019-REDIS-FAULT-20261018"],
+      "review_summary": "自启隔离 redis-server 并指向应用 Redis URL；普通用户及唯一有效 Root 的停机拒绝、重启登录恢复、旧 Session 失效和最后 Root 409 已在正式 HTTP 整组 2/2 核对。",
+      "review_limits": ["单应用进程；未覆盖双应用 Redis 故障交错、非原子撤销窗口、旧格式会话或 OA/Workflow 间接业务。"],
       "review_kind": "isolated_redis_fault_recovery_full_http_test_review",
       "impact_ids": ["IMP-BASE-003"]
     },
@@ -4090,7 +4167,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "7f4357aa75174ce94fbf27ad97d24b4fcd1efeb609c5b43a598c5cb61c2cedd1",
+      "content_sha256": "452f9fde9f71c9e5040a830b25024da323c102d7eedc6a55f6e97a231faef541",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4127,11 +4204,15 @@
         "EV-B02-CORE019-DEFAULT-ROLE-20261013",
         "EV-B02-CORE-CREDENTIAL-20261014",
         "EV-B02-CORE019-POLICY-INIT-20261016",
-        "EV-B02-BASE005-TWO-PROCESS-20261016"
+        "EV-B02-BASE005-TWO-PROCESS-20261016",
+        "EV-B02-CORE019-REDIS-FAULT-20261018",
+        "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018",
+        "EV-B02-CORE019-ONE-END-REDIS-20261018",
+        "EV-B02-CORE019-OA-WORKFLOW-20261018"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "# 用户与权限；同步 BASE-003/004/005/006 会话语义和双进程自然失效、CORE-019 有效 Root、凭据及策略正式 HTTP、并发首次初始化，CORE-022 凭证年龄与必须改密 403、CORE-032 缩权重登录及当前门禁；Web 页面级验收仍归 B08。",
+      "review_summary": "# 用户与权限；同步 BASE-003/004/005/006 会话语义和双进程自然失效、CORE-019 有效 Root、凭据及策略正式 HTTP、并发首次初始化及隔离 Redis 停启、单端连接保护及 OA/Workflow 读取入口，CORE-022 凭证年龄与必须改密 403、CORE-032 缩权重登录及当前门禁；Web 页面级验收仍归 B08。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -4232,26 +4313,27 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "0291a73c5bf8afacab358b4cb0dab0ae9b6cb357782698d13096b69924ccfe7f",
+      "content_sha256": "5362db63c35cef99a758f371e3065863aba98bbe1eaeb23ab967c99c10891d29",
       "reviewed_rules": [
         "04§1",
         "04§4",
         "04§12",
         "04§13"
       ],
-      "issue_ids": [],
+      "issue_ids": ["DIAG-CORE-019"],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-DOC-20261004"
+        "EV-ROOT-DOC-20261004",
+        "EV-B02-CORE019-OA-WORKFLOW-20261018"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "# OA 模块；全文文档结构/本地引用及高影响事实检索，22个一级至三级标题，0个待核对链接候选。",
+      "review_summary": "# OA 模块；全文文档结构/本地引用及高影响事实检索，22个一级至三级标题，0个待核对链接候选；新增通讯录分页双 JVM Root 授权/凭据自然失效 200/403/401 的正式 HTTP 边界。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
       "review_kind": "document_structure_and_high_impact_claim_scan",
-      "impact_ids": []
+      "impact_ids": ["IMP-CORE-001"]
     },
     {
       "path": "docs/后端/10-后端模块/09-文件上传.md",
@@ -4284,33 +4366,34 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "bcc2fdb448fb9be7ecc2d95f283dc76f17d38a9bc34f13fa1c228454e6c6d7bd",
+      "content_sha256": "98de3cee63881614be5c524279cd54e55061ffb2f14e813c4f7c75cddd9bb882",
       "reviewed_rules": [
         "04§1",
         "04§4",
         "04§12",
         "04§13"
       ],
-      "issue_ids": [],
+      "issue_ids": ["DIAG-CORE-019"],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-ROOT-DOC-20261004"
+        "EV-ROOT-DOC-20261004",
+        "EV-B02-CORE019-OA-WORKFLOW-20261018"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "# 工作流；全文文档结构/本地引用及高影响事实检索，8个一级至三级标题，0个待核对链接候选。",
+      "review_summary": "# 工作流；全文文档结构/本地引用及高影响事实检索，8个一级至三级标题，0个待核对链接候选；新增流程定义列表双 JVM Root 授权/凭据自然失效 200/403/401 的正式 HTTP 边界。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
       "review_kind": "document_structure_and_high_impact_claim_scan",
-      "impact_ids": []
+      "impact_ids": ["IMP-CORE-001"]
     },
     {
       "path": "docs/后端/10-后端模块/11-统一通知模块.md",
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "fe2c7316bdeb3230c2fecfb0a170b239995dd1cf76114c1740353a656525b1fb",
+      "content_sha256": "65207b5d04248c6c13943d09411f549bf81330a44d505691a7bbeb88bba2e819",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4343,7 +4426,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "41bd553123ca8d780561b06d24d85816bb83618db2f8a747471f6183c4c66c9f",
+      "content_sha256": "6be990336c10f149a25141b2dddccc88c35f154923b29931b90778bb7d59637b",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5031,7 +5114,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4acda48db5d3049191773321c99674d83fa3d016a18294b2a42099ebfe236c1f",
+      "content_sha256": "5c8ad0744ade0b08cd9d7d8feac317869582781c9f9e526657bafe3b8df17b1c",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5076,7 +5159,7 @@
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "正式台账局部登记 Core 有效 Root、凭据、策略和初始化正式 HTTP 专项，以及双进程 HTTP Session 撤销和自然失效、角色缩权重登录与八模块分段门禁；CHECK-CORE-019/022、BC-BASE-002 和 B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
+      "review_summary": "正式台账局部登记 Core 有效 Root、凭据、策略和初始化正式 HTTP 专项，以及双进程 HTTP Session 撤销和自然失效、唯一有效 Root 的单/双应用隔离 Redis 故障恢复、角色缩权重登录与八模块分段门禁；CHECK-CORE-019/022、BC-BASE-002 和 B02 保持进行中，本体使用自摘要置空后的 PowerShell 规范化 JSON 摘要。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -5155,11 +5238,67 @@
       "impact_ids": ["IMP-CORE-001"]
     },
     {
+      "path": "docs/开发指南/工程治理/2026-10-18-B02有效Root隔离Redis故障恢复验证.md",
+      "role": "B02 CORE-019 唯一有效 Root 隔离 Redis 停启正式 HTTP 与分段门禁证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "c3309490ffb1c3db61636e8ad9a7cf61b2e36571d292f25b15ea59b5b029f00e",
+      "reviewed_rules": ["04 §7 有效 Root", "04 §8 安全 Redis", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-019"],
+      "evidence_ids": ["EV-B02-CORE019-REDIS-FAULT-20261018"],
+      "review_summary": "记录独立 Redis 停机及恢复时唯一有效 Root 的拒绝、旧会话失效、重新登录和下限保护，以及真实依赖整组与分段门禁。",
+      "review_limits": ["双应用 Redis 故障交错、非原子撤销窗口、策略/初始化故障恢复与 OA/Workflow 间接业务未运行。"],
+      "review_kind": "documented_root_isolated_redis_fault_recovery_http_and_gate_review",
+      "impact_ids": ["IMP-CORE-001", "IMP-BASE-003"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-18-B02双实例Root隔离Redis故障恢复验证.md",
+      "role": "B02 CORE-019 双应用 JVM 共用隔离 Redis 停启的正式 HTTP 与分段门禁证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "5a80b1082aa7f1d8a4b4c494f29aaee8d9d98312b3f0ad1225aaf45588076b00",
+      "reviewed_rules": ["04 §7 有效 Root", "04 §8 安全 Redis", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-019"],
+      "evidence_ids": ["EV-B02-CORE019-REDIS-TWO-PROCESS-20261018"],
+      "review_summary": "记录两独立应用 JVM 共同经历隔离 Redis 停启时 Root 的两端失败拒绝、各自恢复、旧会话失效与最后 Root 保护，以及真实依赖整组和分段门禁。",
+      "review_limits": ["单端网络隔离、非原子撤销窗口、策略/初始化故障恢复及 OA/Workflow 间接业务未运行。"],
+      "review_kind": "documented_root_two_process_isolated_redis_fault_recovery_http_and_gate_review",
+      "impact_ids": ["IMP-CORE-001", "IMP-BASE-003"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-18-B02单端Root隔离Redis连接验证.md",
+      "role": "B02 CORE-019 双应用 JVM 单端隔离 Redis 连接的正式 HTTP 与分段门禁证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "10fbc1579007e4e3b764b19849bc1d825074c039210028c664d49a9a4ec6ee9a",
+      "reviewed_rules": ["04 §7 有效 Root", "04 §8 安全 Redis", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-019"],
+      "evidence_ids": ["EV-B02-CORE019-ONE-END-REDIS-20261018"],
+      "review_summary": "记录单端 TCP 连接隔离时失联应用失败拒绝、直连应用继续服务、恢复后原 Session 保留及最后 Root 保护，以及定点真实依赖和八模块门禁。",
+      "review_limits": ["真实跨主机网络、非原子撤销窗口、策略/初始化故障恢复及 OA/Workflow 间接业务未运行。"],
+      "review_kind": "documented_root_one_end_redis_connection_isolation_http_and_gate_review",
+      "impact_ids": ["IMP-CORE-001", "IMP-BASE-003"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-18-B02有效Root跨OA与Workflow入口验证.md",
+      "role": "B02 CORE-019 有效 Root 授权与凭据自然失效穿透 OA/Workflow 正式读取入口的证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "531ddcea6dae3fc19adee64523f75bcab2c775fce35b8de3a03b78d9053585e3",
+      "reviewed_rules": ["04 §7 授权与有效 Root", "04 §8 多实例", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-019"],
+      "evidence_ids": ["EV-B02-CORE019-OA-WORKFLOW-20261018"],
+      "review_summary": "记录 OA 通讯录和 Workflow 流程定义两个读取入口在两个独立应用 JVM 上随 Root 角色和凭据自然失效的 200/403/401，以及有效 Root 继续可用、双进程整组和八模块门禁。",
+      "review_limits": ["仅两个空业务数据读取入口；数据范围、写入、真实流程任务、后台身份及 B08 浏览器未运行。"],
+      "review_kind": "documented_root_oa_workflow_indirect_http_and_gate_review",
+      "impact_ids": ["IMP-CORE-001"]
+    },
+    {
       "path": "docs/开发指南/工程治理/README.md",
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "55b2ef977a4576b76700ebde26afcbf603abb4112ddcd82e88d83b01e1643cec",
+      "content_sha256": "b888315a93c019a7753d5abf88558fee81db0242d8382d5f16c5e104714ada2a",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5217,6 +5356,10 @@
         "EV-B02-BASE002-CLIENT-REVOKE-20261016",
         "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016",
         "EV-B02-BASE003-FAULT-RECOVERY-20261016",
+        "EV-B02-CORE019-REDIS-FAULT-20261018",
+        "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018",
+        "EV-B02-CORE019-ONE-END-REDIS-20261018",
+        "EV-B02-CORE019-OA-WORKFLOW-20261018",
         "EV-B02-CORE020-023-TWO-PROCESS-20261016",
         "EV-B02-CORE020-OPS-CLEAR-20261016",
         "EV-SCRIPT-B01-20261016",
@@ -5255,7 +5398,7 @@
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "工程治理台账索引；同步有效 Root、凭据、策略、首次初始化、双进程 Session 自然失效、BC-BASE-001/002 两进程重放/配额/到期后撤销/客户端与踢旧、CORE-020 登录失败桶、改密审计脱敏、CORE-023 绑定验证码预算、BC-BASE-008 会议以外分页入口、CORE-022 双进程凭据重载与自然失效、CORE-032 角色变更两进程联动、CORE-019 会话策略收紧跨进程、隔离 Redis 停启恢复及登录桶/绑定预算双进程共享的正式 HTTP 证据，记录八模块门禁和未验收边界；全局仍 in_progress。",
+      "review_summary": "工程治理台账索引；同步有效 Root、凭据、策略、首次初始化、双进程 Session 自然失效、BC-BASE-001/002 两进程重放/配额/到期后撤销/客户端与踢旧、CORE-020 登录失败桶、改密审计脱敏、CORE-023 绑定验证码预算、BC-BASE-008 会议以外分页入口、CORE-022 双进程凭据重载与自然失效、CORE-032 角色变更两进程联动、CORE-019 会话策略收紧跨进程、单/双应用隔离 Redis 停启、单端连接隔离恢复及 OA/Workflow 读取入口与登录桶/绑定预算双进程共享的正式 HTTP 证据，记录八模块门禁和未验收边界；全局仍 in_progress。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -23964,7 +24107,7 @@
       "role": "后端 spectra-core / 公共契约或内部实现",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "e1cacf9c67f9a41cc0bbee11d2e69abbd6f31c02ef55efaf2a8ff321d46e0814",
+      "content_sha256": "30eb185654cf07f1ef83bd21640b682ae07f793bbb759ba1244b7b31a2436190",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -23979,16 +24122,31 @@
       "issue_ids": [],
       "evidence_ids": [
         "EV-INVENTORY-20261003",
-        "EV-CORE-001"
+        "EV-CORE-001",
+        "EV-B02-CORE023-DELIVERY-20261018"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "SMS/EMAIL mock配置检查，解密地址后掩码日志并模拟SENT；日志仍含title/content，敏感真实载荷需Planner占位保证。",
+      "review_summary": "SMS/EMAIL MOCK 配置检查，解密地址后重新计算收件人掩码并模拟 SENT；日志仅保留渠道、任务 ID、掩码及固定结果码，去除可能包含验证码的标题和正文。",
       "review_limits": [
         "2026-10-05静态逐文件实现/控制流/调用边界审查；省略许可证、import与机械Javadoc；未运行依赖/HTTP/Provider/并发验证，复杂度未用校准PMD实测。"
       ],
       "review_kind": "source_responsibility_and_failure_path_review",
       "impact_ids": []
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/notification/provider/impl/MockNotificationProviderTest.java",
+      "role": "MOCK Provider 日志脱敏与阻断分支单元测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "0f266694f74859c4d9d096c2364f311e1e018deee40c2d6d932d52e44942e10e",
+      "reviewed_rules": ["04 §7 敏感数据", "04 §13 行为验证"],
+      "issue_ids": ["DIAG-CORE-023"],
+      "evidence_ids": ["EV-B02-CORE023-DELIVERY-20261018"],
+      "review_summary": "合成地址与正文断言 MOCK 只记录从解密地址重新计算的脱敏地址及安全字段；无效配置和解密失败阻断。",
+      "review_limits": ["合成单元测试；真实 Worker/Delivery 由正式 HTTP 用例验证。"],
+      "review_kind": "mock_provider_sensitive_log_test_review",
+      "impact_ids": ["IMP-CORE-005"]
     },
     {
       "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/notification/provider/impl/SmtpEmailNotificationProvider.java",
@@ -67342,7 +67500,7 @@
       "finding": "LastEffectiveDevOpsGuard仅声明/实现，无调用方；生命周期锁定/停用/离职及授权移除没有接入最小有效Root保护。 JdbcRootPolicyRepository有效计数SQL还未考虑用户deleted、assignment有效起止及凭证到期，不能代表当前可登录有效Root。",
       "impact": "最后可登录DEV_OPS可被停用/撤权而系统正常管理不可恢复；需要所有减少有效Root用例同事务锁与统一有效计数。",
       "priority": "P1",
-      "disposition": "用户状态、授权、身份、凭据、策略、用户编辑和首次初始化均接入事务锁及有效人数复核；仓储对未知锁定策略和人数结果失败拒绝。用户编辑缺失基础角色的补齐移至授权提交成功之后，拒绝最后 Root 撤权时不提前撤销 Redis Session。身份解绑改为先锁再读活动身份，最后身份 409，成功后撤销 Redis Session；用户重载支持与 Root 计数一致的本地 PASSWORD/EMAIL/SMS。2026-10-14 本人改密将 Root 行锁提前至旧密码读取前，修复两个并发请求重复使用旧密码；两个 Root 同时写过期凭据只有一次提交。2026-10-16 策略收紧最后 Root、并发版本冲突、会话策略旧版本及首次初始化并发已补正式 HTTP；安全策略版本冲突统一为 409。2026-10-18 Root 下限、上限和策略版本冲突补独立领域 error_code，Framework 原样输出，普通冲突回退不变；同日正式 HTTP 补单进程和双进程授权关系及凭据随真实时间到期、权限和身份失效与剩余 Root 保护。直接缺陷已修复；实际故障恢复和间接业务入口仍待行为验收。",
+      "disposition": "用户状态、授权、身份、凭据、策略、用户编辑和首次初始化均接入事务锁及有效人数复核；仓储对未知锁定策略和人数结果失败拒绝。用户编辑缺失基础角色的补齐移至授权提交成功之后，拒绝最后 Root 撤权时不提前撤销 Redis Session。身份解绑改为先锁再读活动身份，最后身份 409，成功后撤销 Redis Session；用户重载支持与 Root 计数一致的本地 PASSWORD/EMAIL/SMS。2026-10-14 本人改密将 Root 行锁提前至旧密码读取前，修复两个并发请求重复使用旧密码；两个 Root 同时写过期凭据只有一次提交。2026-10-16 策略收紧最后 Root、并发版本冲突、会话策略旧版本及首次初始化并发已补正式 HTTP；安全策略版本冲突统一为 409。2026-10-18 Root 下限、上限和策略版本冲突补独立领域 error_code，Framework 原样输出，普通冲突回退不变；同日正式 HTTP 补单进程和双进程授权关系及凭据随真实时间到期、权限和身份失效与剩余 Root 保护，并补唯一 Root 在单应用及两个独立应用共用隔离 Redis 停启时失败拒绝、各自恢复登录、旧 Session 失效和下限保护。直接缺陷已修复；单端 TCP 连接隔离两 JVM 专项验证失联端 503、直连端可用且恢复后原 Session 保留。OA 通讯录与 Workflow 流程定义两个双 JVM 读取入口随授权/凭据自然失效已验证；其余 OA/Workflow 数据范围、写入与后台入口仍待行为验收。",
       "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
@@ -67358,13 +67516,17 @@
         "EV-B02-CORE019-POLICY-INIT-20261016",
         "EV-B02-CORE019-ERROR-CODE-20261018",
         "EV-B02-CORE019-NATURAL-20261018",
-        "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018"
+        "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018",
+        "EV-B02-CORE019-REDIS-FAULT-20261018",
+        "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018",
+        "EV-B02-CORE019-ONE-END-REDIS-20261018",
+        "EV-B02-CORE019-OA-WORKFLOW-20261018"
       ],
       "impact_ids": [
         "IMP-CORE-001"
       ],
       "resolution": "首次初始化在 Root 策略行锁下执行激活和 DEV_OPS 授权，并在同一事务中复核人数上下限；仓储不再把 null 锁定策略或 null 有效人数误判为可继续状态。",
-      "verification_record": "docs/开发指南/工程治理/2026-10-11-B02有效Root当前版入口验证.md、2026-10-12-B02有效Root正式HTTP验证.md、2026-10-13-B02身份解绑有效Root与会话验证.md、2026-10-14-B02凭据生命周期与并发验证.md、2026-10-16-B02策略与首次初始化正式HTTP验证.md、2026-10-18-B02有效Root稳定错误码验证.md、2026-10-18-B02有效Root自然失效验证.md；合成 PostgreSQL Root 19/19、仓储单测 2/2、单进程 Root HTTP 10/10、双进程 Core HTTP 6/6、初始化 1/1；八模块单元与静态 clean verify 退出 0，执行 345 项、真实依赖等跳过 133 项。真实依赖混跑的合成 schema/Flyway 冲突单列；CHECK-CORE-019 保持部分执行。"
+      "verification_record": "docs/开发指南/工程治理/2026-10-11-B02有效Root当前版入口验证.md、2026-10-12-B02有效Root正式HTTP验证.md、2026-10-13-B02身份解绑有效Root与会话验证.md、2026-10-14-B02凭据生命周期与并发验证.md、2026-10-16-B02策略与首次初始化正式HTTP验证.md、2026-10-18-B02有效Root稳定错误码验证.md、2026-10-18-B02有效Root自然失效验证.md、2026-10-18-B02有效Root隔离Redis故障恢复验证.md、2026-10-18-B02双实例Root隔离Redis故障恢复验证.md、2026-10-18-B02单端Root隔离Redis连接验证.md、2026-10-18-B02有效Root跨OA与Workflow入口验证.md；合成 PostgreSQL Root 19/19、仓储单测 2/2、单进程 Root HTTP 10/10、双进程 Core HTTP 8/8、单端隔离连接正式 HTTP 1/1、单实例隔离 Redis 停启正式 HTTP 2/2、初始化 1/1；八模块单元与静态 clean verify 复跑退出 0，执行 345 项、真实依赖等跳过 135 项；单端隔离专项后再次复跑退出 0，发现 481 项、跳过 136 项、执行 345 项。真实依赖混跑的合成 schema/Flyway 冲突单列；CHECK-CORE-019 保持部分执行。"
     },
     {
       "id": "DIAG-CORE-020",
@@ -67479,7 +67641,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-CORE-001",
-        "EV-B02-CORE023-20261011"
+        "EV-B02-CORE023-20261011",
+        "EV-B02-CORE023-DELIVERY-20261018"
       ],
       "impact_ids": [
         "IMP-CORE-005"
@@ -67821,7 +67984,9 @@
       "evidence_ids": [
         "EV-CORE-005",
         "EV-B02-CORE034-20261009",
-        "EV-B02-CORE034-GATES-20261009"
+    "EV-B02-CORE034-GATES-20261009",
+    "EV-B02-CORE034-QUARTZ-20261018",
+    "EV-B02-CORE034-CONTROLLED-HTTP-20261018"
       ],
       "impact_ids": [
         "IMP-CORE-007"
@@ -68713,7 +68878,7 @@
         "安全计数首次写入与 TTL 原子化；拒绝无 TTL、异常脚本返回和结果未知，验证竞争递增及窗口保持。",
         "Session 签发、读取和刷新遵守绝对/空闲与原始令牌期限，活动时间原子更新，验证双连接、撤销竞争及旧格式会话处置。"
       ],
-  "deferred_boundary": "BASE-003/004 已在隔离 Redis 验证撤销与双连接重放交错；BASE-004 严格拒绝 Lua 未定义结果，BASE-003 Core 改密、管理员撤销与身份解绑均经正式端口到 Redis。BASE-007 集合 null/empty、BASE-018 计数 TTL、BASE-005 期限活动、BASE-006 并发配额均有专项。两个独立应用进程的正式 HTTP 登出与按用户撤销 Access 专项 1/1；2026-10-16 再验证 Access/Refresh Key 自然到期、跨进程 Web Refresh 轮换与绝对期限收紧后的双端拒绝，双进程整组 2/2。单进程身份解绑及凭据重置/改密均验证旧 Access 401，Web 身份解绑清理本地 Session，八模块完整门禁 317/317。BC-BASE-001 的两个独立应用进程重放围栏、并发消费只成功一次与共享 max_sessions 已补证据（整组 5/5，第二进程 409）。真实 Redis 停启恢复、Access 自然到期后的各撤销入口、Redis 撤销与数据库提交故障窗口、旧格式会话上线处置、角色/凭据变更跨进程及 Web 浏览器入口仍未验收；没有凭据输出。",
+  "deferred_boundary": "BASE-003/004 已在隔离 Redis 验证撤销与双连接重放交错；BASE-004 严格拒绝 Lua 未定义结果，BASE-003 Core 改密、管理员撤销与身份解绑均经正式端口到 Redis。BASE-007 集合 null/empty、BASE-018 计数 TTL、BASE-005 期限活动、BASE-006 并发配额均有专项。两个独立应用进程的正式 HTTP 登出与按用户撤销 Access 专项 1/1；2026-10-16 再验证 Access/Refresh Key 自然到期、跨进程 Web Refresh 轮换与绝对期限收紧后的双端拒绝，双进程整组 2/2。单进程身份解绑及凭据重置/改密均验证旧 Access 401，Web 身份解绑清理本地 Session，八模块完整门禁 317/317。BC-BASE-001 的两个独立应用进程重放围栏、并发消费只成功一次与共享 max_sessions 已补证据（整组 5/5，第二进程 409）。单应用和两个独立应用共同使用的隔离 Redis 实际停启均验证失败拒绝与恢复，双实例 Root 专项整组 7/7。单端本机 TCP 连接隔离已验证失联端失败拒绝与直连端继续服务；真实跨主机网络、Access 自然到期后的各撤销入口、Redis 撤销与数据库提交故障窗口、旧格式会话上线处置及 Web 浏览器入口仍未验收；没有凭据输出。",
       "state": "in_progress",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
@@ -68745,7 +68910,9 @@
     "EV-B02-CORE022-TWO-PROCESS-20261016",
     "EV-B02-CORE032-TWO-PROCESS-20261016",
     "EV-B02-BASE003-FAULT-RECOVERY-20261016",
-    "EV-B02-BASE002-EXPIRED-CLIENT-20261016"
+    "EV-B02-BASE002-EXPIRED-CLIENT-20261016",
+    "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018",
+    "EV-B02-CORE019-ONE-END-REDIS-20261018"
       ],
       "verification": [
         "真实隔离Redis测试并发重放、Access过期Refresh有效、ALLOW多客户端、多实例登录限制、Redis异常/null与正常empty。",
@@ -68754,12 +68921,13 @@
         "BASE-003 两个独立应用进程共享 Redis DB 5，正式 HTTP 登出和公共按用户撤销后旧 Access 在两端拒绝；重新签发恢复，专项 1/1、当前分段完整门禁 315/315。",
         "BASE-004 当前版严格核对 Refresh claim、围栏安装及映射清理的 Lua 返回值；异常结果 3 项先失败后通过，隔离 Redis 围栏专项 15/15，八模块 verify 选定测试 301/301 通过。",
         "CORE-019 身份解绑正式 HTTP 验证成功后公共撤销端口令旧 Access 返回 401；Web 调用方同步清理本地 Session。",
-        "CORE-019/022 凭据超龄、管理员重置和本人改密的正式 HTTP 验证旧 Access 失效及新密码重新登录；真实 Core 凭据跨进程自然失效与 Redis 停启未运行。",
+        "CORE-019/022 凭据超龄、管理员重置和本人改密的正式 HTTP 验证旧 Access 失效及新密码重新登录；真实 Core 凭据跨进程自然失效及共同隔离 Redis 停启下的 Root 会话失败拒绝和恢复已分别验证。",
         "BASE-005 双进程正式 HTTP 验证 Access 自然到期 401、有效 Refresh 跨进程轮换、绝对期限收紧后的两端拒绝及 Refresh 自然到期 401；整组 2/2、八模块门禁 317/317。",
-        "BASE-001 两个独立应用进程共享 Redis DB 5：跨进程重放旧 Refresh 即撤销 Family 且轮换新 Access 两端拒绝，并发消费只成功一次，REJECT_NEW max_sessions=1 时第二进程签发 409 且仅一个活动会话；整组 5/5。"
+        "BASE-001 两个独立应用进程共享 Redis DB 5：跨进程重放旧 Refresh 即撤销 Family 且轮换新 Access 两端拒绝，并发消费只成功一次，REJECT_NEW max_sessions=1 时第二进程签发 409 且仅一个活动会话；整组 5/5。",
+        "CORE-019 两个独立应用 JVM 共用隔离 Redis 停启：停机时旧 Root Access、停用和登录两端 503，恢复后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409；Core 双进程整组 7/7。"
       ],
       "limits": [
-    "BASE-003/004/005/006/007/018 已有当前源码和隔离 Redis 专项；双进程正式 HTTP Access 撤销、Access/Refresh 自然失效与轮换、BC-BASE-001 两进程重放/并发/配额，以及单进程正式 Core 角色事务/重新登录专项通过。Access 到期后各撤销入口跨进程、真实 Redis 停启恢复、角色/凭据变更跨进程和 Web 浏览器入口仍待完成。"
+    "BASE-003/004/005/006/007/018 已有当前源码和隔离 Redis 专项；双进程正式 HTTP Access 撤销、Access/Refresh 自然失效与轮换、BC-BASE-001 两进程重放/并发/配额，以及 Core 角色事务/重新登录和共同隔离 Redis 停启专项通过。单端网络隔离、Access 到期后各撤销入口跨进程、Redis 撤销与数据库提交非原子窗口和 Web 浏览器入口仍待完成。"
       ]
     },
     {
@@ -69205,7 +69373,7 @@
         "公开业务操作与必要DTO、最终授权/系统上下文、Mapper SQL、Common端口、所有直接间接仓库调用者、Web编辑及错误展示",
         "Core组织用例与Framework范围策略，历史组织数据语义"
       ],
-  "deferred_boundary": "OA/Workflow独立业务治理暂缓，公共权限/目录/时区/历史部门改变影响的调用方必须一致迁移。CORE-019 未发现 OA/Workflow 直接调用用户停用、用户编辑撤权、身份解绑、密码、策略或首次初始化写入入口；其目录与授权读取仍是间接影响。Web RoleAssignmentEditor 经 UserApi.submitUpdate 调用用户编辑撤权；Web ProfileBinding 经 AuthenticationIdentityApi.unbind 调用身份解绑并清理本地 Session；Web 个人中心通过 UserApi 调用本人改密，初始化页调用 status/start/complete、个人中心读取密码策略，协议形状不变。2026-10-18 Root 下限、上限与策略版本冲突补独立 error_code，Web 请求客户端已保留该字段，无需迁移请求代码；OA/Workflow 共享 Framework 错误边界但无直接 Root 冲突构造。专用 PostgreSQL Root 19/19、正式 Root HTTP 10/10、双进程 Core HTTP 6/6、通用冲突 HTTP 1/1 和八模块单元/静态门禁通过；授权与凭据自然到期的单进程、双进程正式 HTTP 均覆盖 Root 权限收缩及凭据拒绝。实际故障恢复及 OA/Workflow 间接行为未验收。",
+  "deferred_boundary": "OA/Workflow独立业务治理暂缓，公共权限/目录/时区/历史部门改变影响的调用方必须一致迁移。CORE-019 未发现 OA/Workflow 直接调用用户停用、用户编辑撤权、身份解绑、密码、策略或首次初始化写入入口；其目录与授权读取仍是间接影响。Web RoleAssignmentEditor 经 UserApi.submitUpdate 调用用户编辑撤权；Web ProfileBinding 经 AuthenticationIdentityApi.unbind 调用身份解绑并清理本地 Session；Web 个人中心通过 UserApi 调用本人改密，初始化页调用 status/start/complete、个人中心读取密码策略，协议形状不变。2026-10-18 Root 下限、上限与策略版本冲突补独立 error_code，Web 请求客户端已保留该字段，无需迁移请求代码；OA/Workflow 共享 Framework 错误边界但无直接 Root 冲突构造。专用 PostgreSQL Root 19/19、正式 Root HTTP 10/10、双进程 Core HTTP 7/7、通用冲突 HTTP 1/1 和八模块单元/静态门禁通过；授权与凭据自然到期的单进程、双进程正式 HTTP 均覆盖 Root 权限收缩及凭据拒绝。单应用隔离 Redis 停启下唯一 Root 的正式 HTTP 整组 2/2，以及两个独立应用共同 Redis 停启的双进程整组 7/7 均通过；单端本机 TCP 连接隔离 Root 专项 1/1 已通过；OA 通讯录与 Workflow 流程定义双 JVM 读取入口已验证角色到期 403、凭据到期 401，未失效 Root 仍为 200；真实跨主机网络、OA/Workflow 数据范围、写入与后台行为未验收。",
       "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
@@ -69223,7 +69391,11 @@
     "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016",
     "EV-B02-CORE019-ERROR-CODE-20261018",
     "EV-B02-CORE019-NATURAL-20261018",
-    "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018"
+    "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018",
+    "EV-B02-CORE019-REDIS-FAULT-20261018",
+    "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018",
+    "EV-B02-CORE019-ONE-END-REDIS-20261018",
+    "EV-B02-CORE019-OA-WORKFLOW-20261018"
       ],
       "verification": [
         "隔离DB/Redis权限范围与撤权故障",
@@ -69472,6 +69644,7 @@
         "EV-B02-CORE022-20261011",
         "EV-B02-CORE023-20261011",
         "EV-B02-CORE023-HTTP-20261016",
+        "EV-B02-CORE023-DELIVERY-20261018",
         "EV-B02-CORE022-TWO-PROCESS-20261016",
         "EV-B02-CORE022-NATURAL-20261016",
         "EV-B02-CORE020-023-TWO-PROCESS-20261016",
@@ -69485,7 +69658,7 @@
         "任务跨实例下载",
         "Quartz finish/abandon竞争"
       ],
-      "limits": ["CORE-020 真实 Redis 双连接、CORE-022 固定时钟/401 协作者、CORE-023 绑定码双连接并发/故障专项及全后端门禁已通过；凭证写入的专用 PostgreSQL 端到端、实际 HTTP、双应用进程、真实通知投递和 Redis 实际停启未运行，其余 IMP-CORE-005 关联问题及行为场景仍待逐项治理。"]
+      "limits": ["CORE-020/022/023 已有 Redis 并发、正式 HTTP、双进程共享状态与故障恢复证据；CORE-023 通知链路以 MOCK Provider 完成单进程投递，外部供应商未验收。IMP-CORE-005 还关联导入、诊断、Quartz 等独立问题，须按各自检查项继续治理。"]
     },
     {
       "id": "IMP-CORE-006",
@@ -69584,7 +69757,10 @@
         "EV-B02-CORE034-GATES-20261009",
         "EV-B02-CORE032-20261011",
         "EV-B02-CORE032-HTTP-20261012",
-        "EV-B02-CORE032-TWO-PROCESS-20261016"
+    "EV-B02-CORE032-TWO-PROCESS-20261016",
+    "EV-B02-CORE023-DELIVERY-20261018",
+    "EV-B02-CORE034-QUARTZ-20261018",
+    "EV-B02-CORE034-CONTROLLED-HTTP-20261018"
       ],
       "verification": [
         "DB/Redis启动故障矩阵，保留Flyway既有失败保护",
@@ -71989,6 +72165,36 @@
       "limits": "单应用进程、数据库与 Redis 在线；未覆盖双独立应用进程共享尝试预算、真实 Redis 停启恢复及邮件/短信通知投递联动。CHECK-CORE-023 维持部分执行，B02 仍未验收。"
     },
     {
+      "id": "EV-B02-CORE023-DELIVERY-20261018",
+      "scope": "DIAG-CORE-023 / IMP-CORE-005 / IMP-CORE-007 / CHECK-CORE-023 绑定验证码通知投递联动与 MOCK 日志脱敏",
+      "command_or_scenario": [
+        "CodeGraph 与当前源码核对 AuthenticationController.sendBindingEmail → VerificationCodeServiceImpl → NotificationService → NotificationGatewayImpl → NotificationTaskWorker → MockNotificationProvider → ntf_delivery；Web 保持原 API，OA/Workflow 只受公共通知发送端间接影响",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-core -am '-Dtest=MockNotificationProviderTest' '-Dsurefire.failIfNoSpecifiedTests=false' test -> 退出 0，MOCK 单元 2/2；敏感正文、标题、完整地址和不可信掩码均不写日志，错误配置与解密失败阻断",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=BindingCodeBudgetFullHttpTest#bindingCodeDeliveryRejectsUnavailableChannelAndRecordsOneMockDelivery' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 前两次夹具密钥缺失分别退出 1，最终补齐一次性合成密钥后退出 0，正式 HTTP 1/1",
+        "无邮件 Provider 时发送拒绝、Redis 绑定码清理、通知请求 0；MOCK 健康后发送 200、Task PENDING→SENT、Delivery MOCK/SENT 恰好一条，重复 Worker 领取 0；日志仅含脱敏收件人和固定结果码",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> 前两轮 Launch Spotless 格式退出 1；定向 spotless:check 退出 0 后最终八模块退出 0，发现 484 项、跳过 137 项、执行 347 项；Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过",
+        "pwsh -NoProfile -File scripts/check-governance-exceptions.ps1 -RootPath . -LedgerPath docs/开发指南/工程治理/ledger.json -SourceRoot spectra-admin -SuppressionFile spectra-admin/config/spotbugs/exclude.xml -> 退出 0，100 条例外、1732 文件扫描；JSON、7 个变动文件摘要、自摘要、唯一覆盖及 5 处证据引用核对通过"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、仓库 Maven Wrapper；专用 PostgreSQL devops00_spectra_db_test、Redis DB 5、单个正式 HTTP 应用与合成用户/地址/密钥；未读取或输出本机凭据及真实业务数据。",
+      "tool_versions": {"java": "25", "maven_wrapper": "3.9.12", "surefire": "3.5.6", "spotless": "3.9.0", "checkstyle": "14.0.0", "pmd": "7.17.0", "spotbugs_plugin": "4.10.3.0"},
+      "checked_at": "2026-10-18",
+      "result": "pass_with_declared_limits",
+      "exit_code": 0,
+      "summary": "绑定验证码渠道不可用拒绝并清理 Redis 码；MOCK 健康后完整通知链路单次投递，Delivery 唯一，日志无验证码正文。定点正式 HTTP 1/1、MOCK 单元 2/2、八模块完整门禁 347/347 执行通过；CHECK-CORE-023 置 passed，B02 仍 in_progress。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-18-B02绑定验证码通知投递联动验证.md",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/BindingCodeBudgetFullHttpTest.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/notification/provider/impl/MockNotificationProviderTest.java",
+        ".temp/b02/core023-mock-provider-unit.log",
+        ".temp/b02/core023-delivery-http.log",
+        ".temp/b02/core023-delivery-full-gate-success.log",
+        ".temp/b02/core023-delivery-full-gate-success.exit",
+        ".temp/b02/core023-delivery-governance.log",
+        ".temp/b02/core023-delivery-governance.exit"
+      ],
+      "limits": "通知投递联动仅单应用进程与 MOCK Provider；真实外部短信/邮件供应商及启用生产调度器的通知/OA Quartz/Workflow 未验收。并发猜码与两应用共享预算沿用既有专项证据。"
+    },
+    {
       "id": "EV-B02-BASE008-CORE-PAGE-20261016",
       "scope": "DIAG-BASE-002 / IMP-BASE-005 / BC-BASE-008 会议以外 Core 分页入口的正式 HTTP 排序边界与正式 Core 身份装配",
       "command_or_scenario": [
@@ -72138,6 +72344,112 @@
         ".temp/b02/root-natural-two-process-unit-static-gate.log"
       ],
       "limits": "实际 Redis 停启、策略/初始化故障恢复、OA/Workflow 间接业务和 B08 浏览器未运行；单元与静态门禁跳过真实依赖，既有合成 schema/Flyway 混跑冲突未在本项修复。CHECK-CORE-019 与 B02 保持未验收。"
+    },
+    {
+      "id": "EV-B02-CORE019-REDIS-FAULT-20261018",
+      "scope": "DIAG-CORE-019 / IMP-CORE-001 / IMP-BASE-003 / CHECK-CORE-019 唯一有效 Root 的隔离 Redis 停启与恢复",
+      "command_or_scenario": [
+        "CodeGraph 与源码核对 Root 有效计数、SecurityRedisExecutor、Session 读取和 DependencyReadinessProbe；复用自启独立 Redis 子进程与专用 PostgreSQL 测试库",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=RedisFaultRecoveryHttpTest#lastRootRemainsProtectedAcrossIsolatedRedisRestart' '-Dsurefire.failIfNoSpecifiedTests=false' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' '-Dspectra.test.real-deps=true' test -> 最终源码退出 0，1/1；初始 30 秒恢复轮询两次超时退出 1，延长至 90 秒覆盖探针退避后通过",
+        "同一命令选择 RedisFaultRecoveryHttpTest 整组 -> 退出 0，2/2；停机期间 Root 上下文、登录、停用写请求 503，状态 ACTIVE/人数 1；重启后旧 Access 401、新登录 200、最后 Root 停用 409 / ROOT_EFFECTIVE_MINIMUM",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> 复跑退出 0，八模块发现 479 项、跳过真实依赖等 134 项、执行 345 项，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过"
+      ],
+      "environment": "原生 Windows PowerShell、mise test、JDK 25、Maven Wrapper；专用 PostgreSQL devops00_spectra_db_test、随机合成唯一 Root、独立随机端口无持久化 Redis DB 5；共享 Redis 未停启，未读取或输出本机凭据。",
+      "checked_at": "2026-10-18",
+      "result": "pass_with_declared_limits",
+      "summary": "唯一有效 Root 在安全 Redis 停机时认证和写操作均 503 且数据库不变量保持；重启后新登录恢复、旧 Session 失效、最后 Root 仍 409 拒绝。真实依赖整组 2/2，分段八模块单元及静态门禁复跑退出 0。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-18-B02有效Root隔离Redis故障恢复验证.md",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/RedisFaultRecoveryHttpTest.java",
+        ".temp/b02/root-redis-fault-focused-retry.log",
+        ".temp/b02/root-redis-fault-focused-90s.log",
+        ".temp/b02/root-redis-fault-suite.log",
+        ".temp/b02/root-redis-fault-unit-static-gate.log",
+        ".temp/b02/root-redis-fault-unit-static-gate-confirm.log",
+        ".temp/b02/root-redis-fault-unit-static-gate-confirm.exit"
+      ],
+      "limits": "单应用进程；未验证双应用 Redis 故障交错、Redis 撤销与数据库提交非原子窗口、初始化/策略故障恢复、OA/Workflow 间接业务及 B08 浏览器。CHECK-CORE-019 和 B02 保持进行中。"
+    },
+    {
+      "id": "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018",
+      "scope": "DIAG-CORE-019 / IMP-CORE-001 / IMP-BASE-003 / CHECK-CORE-019 两独立应用 JVM 共用隔离 Redis 的停启与 Root 恢复",
+      "command_or_scenario": [
+        "CodeGraph 与源码核对 CoreTwoProcessHttpTest 第二 JVM、Framework Session Redis 事实源、就绪探针及 Core Root 有效计数；两应用分别用命令行/进程环境变量指向测试进程自启的同一随机端口 Redis",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=CoreTwoProcessHttpTest#lastRootSurvivesSharedIsolatedRedisOutageAcrossProcesses' '-Dsurefire.failIfNoSpecifiedTests=false' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' '-Dspectra.test.real-deps=true' test -> 首轮退出 1，第二 JVM 恢复探针尚未 READY 时登录 503；分别等待两端恢复后定点退出 0，1/1",
+        "同一命令选择 CoreTwoProcessHttpTest 整组，增加旧 Refresh 两端 401 断言 -> 退出 0，7/7；Redis 停机时两端上下文/登录/停用 503，重启后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> 首轮因新增测试方法签名 Spotless 换行退出 1；修正后复跑退出 0，八模块发现 480 项、跳过真实依赖等 135 项、执行 345 项，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过"
+      ],
+      "environment": "原生 Windows PowerShell、mise test、JDK 25、Maven Wrapper；两个不同 PID 的完整应用 JVM、专用 PostgreSQL devops00_spectra_db_test、随机合成唯一 Root、独立随机端口无持久化 Redis DB 5；共享 Redis 未停启，未读取或输出本机凭据。",
+      "checked_at": "2026-10-18",
+      "result": "pass_with_declared_limits",
+      "summary": "两个独立应用 JVM 在共同隔离 Redis 停机时失败拒绝，重启后分别恢复，旧 Access/Refresh 两端失效、新 Access 两端可用，最后 Root 仍 409 拒绝；真实依赖整组 7/7，八模块单元与静态门禁复跑退出 0。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-18-B02双实例Root隔离Redis故障恢复验证.md",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/CoreTwoProcessHttpTest.java",
+        ".temp/b02/root-redis-two-process-focused.log",
+        ".temp/b02/root-redis-two-process-focused-retry.log",
+        ".temp/b02/root-redis-two-process-suite.log",
+        ".temp/b02/root-redis-two-process-unit-static-gate.log",
+        ".temp/b02/root-redis-two-process-unit-static-gate.exit",
+        ".temp/b02/root-redis-two-process-unit-static-gate-retry.log",
+        ".temp/b02/root-redis-two-process-unit-static-gate-retry.exit"
+      ],
+      "limits": "共同 Redis 停启已覆盖；未验证单端网络隔离、Redis 撤销与数据库提交非原子窗口、初始化/策略故障恢复、OA/Workflow 间接业务及 B08 浏览器。CHECK-CORE-019 和 B02 保持进行中。"
+    },
+    {
+      "id": "EV-B02-CORE019-ONE-END-REDIS-20261018",
+      "scope": "DIAG-CORE-019 / IMP-CORE-001 / IMP-BASE-003 / CHECK-CORE-019 双应用 JVM 单端 Redis 连接隔离与恢复",
+      "command_or_scenario": [
+        "CodeGraph 与当前源码核对 Framework Session Redis 事实源、Core Root 有效计数及双 JVM 启动；一端通过本机 TCP 转发器访问测试进程隔离 Redis，另一端直连",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=CoreTwoProcessHttpTest#lastRootSurvivesOneApplicationRedisNetworkIsolation' '-Dsurefire.failIfNoSpecifiedTests=false' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' '-Dspectra.test.real-deps=true' test -> 初次退出 0，1/1；最终源码复跑结果见专项报告",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> 首轮 Spotless 缩进退出 1；修正后八模块复跑退出 0，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过"
+      ],
+      "environment": "原生 Windows PowerShell、mise test、JDK 25、Maven Wrapper；两个不同 PID 的完整应用 JVM、专用 PostgreSQL devops00_spectra_db_test、随机合成唯一 Root、独立随机端口无持久化 Redis DB 5、本机可控 TCP 转发器；共享 Redis 未停启，没有读取或输出本机凭据。",
+      "checked_at": "2026-10-18",
+      "result": "pass_with_declared_limits",
+      "summary": "单端连接隔离时失联应用上下文/停用/登录 503，直连应用原 Access 200、最后 Root 停用 409；恢复后原 Session 两端可用，Root 状态/人数不变；定点 1/1，八模块单元与静态门禁退出 0。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-18-B02单端Root隔离Redis连接验证.md",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/CoreTwoProcessHttpTest.java",
+        ".temp/b02/root-redis-one-end-focused.log",
+        ".temp/b02/root-redis-one-end-focused.exit",
+        ".temp/b02/root-redis-one-end-focused-final.log",
+        ".temp/b02/root-redis-one-end-focused-final.exit",
+        ".temp/b02/root-redis-one-end-unit-static-gate.log",
+        ".temp/b02/root-redis-one-end-unit-static-gate.exit",
+        ".temp/b02/root-redis-one-end-unit-static-gate-retry.log",
+        ".temp/b02/root-redis-one-end-unit-static-gate-retry.exit"
+      ],
+      "limits": "本机 TCP 中断模拟单端失联，未验证真实跨主机网络；Redis 撤销与数据库提交非原子窗口、策略/初始化故障恢复、OA/Workflow 间接业务及 B08 浏览器仍待验收。CHECK-CORE-019 和 B02 保持进行中。"
+    },
+    {
+      "id": "EV-B02-CORE019-OA-WORKFLOW-20261018",
+      "scope": "DIAG-CORE-019 / IMP-CORE-001 / CHECK-CORE-019 有效 Root 授权与凭据自然失效穿透 OA、Workflow 正式读取入口",
+      "command_or_scenario": [
+        "CodeGraph 与当前源码核对 OA ContactController.page、Workflow ProcessDefinitionController.definitions、共享 hasPermission、Core Session 与有效 Root；两个独立应用 JVM 共用专用 PostgreSQL/Redis，仅使用合成用户和空业务数据",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=CoreTwoProcessHttpTest#naturalRootAssignmentAndCredentialExpiryPropagatesAcrossProcesses' '-Dsurefire.failIfNoSpecifiedTests=false' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' '-Dspectra.test.real-deps=true' test -> 首轮和最终源码均退出 0，各 1/1；目标 Root 在 OA/Workflow 两端先 200、角色到期后 403、凭据到期后 401，仍有效 Root 继续 200",
+        "同一命令选择 CoreTwoProcessHttpTest 整组 -> 退出 0，8/8",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> 首轮因新增辅助方法签名 Spotless 退出 1；修正后八模块复跑退出 0，发现 481 项、跳过 136 项、执行 345 项，Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过"
+      ],
+      "environment": "原生 Windows PowerShell、mise test、JDK 25、Maven Wrapper；两个不同 PID 的完整应用 JVM、正式 Flyway schema、专用 PostgreSQL devops00_spectra_db_test、Redis DB 5、随机合成 Root；未读取或输出本机凭据。",
+      "checked_at": "2026-10-18",
+      "result": "pass_with_declared_limits",
+      "summary": "OA 通讯录与 Workflow 流程定义读取的共享身份和授权边界在两个 JVM 均随 Root 角色自然失效由 200 变 403，随凭据自然失效由 200 变 401；另一有效 Root 保持 200 和最后 Root 下限。双进程整组 8/8，八模块门禁复跑退出 0。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-18-B02有效Root跨OA与Workflow入口验证.md",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/CoreTwoProcessHttpTest.java",
+        ".temp/b02/root-oa-workflow-indirect-focused.log",
+        ".temp/b02/root-oa-workflow-indirect-focused.exit",
+        ".temp/b02/root-oa-workflow-indirect-focused-final.log",
+        ".temp/b02/root-oa-workflow-indirect-focused-final.exit",
+        ".temp/b02/root-oa-workflow-indirect-suite.log",
+        ".temp/b02/root-oa-workflow-indirect-suite.exit",
+        ".temp/b02/root-oa-workflow-indirect-unit-static-gate.log",
+        ".temp/b02/root-oa-workflow-indirect-unit-static-gate.exit",
+        ".temp/b02/root-oa-workflow-indirect-unit-static-gate-retry.log",
+        ".temp/b02/root-oa-workflow-indirect-unit-static-gate-retry.exit"
+      ],
+      "limits": "只覆盖 OA 通讯录和 Workflow 流程定义两个空业务数据读取入口；数据范围、写入、真实流程任务、后台身份、Redis 撤销/数据库提交非原子窗口及 B08 浏览器未验收。CHECK-CORE-019 和 B02 保持进行中。"
     },
     {
       "id": "EV-B02-CORE019-ERROR-CODE-20261018",
@@ -72863,6 +73175,54 @@
         ".temp/b02/core034-full-test.log"
       ],
       "limits": "被跳过模块未执行全套质量与依赖测试；真实 HTTP、Quartz、Workflow、数据库投递及多实例行为仍未验证，不关闭 IMP-CORE-007、B02 或集中治理周期。"
+    },
+    {
+      "id": "EV-B02-CORE034-QUARTZ-20261018",
+      "scope": "DIAG-CORE-034 / IMP-CORE-007 / CHECK-CORE-034 通知 Quartz Worker 与服务监控显式系统身份",
+      "command_or_scenario": [
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=BindingCodeBudgetFullHttpTest#quartzJobDeliversBindingCodeOnceWithoutRequestIdentity' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> exit 0, 1/1",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=NotificationSystemActorQuartzFullHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> exit 0, 1/1",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=BindingCodeBudgetFullHttpTest,NotificationSystemActorQuartzFullHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> exit 0, 4/4",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch '-Dspotless.ratchetFrom=origin/master' spotless:check -> exit 0",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> exit 0, eight modules, 486 found, 139 skipped, 347 executed"
+      ],
+      "environment": "原生 Windows PowerShell 7.6；mise test / JDK 25 / 仓库 Maven Wrapper；专用 PostgreSQL devops00_spectra_db_test、Redis DB 5、正式 Flyway schema；单应用进程，合成用户与通知。",
+      "checked_at": "2026-10-18",
+      "result": "pass_with_declared_limits",
+      "exit_code": 0,
+      "summary": "通知 Quartz JDBC Job 注册并实际运行；绑定验证码邮件 MOCK 通知入队、一次投递、重复触发不重投，Provider 故障导致 BLOCKED 且恢复后新任务可发送；无身份普通发送与错误系统身份拒绝，SERVICE_MONITOR_ALERT 在后台线程完成站内信与 Delivery，重复触发不重复写入。八模块 clean verify 退出 0，执行 347/347，139 项跳过。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-18-B02通知Quartz后台身份验证.md",
+        ".temp/b02/core034-notification-quartz-suite.log",
+        ".temp/b02/core034-notification-quartz-suite.exit",
+        ".temp/b02/core034-notification-final-gate.log",
+        ".temp/b02/core034-notification-final-gate.exit"
+      ],
+      "limits": "未运行 OA 合同 Quartz、Workflow 流程实例、受控发送 Preview/Apply、双实例 Quartz 竞争、真实外部邮件供应商、数据库停启；CHECK-CORE-034 与 B02 不作通过结论。"
+    },
+    {
+      "id": "EV-B02-CORE034-CONTROLLED-HTTP-20261018",
+      "scope": "DIAG-CORE-034 / IMP-CORE-007 / CHECK-CORE-034 通知受控发送 Preview/Apply 正式 HTTP、受众漂移和并发消费",
+      "command_or_scenario": [
+        "CodeGraph 在 spectra-admin 核对 Controller、Service、受众目录和通知 Gateway；在 spectra-ui 核对页面经 API 的 Preview/Apply 调用，rg 复核 OA/Workflow 的显式系统身份调用另走公共通知端口",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=NotificationControlledSendFullHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 初轮与最终均 exit 0, 1/1",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch '-Dspotless.ratchetFrom=origin/master' spotless:check -> 初轮格式偏差 exit 1，修正后 exit 0",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> exit 0, eight modules, 487 found, 140 skipped, 347 executed"
+      ],
+      "environment": "原生 Windows PowerShell 7.6；mise test / JDK 25 / 仓库 Maven Wrapper；专用 PostgreSQL devops00_spectra_db_test、Redis DB 5、正式 Flyway schema；单应用进程，随机合成用户与通知。",
+      "checked_at": "2026-10-18",
+      "result": "pass_with_declared_limits",
+      "exit_code": 0,
+      "summary": "正式 HTTP Preview/Apply 定点 1/1：匿名拒绝、错误 token 拒绝、受众停用后的旧 Preview 拒绝；恢复后同步并发 Apply 只产生一个 Request/Task，重复 Apply 返回幂等重放。八模块 clean verify 退出 0，执行 347/347，140 项跳过。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-18-B02受控发送正式HTTP验证.md",
+        ".temp/b02/core034-controlled-send-http-final.log",
+        ".temp/b02/core034-controlled-send-http-final.exit",
+        ".temp/b02/core034-controlled-send-spotless-final.log",
+        ".temp/b02/core034-controlled-send-full-gate.log",
+        ".temp/b02/core034-controlled-send-full-gate.exit"
+      ],
+      "limits": "未运行跨实例同时 Apply、脱离 Controller 的服务层权限、OA 合同 Quartz、Workflow 实例及外部 Provider；CHECK-CORE-034 和 B02 仍未通过。"
     },
     {
       "id": "EV-B02-COMMON14-20261010",
@@ -75730,14 +76090,14 @@
       }
     ],
     "scope_counts": {
-      "included": 1647,
+      "included": 1657,
       "shared_impact": 30,
       "deferred_business": 438,
       "excluded": 24
     },
     "pending_review_filter": "coverage where scope in [included, shared_impact] and state != reviewed",
     "pending_impact_filter": "coverage where scope == deferred_business and impact_state == pending_analysis",
-    "recent_bounded_refresh": "2026-10-18 CORE-019 自然失效局部复核追加两个独立应用 JVM 的正式 HTTP 测试与证据，更新直接变动测试和知识库摘要；单进程 Root 10/10、双进程 Core 6/6、八模块单元与静态门禁通过。未重新执行全工作区枚举。",
+    "recent_bounded_refresh": "2026-10-18 CORE-034 受控发送 Preview/Apply 局部复核新增 Launch 正式 HTTP 测试与证据报告，更新受影响知识库摘要及 B02/影响项/行为检查。专用 PostgreSQL/Redis 定点 1/1，八模块 clean verify 发现 487、跳过 140、执行 347。未重新执行全工作区枚举。",
 "classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. CORE-032 bounded refresh adds the Boundary reconciler, synthetic PostgreSQL test and evidence report, updating changed source and knowledge digests. CORE-022 bounded refresh registers the existing age test, adds write-clock and 401 response tests plus evidence report, and updates changed source and knowledge digests. BASE-003 Core caller refresh adds its real Redis test and evidence report, updating the user-permissions knowledge digest. BASE-004 current refresh adds one evidence report, updates the Lua store, its failure-path test and affected knowledge digests, and records the current full gate. CORE-019 current refresh adds one repository unit test and one evidence report, updates initialization and repository source, PostgreSQL tests and knowledge digests, and records the current full gate. BC-BASE-008 scope refresh adds one isolated PostgreSQL test and one evidence report, updates Framework scope sources, tests and knowledge digests, and records the 311-test full gate. OA Mapper bounded refresh adds one Launch PostgreSQL test and one evidence report, updates affected knowledge digests, and records the final 313-test full gate. OA meeting page bounded refresh adds one Launch PostgreSQL MVC test and one evidence report, updates affected knowledge digests, and records the 315-test full gate. 2026-10-12 BASE-003 two-process refresh adds one Launch HTTP test and one evidence report, updates affected knowledge digests and records the current 315-test segmented full gate. CORE-032 HTTP refresh adds one Launch full-app HTTP test, updates role service and affected knowledge digests, and records a separate full-app Flyway test plus 315-test segmented full gate. 2026-10-14 CORE-019/022 凭据入口局部刷新新增一份证据文档、更新直接变动的后端源码与测试及知识库摘要，记录八模块 317 项分段门禁和正式 HTTP 8 项；UserServiceImpl 全文件旧职责审查仍为 stale，仅本次改密入口登记局部复核。Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
     "content_digest_policy": "Actual reviewed content SHA256; deferred impact-only input uses impact_content_sha256; private/excluded input never hashed. Ledger self digest: PowerShell 7.6 ConvertFrom-Json -DateKind String / ConvertTo-Json -Depth 100 -Compress with self content_sha256 null.",
     "phase1_baseline": {
@@ -76655,10 +77015,10 @@
         ],
         "state": "partially_executed",
         "scenario": "最后可登录DEV_OPS可被停用/撤权而系统正常管理不可恢复；需要所有减少有效Root用例同事务锁与统一有效计数。",
-      "validation": "周期级 test 环境 devops00_spectra_db_test 中，Root PostgreSQL 19/19 覆盖有效计数、最后 Root 回滚、角色/身份撤销、初始化、人数上限、密码年龄与并发。正式 Core HTTP 用户停用、用户编辑撤权、基础角色副作用、身份解绑、凭据、策略及首次初始化已有专项。2026-10-18 Root 下限、上限和策略版本冲突分别输出稳定领域 error_code：Framework 11/11、合成 PostgreSQL 19/19、通用冲突 HTTP 1/1。同日新增授权关系与凭据自然到期的单进程正式 HTTP：到期前后 Root 人数 2→1、旧 Access 失权 403 或认证 401、重登录 401、剩余 Root 停用 409 且状态不变；Root 整组 10/10。两个独立应用 JVM 再覆盖授权到期后的两端失权、凭据到期后的两端旧 Access 401、第二端旧 Refresh 401 与最后 Root 409；定点 1/1、双进程整组 6/6。八模块单元与静态 clean verify 退出 0，执行 345 项、跳过真实依赖等 133 项；此前真实依赖混跑在 Launch 因合成简化 schema 与正式 Flyway schema 冲突退出 1，按分段专项记录。实际 Redis 停启及 OA/Workflow 间接业务入口仍未执行。",
+      "validation": "周期级 test 环境 devops00_spectra_db_test 中，Root PostgreSQL 19/19 覆盖有效计数、最后 Root 回滚、角色/身份撤销、初始化、人数上限、密码年龄与并发。正式 Core HTTP 用户停用、用户编辑撤权、基础角色副作用、身份解绑、凭据、策略及首次初始化已有专项。2026-10-18 Root 下限、上限和策略版本冲突分别输出稳定领域 error_code：Framework 11/11、合成 PostgreSQL 19/19、通用冲突 HTTP 1/1。授权关系与凭据自然到期的单进程正式 HTTP 覆盖人数 2→1、旧 Access 失权或 401、剩余 Root 停用 409；Root 整组 10/10；两个独立应用 JVM 自然失效整组 6/6。隔离 Redis 实际停启下唯一 Root 的单实例上下文、登录、停用写请求 503，状态/人数不变，重启后旧 Access 401、新登录恢复、最后 Root 409；整组 2/2。两个独立应用共同隔离 Redis 停启又覆盖两端 503 拒绝、分别恢复后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409，双进程整组 7/7。八模块单元与静态 clean verify 复跑退出 0，执行 345 项、跳过真实依赖等 135 项；此前真实依赖混跑在 Launch 因合成简化 schema 与正式 Flyway schema 冲突退出 1，按分段专项记录。单端 TCP 转发器隔离一端连接定点 1/1、失联端 503/直连端 200 与 Root 409/恢复后原 Session 可用；八模块门禁再跑退出 0，发现 481 项、跳过 136 项、执行 345 项。OA 通讯录与 Workflow 流程定义正式读取入口在两个独立 JVM 上随角色自然到期 200→403、随凭据自然到期旧 Access 401，另一有效 Root 保持 200，双进程整组 8/8；八模块门禁复跑退出 0、执行 345 项。OA/Workflow 数据范围、写入与后台入口仍未执行。",
          "impact_ids": ["IMP-CORE-001"],
-         "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-CORE019-20261010", "EV-B02-CORE019-CURRENT-20261011", "EV-B02-CORE019-HTTP-20261012", "EV-B02-CORE019-ROLE-20261012", "EV-B02-CORE019-DEFAULT-ROLE-20261013", "EV-B02-CORE019-IDENTITY-20261013", "EV-B02-CORE-CREDENTIAL-20261014", "EV-B02-CORE019-POLICY-INIT-20261016", "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016", "EV-B02-CORE019-ERROR-CODE-20261018", "EV-B02-CORE019-NATURAL-20261018", "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018"],
-         "required_environment": "已在专用测试库和 Redis DB 5 运行用户停用、用户编辑撤权、缺失 ROLE_USER、身份解绑、凭据、策略、首次初始化、会话策略收紧跨进程、Root 领域错误码及授权与凭据自然到期的单进程和双进程正式 HTTP、Mapper、行锁与 Session；后续还需实际 Redis 停启及 OA/Workflow 间接业务入口。"
+         "evidence_ids": ["EV-B02-DEPS-PORTS-20261010", "EV-CYCLE-TEST-ENV-20261010", "EV-B02-CORE019-20261010", "EV-B02-CORE019-CURRENT-20261011", "EV-B02-CORE019-HTTP-20261012", "EV-B02-CORE019-ROLE-20261012", "EV-B02-CORE019-DEFAULT-ROLE-20261013", "EV-B02-CORE019-IDENTITY-20261013", "EV-B02-CORE-CREDENTIAL-20261014", "EV-B02-CORE019-POLICY-INIT-20261016", "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016", "EV-B02-CORE019-ERROR-CODE-20261018", "EV-B02-CORE019-NATURAL-20261018", "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018", "EV-B02-CORE019-REDIS-FAULT-20261018", "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018", "EV-B02-CORE019-ONE-END-REDIS-20261018", "EV-B02-CORE019-OA-WORKFLOW-20261018"],
+         "required_environment": "已在专用测试库和 Redis DB 5 运行用户停用、用户编辑撤权、缺失 ROLE_USER、身份解绑、凭据、策略、首次初始化、会话策略收紧跨进程、Root 领域错误码、授权与凭据自然到期的单进程和双进程，以及单进程和两个独立应用共同使用隔离 Redis 停启的唯一 Root 正式 HTTP、Mapper、行锁与 Session；已补单端本机 TCP 连接隔离专项；已补 OA 通讯录与 Workflow 流程定义双 JVM 读取入口；后续还需 OA/Workflow 数据范围、写入、后台入口及真实跨主机网络故障。"
       },
       {
         "id": "CHECK-CORE-020",
@@ -76701,12 +77061,12 @@
         "issue_ids": [
           "DIAG-CORE-023"
         ],
-        "state": "partially_executed",
+        "state": "passed",
          "scenario": "已登录账号可并行猜短验证码，需用户/用途/地址绑定及原子耗尽失效；外层限流需共同核对。",
-         "validation": "Core 绑定用例与通知失败测试、Framework 限流策略和真实 Redis DB 5 双连接并发/跨用户/重放/耗尽/无 TTL/命令失败/丢回复测试通过；完整后端 verify 通过。2026-10-16 增加正式 HTTP 证据：绑定验证码按地址/用户绑定、预算内正确码成功、达上限原子失效且随后正确码被拒（专项 1/1），以及两个独立应用 JVM 跨进程累计尝试并共享预算（共享状态专项 1/1）。外部通知投递仍未执行。",
+         "validation": "Core 绑定、通知失败、Framework 限流与真实 Redis DB 5 双连接并发/跨用户/重放/耗尽/无 TTL/命令失败/丢回复测试通过；正式 HTTP 验证预算与用户/地址绑定，两个独立应用 JVM 共享尝试预算。2026-10-18 新增正式 HTTP 通知联动：渠道不可用时拒绝并清理验证码，MOCK 健康后入队、Worker 单次投递及 Delivery 唯一记录 1/1；MOCK 日志脱敏单元 2/2。外部供应商投递未验收。",
          "impact_ids": ["IMP-CORE-005"],
-         "evidence_ids": ["EV-B02-CORE023-20261011", "EV-B02-CORE023-HTTP-20261016", "EV-B02-CORE020-023-TWO-PROCESS-20261016"],
-         "required_environment": "已使用 mise test 的专用 Redis DB 5 与 PostgreSQL 测试库；绑定验证码正式 HTTP 与两个独立应用进程共享预算已运行；仍需通知投递联动。"
+         "evidence_ids": ["EV-B02-CORE023-20261011", "EV-B02-CORE023-HTTP-20261016", "EV-B02-CORE020-023-TWO-PROCESS-20261016", "EV-B02-CORE023-DELIVERY-20261018"],
+         "required_environment": "已使用 mise test 的专用 Redis DB 5 与 PostgreSQL 测试库；绑定验证码正式 HTTP、两个独立应用进程共享预算、单进程 MOCK 通知投递联动均已运行。"
       },
       {
         "id": "CHECK-CORE-024",
@@ -76833,17 +77193,19 @@
         "issue_ids": [
           "DIAG-CORE-034"
         ],
-        "state": "inconclusive",
+        "state": "partially_executed",
         "scenario": "通知普通管理端口与后台运行端口边界混用；OA/Workflow后台受众及未来内部调用必须迁移显式运行身份，不能靠空上下文扩大权限。",
-        "validation": "CORE-034 当前源码要求普通目录查询具备认证身份；显式系统身份仅允许登记的来源、用途、模板与明确用户 ID。Core 定点 10/10（含匿名/已认证并行隔离）、八模块测试编译和改动范围格式通过；全量格式、verify 与全量测试失败或跳过下游模块，不标整项 passed。",
+        "validation": "普通目录查询无认证身份拒绝；显式系统身份限制登记的来源、用途、模板与明确用户 ID。Core 原定点 10/10；单应用真实 PostgreSQL/Redis/Flyway 下通知 Quartz 和服务监控系统身份整组 4/4：后台入队投递与重复触发不重复投递、渠道不可用 BLOCKED 和恢复后新任务成功。受控发送正式 HTTP 1/1：匿名、错误 token 与受众变化拒绝，并发消费只产生一个 Request/Task，重放返回同一结果。各轮八模块 clean verify 结果见对应证据；整项仍未通过。",
         "impact_ids": [
           "IMP-CORE-007"
         ],
         "evidence_ids": [
           "EV-B02-CORE034-20261009",
-          "EV-B02-CORE034-GATES-20261009"
+          "EV-B02-CORE034-GATES-20261009",
+          "EV-B02-CORE034-QUARTZ-20261018",
+          "EV-B02-CORE034-CONTROLLED-HTTP-20261018"
         ],
-        "required_environment": "真实隔离 HTTP 通知/受控发送、OA 合同 Quartz、Workflow 流程实例与数据库投递事务仍未运行；同影响图的 DataScope 后台拒绝、角色快照和基础设施恢复待各自专项处理。"
+        "required_environment": "仍需受控发送跨实例消费与脱离 Controller 的 Service 权限验证、OA 合同 Quartz、Workflow 流程实例、双实例 Quartz 竞争及故障恢复；同影响图的 DataScope 后台拒绝和角色快照按各自专项验证。"
       },
       {
         "id": "CHECK-CORE-035",
