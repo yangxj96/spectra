@@ -199,10 +199,13 @@
         "EV-B02-CORE034-CONTROLLED-HTTP-20261018",
         "EV-B02-CORE034-SERVICE-AUTH-20261018",
         "EV-B02-CORE034-OA-QUARTZ-20261018",
-        "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019"
+        "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019",
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
+        "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
+        "EV-B02-CORE034-FIRST-TODO-20261020"
         ],
         "state": "in_progress",
-      "progress_summary": "2026-10-16 首轮收口将 BC-BASE-001/002/003、CHECK-CORE-020/022 置为 passed，八模块真实依赖分段 clean verify 317/317 与静态门禁通过。2026-10-18 补 CHECK-CORE-019 的独立 Root error_code：Framework 11/11、合成 PostgreSQL Root 19/19。授权关系和凭据按真实时间自然到期的单进程正式 HTTP：人数 2→1、旧 Access 失权或 401、最后 Root 停用 409，Root 整组 10/10；两个独立应用 JVM 自然失效整组 6/6。单实例唯一 Root 隔离 Redis 停启整组 2/2；随后两个独立应用共同隔离 Redis 停启验证两端 503、数据库状态/人数保持、分别恢复后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409，双进程整组 7/7。八模块单元与静态 clean verify 复跑退出 0，发现 480 项、跳过真实依赖等 135 项、执行 345 项。此前真实依赖混跑因 Core 合成简化 schema 与 Launch 正式 Flyway schema 冲突退出 1，按分段证据记录。单端 TCP 转发器隔离一端连接又验证失联端上下文/登录/停用 503、直连端原 Session 200 与 Root 下限 409、恢复后原 Session 两端继续可用，定点 1/1；八模块单元与静态 clean verify 最终退出 0。OA 通讯录和 Workflow 流程定义的两个双 JVM 正式读取入口随 Root 角色/凭据自然失效分别 200→403/401，仍有效 Root 保持 200，双进程整组 8/8、八模块门禁复跑退出 0。2026-10-18 CHECK-CORE-023 补 MOCK 日志脱敏、正式 HTTP 渠道不可用拒绝/Redis 清理及入队到 Delivery 单次投递，单元 2/2、真实依赖 1/1、八模块门禁 347/347 执行通过；该检查置 passed。仍未完成：CHECK-CORE-019 OA/Workflow 数据范围、写入与后台间接入口；CHECK-CORE-032 部门重组与受众业务；CHECK-CORE-034 Workflow 流程实例、双实例 Quartz 与受控发送跨实例消费及角色变更竞争；以及旧格式会话、非原子故障窗口、B08 浏览器与其他影响范围。本轮通知 Quartz 和服务监控系统身份两类真实依赖整组 4/4，八模块最终 clean verify 发现 486、跳过 139、执行 347；CHECK-CORE-034 受控发送正式 HTTP 1/1，匿名/错误令牌/受众变化拒绝、同步并发 Apply 唯一请求及重放通过；本轮八模块 clean verify 发现 487、跳过 140、执行 347。CHECK-CORE-034 受控发送 Service 直接授权单测 5/5、正式角色到期定点 1/1；八模块 clean verify 发现 492、跳过 140、执行 352，门禁退出 0。OA 合同 Quartz 上游显式身份与限字段读取正式依赖 1/1，手动无身份/错误系统身份拒绝、归档跳过、重复触发与双线程扫描唯一请求；八模块 clean verify 发现 493、跳过 141、执行 352，退出 0。Workflow 两步真实 Flowable 实例通知定点 1/1：错误办理人及重放拒绝、明确收件人、双线程竞争唯一完成/结果请求；八模块 clean verify 发现 494、跳过 142、执行 352，退出 0。CHECK-CORE-034 维持 partially_executed。B02 保持 in_progress，未满足 done_when。"
+      "progress_summary": "2026-10-16 首轮收口将 BC-BASE-001/002/003、CHECK-CORE-020/022 置为 passed，八模块真实依赖分段 clean verify 317/317 与静态门禁通过。2026-10-18 补 CHECK-CORE-019 的独立 Root error_code：Framework 11/11、合成 PostgreSQL Root 19/19。授权关系和凭据按真实时间自然到期的单进程正式 HTTP：人数 2→1、旧 Access 失权或 401、最后 Root 停用 409，Root 整组 10/10；两个独立应用 JVM 自然失效整组 6/6。单实例唯一 Root 隔离 Redis 停启整组 2/2；随后两个独立应用共同隔离 Redis 停启验证两端 503、数据库状态/人数保持、分别恢复后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409，双进程整组 7/7。八模块单元与静态 clean verify 复跑退出 0，发现 480 项、跳过真实依赖等 135 项、执行 345 项。此前真实依赖混跑因 Core 合成简化 schema 与 Launch 正式 Flyway schema 冲突退出 1，按分段证据记录。单端 TCP 转发器隔离一端连接又验证失联端上下文/登录/停用 503、直连端原 Session 200 与 Root 下限 409、恢复后原 Session 两端继续可用，定点 1/1；八模块单元与静态 clean verify 最终退出 0。OA 通讯录和 Workflow 流程定义的两个双 JVM 正式读取入口随 Root 角色/凭据自然失效分别 200→403/401，仍有效 Root 保持 200，双进程整组 8/8、八模块门禁复跑退出 0。2026-10-18 CHECK-CORE-023 补 MOCK 日志脱敏、正式 HTTP 渠道不可用拒绝/Redis 清理及入队到 Delivery 单次投递，单元 2/2、真实依赖 1/1、八模块门禁 347/347 执行通过；该检查置 passed。仍未完成：CHECK-CORE-019 OA/Workflow 数据范围、写入与后台间接入口；CHECK-CORE-032 部门重组与受众业务；CHECK-CORE-034 Workflow 流程实例、双实例 Quartz 与受控发送跨实例消费及角色变更竞争；以及旧格式会话、非原子故障窗口、B08 浏览器与其他影响范围。本轮通知 Quartz 和服务监控系统身份两类真实依赖整组 4/4，八模块最终 clean verify 发现 486、跳过 139、执行 347；CHECK-CORE-034 受控发送正式 HTTP 1/1，匿名/错误令牌/受众变化拒绝、同步并发 Apply 唯一请求及重放通过；本轮八模块 clean verify 发现 487、跳过 140、执行 347。CHECK-CORE-034 受控发送 Service 直接授权单测 5/5、正式角色到期定点 1/1；八模块 clean verify 发现 492、跳过 140、执行 352，门禁退出 0。OA 合同 Quartz 上游显式身份与限字段读取正式依赖 1/1，手动无身份/错误系统身份拒绝、归档跳过、重复触发与双线程扫描唯一请求；八模块 clean verify 发现 493、跳过 141、执行 352，退出 0。Workflow 两步真实 Flowable 实例通知定点 1/1：错误办理人及重放拒绝、明确收件人、双线程竞争唯一完成/结果请求；八模块 clean verify 发现 494、跳过 142、执行 352，退出 0。Workflow 首个待办按明确办理人使用显式系统身份写入，重复业务键拒绝且通知保持一条；真实依赖定点 9/9，八模块门禁发现 502、跳过 144、执行 358，退出 0。首待办通知渠道不可用时启动回滚且通知计数不变，恢复后同业务键成功，定点 1/1。无可解析活跃办理人时流程启动且不新增通知，真实依赖定点 1/1；无办理人任务同样启动且不新增通知，定点 1/1。两个独立应用 JVM 同业务键仅一实例及首待办，定点 1/1。CHECK-CORE-034 维持 partially_executed。B02 保持 in_progress，未满足 done_when。"
       },
       {
         "id": "B03",
@@ -1326,25 +1329,28 @@
       "role": "B02 分页请求边界或专项测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "f8da2a36be15f81e2c22e5424e854a493eca3f0bac9b4c211f876d3bb955cbbd",
+      "content_sha256": "b493bb345a19228a7d31da7cd60b0721dc9ef08cc97c30241e2be3811ad7cee6",
       "reviewed_rules": [
         "04 §5 接口/排序输入安全",
         "04 §12 验证与证据"
       ],
       "issue_ids": [
-        "DIAG-BASE-002"
+        "DIAG-BASE-002",
+        "DIAG-CORE-034"
       ],
       "evidence_ids": [
         "EV-B02-SORT-20261008",
-        "EV-B02-SORT-GATES-20261008"
+        "EV-B02-SORT-GATES-20261008",
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019"
       ],
-      "review_summary": "2026-10-08 阅读并验证本文件的分页排序输入、映射、失败或证据边界。",
+      "review_summary": "保留 Workflow 固定分页排序的 null/空集合边界；Task Service 增加主体绑定后测试使用合成当前用户继续核对既有分页路径。",
       "review_limits": [
         "限定分页排序；不证明完整门禁/B02其他问题或全周期验收。"
       ],
       "review_kind": "pagination_source_or_evidence_review",
       "impact_ids": [
-        "IMP-BASE-005"
+        "IMP-BASE-005",
+        "IMP-CORE-007"
       ]
     },
     {
@@ -1604,7 +1610,7 @@
       "role": "B02 CHECK-CORE-034 Workflow 流程实例通知身份验证证据",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b59044e7d513177072db7f837951435055854c3ca343432d87425e965ee7226d",
+      "content_sha256": "817c579300bb50ece6256acabc35339d7703dc122aab7e98c623fc6bd5f1a326",
       "reviewed_rules": ["04 §7 后台身份与数据范围", "04 §9 状态竞争", "04 §13 真实依赖与门禁", "05 集中治理验收"],
       "issue_ids": ["DIAG-CORE-034"],
       "evidence_ids": ["EV-B02-CORE034-WORKFLOW-INSTANCE-20261019"],
@@ -1614,16 +1620,72 @@
       "impact_ids": ["IMP-CORE-007"]
     },
     {
+      "path": "docs/开发指南/工程治理/2026-10-19-B02Workflow任务Service授权边界验证.md",
+      "role": "B02 CHECK-CORE-034 Workflow 任务 Service 身份与活授权验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "1a74e5c1ce4b115eafdeb5c9ec296ed10fb5c941c27866cd6a72401cb776fc65",
+      "reviewed_rules": ["04 §7 应用 Service 最终授权", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019"],
+      "review_summary": "记录 Workflow 任务 Service 的当前主体绑定、实时写权限、拒绝与角色自然到期以及完整门禁边界。",
+      "review_limits": ["单应用 JVM；HTTP 权限矩阵、OA 回调和双实例同时撤权竞争未验收。"],
+      "review_kind": "documented_workflow_task_service_authorization_evidence_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-20-B02Workflow任务HTTP授权验证.md",
+      "role": "B02 CHECK-CORE-034 Workflow 任务正式 HTTP 授权验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "b4858fac4e981f52f8f2a1746838ffbcdd4f09e5e9e0601b2d4303f54379caad",
+      "reviewed_rules": ["04 §7 应用 Service 最终授权", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020"],
+      "review_summary": "正式 HTTP 验证本人任务读取、四写入口匿名与角色自然到期拒绝，以及完成、驳回、转办、委派成功后的真实 Flowable 状态。",
+      "review_limits": ["单应用 JVM；双 JVM 与同时撤权竞争未验收。"],
+      "review_kind": "documented_workflow_task_http_authorization_evidence_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-20-B02Workflow首个待办通知验证.md",
+      "role": "B02 CHECK-CORE-034 Workflow 首个待办通知验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "ae62651fb9504156103e9fe6da4458f581521bee3b0fc0b9422ebc2403565c38",
+      "reviewed_rules": ["04 §7 后台显式身份与事务", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-FIRST-TODO-20261020"],
+      "review_summary": "记录流程启动首个待办、明确收件人、重复业务键拒绝及后续任务通知的真实依赖验证和限制。",
+      "review_limits": ["单应用 JVM；通知命令故障回滚、OA 回调和双实例同业务键竞争未验收。"],
+      "review_kind": "documented_workflow_initial_todo_evidence_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/TaskServiceAuthorizationTest.java",
+      "role": "B02 Workflow 任务 Service 身份和授权边界单测",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "8be1962395200edd6f68c07abae8283860255207147f00d87f5b1b093b4bd155",
+      "reviewed_rules": ["04 §7 应用 Service 最终授权", "04 §13 测试与证据"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019"],
+      "review_summary": "六项单测覆盖无身份、冒用、缺权限、快照未知或故障、本人查询和授权转办，拒绝发生在 Flowable 副作用前。",
+      "review_limits": ["Mockito 隔离；真实数据库角色到期由同组 Flowable 全应用测试覆盖。"],
+      "review_kind": "workflow_task_service_authorization_unit_test_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
       "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/WorkflowInstanceNotificationFullAppTest.java",
       "role": "B02 Workflow 实际 Flowable 流程实例通知与竞争测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "29a468151120c2a797cb6189cbd9507cad18a79a7a4683c242380c0c8bcf457a",
+      "content_sha256": "ddca004848674d43b72593bfddfedcebcd7b63ef0a7b3805b4dd162c0f287276",
       "reviewed_rules": ["04 §7 后台显式身份", "04 §9 状态竞争", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-CORE-034"],
-      "evidence_ids": ["EV-B02-CORE034-WORKFLOW-INSTANCE-20261019"],
-      "review_summary": "随机两步 BPMN、随机合成用户及实际 Flowable/通知持久化，检查错误办理人、重放、双线程竞争与收件人。",
-      "review_limits": ["Service 直接调用、单应用 JVM；未覆盖 HTTP 活授权与 OA 回调。"],
+      "evidence_ids": ["EV-B02-CORE034-WORKFLOW-INSTANCE-20261019", "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019", "EV-B02-CORE034-FIRST-TODO-20261020"],
+      "review_summary": "随机两步 BPMN、随机合成用户及实际 Flowable/通知持久化，检查首待办、重复启动、后续结果/待办、重放和双线程竞争；临时关闭通知渠道时启动回滚、无实例或通知残留，恢复后同业务键重试成功；无办理人或无法解析活跃办理人时不写通知且流程仍启动；两个独立 JVM 同业务键竞争仅一实例与一条首待办。",
+      "review_limits": ["Service 直接调用、双 JVM 位于同一主机；未覆盖 HTTP 活授权、跨主机竞争与 OA 回调。"],
       "review_kind": "isolated_real_dependency_workflow_instance_test_review",
       "impact_ids": ["IMP-CORE-007"]
     },
@@ -1862,19 +1924,23 @@
         "04 §12 验证与证据"
       ],
       "issue_ids": [
-        "DIAG-BASE-002"
+        "DIAG-BASE-002",
+        "DIAG-CORE-034"
       ],
       "evidence_ids": [
         "EV-B02-SORT-20261008",
-        "EV-B02-SORT-GATES-20261008"
+        "EV-B02-SORT-GATES-20261008",
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
+        "EV-B02-CORE034-FIRST-TODO-20261020"
       ],
-      "review_summary": "2026-10-08 阅读并验证本文件的分页排序输入、映射、失败或证据边界。",
+      "review_summary": "固定排序非法字段在访问 Service 协作者前拒绝；Workflow Service 新增身份校验后保持此输入边界，定点 54/54 复跑通过。",
       "review_limits": [
         "限定分页排序；不证明完整门禁/B02其他问题或全周期验收。"
       ],
       "review_kind": "pagination_source_or_evidence_review",
       "impact_ids": [
-        "IMP-BASE-005"
+        "IMP-BASE-005",
+        "IMP-CORE-007"
       ]
     },
     {
@@ -4437,7 +4503,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "5d82a3f4e38b2663fd315e4ccb20e915533590d4a94d12c8a53315b744abcba0",
+      "content_sha256": "9cb5bd3b7895d74b5a2c7f9774886f91e8fad5a7f773e67ebaadc362f4095283",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4449,11 +4515,14 @@
         "EV-INVENTORY-20261003",
         "EV-ROOT-DOC-20261004",
         "EV-B02-CORE019-OA-WORKFLOW-20261018",
-        "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019"
+        "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019",
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
+        "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
+        "EV-B02-CORE034-FIRST-TODO-20261020"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "# 工作流；保留流程定义列表双 JVM Root 授权/凭据自然失效边界，补充两步真实 Flowable 实例的通知收件人、错误办理人、重放与双线程竞争证据及限制。",
+      "review_summary": "# 工作流；保留流程定义列表双 JVM Root 边界，补充真实 Flowable 实例通知和任务 Service 的当前主体绑定、实时写权限、拒绝与竞争证据及限制。",
       "review_limits": [
         "文档结构检查与关键声明复核，不证明每项业务描述、历史报告或其中命令已经通过；实际源码和行为分别登记。"
       ],
@@ -5189,7 +5258,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b4492097dc1fa2dca1dc89915ccc27f32bded44a23e828c00f1a08a0ea1adc76",
+      "content_sha256": "4cf7c9efbc848b5e86ea2a0139c65fadc6ee8db1cae8237f384104391cb0d0e8",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5373,7 +5442,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "c3ab68f18702e556d21150e66ab61e3f8941cdec8e4cf0357a4c425622b0870a",
+      "content_sha256": "b9fb0e77c1018cf727fd60fc5736a97ded290740bf1b6a0fc66614db53c7cf38",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -12444,16 +12513,16 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "9e343bf7386f2531cf685202b40166d5b39f66ab481928e509a1eecf4e0d8fec",
+      "content_sha256": "fa2eebad24c94207260a74b1e47f31f5fbbe23fde7b4ae96b5947fc94a05842f",
       "reviewed_rules": ["04§7", "04§8", "04§13"],
-      "issue_ids": [],
-      "evidence_ids": ["EV-B03-WF-AUDIT-20261016"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B03-WF-AUDIT-20261016", "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020"],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "真实 Workflow 任务完成请求（不存在任务）失败后，sys_audit_event 的 JSONB/原因/失败原因不含 password/token 明文。",
-      "review_limits": ["失败路径；成功任务完成需要已部署流程与任务夹具。"],
+      "review_summary": "保留失败任务审计脱敏测试；正式 HTTP 登录、任务读取、四写入口匿名与角色到期拒绝，以及完成、驳回、转办和委派各成功路径与 Flowable 状态已验证。",
+      "review_limits": ["单 JVM；同时撤权与动作竞争以及双实例竞争未运行。"],
       "review_kind": "test_fixture_review",
-      "impact_ids": ["IMP-BASE-001"]
+      "impact_ids": ["IMP-BASE-001", "IMP-CORE-007"]
     },
     {
       "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/service/UploadVerificationWorkerOwnershipTest.java",
@@ -45331,9 +45400,9 @@
         "EV-INVENTORY-20261003"
       ],
       "scope_reason": null,
-      "impact_state": "shared_references_scanned",
+      "impact_state": "public_boundary_reviewed",
       "impact_content_sha256": "c10d4fc4ca32f4a3251a278545674c37b62a5ce7c91bb12710e67d8ba0fd7661",
-      "impact_review_kind": "shared_reference_scan_only",
+      "impact_review_kind": "shared_boundary_source_review",
       "shared_dependency_refs": [
         "com.devops00.spectra.common.exception.DataNotExistException",
         "com.devops00.spectra.common.exception.DataSaveException",
@@ -45348,7 +45417,7 @@
         "Transactional",
         "SecurityContext"
       ],
-      "impact_review_summary": "当前完整文本提取公共导入和风险候选；结合公共能力影响图登记潜在间接一致性边界。 2026-10-08 增量复核分页排序公共调用：白名单转换或固定排序拒绝已迁移并验证。",
+      "impact_review_summary": "分页排序既有复核保留；OA 申请详情传当前用户名给 canAccessProcess，Task Service 不匹配身份返回 false，保持申请人、部门和流程参与者的原有分支。",
       "impact_review_limits": [
         "完整读取供导入/公共符号及风险候选机械核对；未独立审查暂缓业务语义，不以未命中证明无间接影响。关键调用结合CodeGraph及人工职责审查另记。",
         "独立业务语义与复杂度治理暂缓；机械未命中不表示无间接影响。"
@@ -45361,11 +45430,13 @@
         "IMP-CORE-001",
         "IMP-CORE-003",
         "IMP-CORE-004",
-        "IMP-CORE-005"
+        "IMP-CORE-005",
+        "IMP-CORE-007"
       ],
       "impact_link_kind": "shared_or_potential_transitive_boundary",
       "impact_evidence_ids": [
         "EV-DEFERRED-20261004",
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
         "EV-B02-SORT-20261008",
         "EV-B02-SORT-GATES-20261008"
       ],
@@ -53789,9 +53860,9 @@
         "EV-INVENTORY-20261003"
       ],
       "scope_reason": null,
-      "impact_state": "shared_references_scanned",
+      "impact_state": "public_boundary_reviewed",
       "impact_content_sha256": "674fdcdac97dfe1a15de4e2727b00a7609d02e957fca21c62dea28b331551836",
-      "impact_review_kind": "shared_reference_scan_only",
+      "impact_review_kind": "shared_boundary_source_review",
       "shared_dependency_refs": [
         "com.devops00.spectra.common.audit.Audit",
         "com.devops00.spectra.common.notification.NotificationCounter",
@@ -53804,7 +53875,7 @@
         "LocalDate",
         "SecurityContext"
       ],
-      "impact_review_summary": "当前完整文本提取公共导入和风险候选；结合公共能力影响图登记潜在间接一致性边界。",
+      "impact_review_summary": "OA 工作台使用当前用户名查询本人待办计数；Task Service 主体绑定后保持本人统计和 oa:workbench:read 的既有入口权限，未改接口。",
       "impact_review_limits": [
         "完整读取供导入/公共符号及风险候选机械核对；未独立审查暂缓业务语义，不以未命中证明无间接影响。关键调用结合CodeGraph及人工职责审查另记。",
         "独立业务语义与复杂度治理暂缓；机械未命中不表示无间接影响。"
@@ -53817,11 +53888,13 @@
         "IMP-CORE-001",
         "IMP-CORE-003",
         "IMP-CORE-004",
-        "IMP-CORE-005"
+        "IMP-CORE-005",
+        "IMP-CORE-007"
       ],
       "impact_link_kind": "shared_or_potential_transitive_boundary",
       "impact_evidence_ids": [
-        "EV-DEFERRED-20261004"
+        "EV-DEFERRED-20261004",
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019"
       ]
     },
     {
@@ -55279,16 +55352,16 @@
         "EV-INVENTORY-20261003"
       ],
       "scope_reason": null,
-      "impact_state": "shared_references_scanned",
+      "impact_state": "public_boundary_reviewed",
       "impact_content_sha256": "06f321438fcf6306ad07fc8a931f539aece3baa5c56f6370f80bcacb18a244bd",
-      "impact_review_kind": "shared_reference_scan_only",
+      "impact_review_kind": "shared_boundary_source_review",
       "shared_dependency_refs": [
         "com.devops00.spectra.framework.persistence.pagination.PageFrom"
       ],
       "behavior_candidates": [
         "version"
       ],
-      "impact_review_summary": "当前完整文本提取公共导入和风险候选；结合公共能力影响图登记潜在间接一致性边界。",
+      "impact_review_summary": "Workflow 公共任务端口未改签名；Controller、OA 工作台与 OA 申请详情均传入当前用户名，Service 现在独立校验该参数与认证主体及写操作实时权限，Web 1.0.0 请求不变。",
       "impact_review_limits": [
         "完整读取供导入/公共符号及风险候选机械核对；未独立审查暂缓业务语义，不以未命中证明无间接影响。关键调用结合CodeGraph及人工职责审查另记。",
         "独立业务语义与复杂度治理暂缓；机械未命中不表示无间接影响。"
@@ -55301,11 +55374,13 @@
         "IMP-CORE-001",
         "IMP-CORE-003",
         "IMP-CORE-004",
-        "IMP-CORE-005"
+        "IMP-CORE-005",
+        "IMP-CORE-007"
       ],
       "impact_link_kind": "shared_or_potential_transitive_boundary",
       "impact_evidence_ids": [
-        "EV-DEFERRED-20261004"
+        "EV-DEFERRED-20261004",
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019"
       ]
     },
     {
@@ -55482,9 +55557,9 @@
         "EV-INVENTORY-20261003"
       ],
       "scope_reason": null,
-      "impact_state": "shared_references_scanned",
+      "impact_state": "public_boundary_reviewed",
       "impact_content_sha256": "48f69b0396c6678277911c0e2470903c391ade8d3dbc9f91f68ad067df0ea6e2",
-      "impact_review_kind": "shared_reference_scan_only",
+      "impact_review_kind": "shared_boundary_source_review",
       "shared_dependency_refs": [
         "com.devops00.spectra.common.audit.Audit",
         "com.devops00.spectra.common.port.security.SecurityContextAccessor",
@@ -55494,7 +55569,7 @@
         "version",
         "SecurityContext"
       ],
-      "impact_review_summary": "当前完整文本提取公共导入和风险候选；结合公共能力影响图登记潜在间接一致性边界。",
+      "impact_review_summary": "Workflow HTTP 任务入口按既有 1.0.0 路径传递当前用户名；Service 现独立校验主体与实时写权限，Web 请求与 Controller 签名不变。",
       "impact_review_limits": [
         "完整读取供导入/公共符号及风险候选机械核对；未独立审查暂缓业务语义，不以未命中证明无间接影响。关键调用结合CodeGraph及人工职责审查另记。",
         "独立业务语义与复杂度治理暂缓；机械未命中不表示无间接影响。"
@@ -55507,11 +55582,13 @@
         "IMP-CORE-001",
         "IMP-CORE-003",
         "IMP-CORE-004",
-        "IMP-CORE-005"
+        "IMP-CORE-005",
+        "IMP-CORE-007"
       ],
       "impact_link_kind": "shared_or_potential_transitive_boundary",
       "impact_evidence_ids": [
-        "EV-DEFERRED-20261004"
+        "EV-DEFERRED-20261004",
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019"
       ]
     },
     {
@@ -56180,10 +56257,10 @@
       "evidence_ids": [
         "EV-INVENTORY-20261003"
       ],
-      "scope_reason": null,
-      "impact_state": "shared_references_scanned",
-      "impact_content_sha256": "f860d5c155a236001fd10423d6b6333445a8305c20921a358f8644c226d51aa7",
-      "impact_review_kind": "shared_reference_scan_only",
+      "scope_reason": "Workflow 独立业务暂缓；B02 公共流程启动业务键并发边界局部复核",
+      "impact_state": "public_boundary_reviewed",
+      "impact_content_sha256": "137c72defbf86fd8125a98f72b528564c4caa2fa2046f3e266fd72c44a499a49",
+      "impact_review_kind": "shared_boundary_source_review",
       "shared_dependency_refs": [
         "com.devops00.spectra.common.exception.DataException",
         "com.devops00.spectra.common.exception.DataNotExistException",
@@ -56192,7 +56269,7 @@
       "behavior_candidates": [
         "version"
       ],
-      "impact_review_summary": "当前完整文本提取公共导入和风险候选；结合公共能力影响图登记潜在间接一致性边界。",
+      "impact_review_summary": "流程启动在同一事务中按业务键取得 PostgreSQL advisory lock、查重、创建实例并触发首个明确办理人的待办通知；目录或通知失败向上拒绝。OA 申请、请假、采购、报销公共调用方签名不变，真实两步流程首待办、故障回滚及两个独立 JVM 同业务键竞争已验证；OA 回调仍待验证。",
       "impact_review_limits": [
         "完整读取供导入/公共符号及风险候选机械核对；未独立审查暂缓业务语义，不以未命中证明无间接影响。关键调用结合CodeGraph及人工职责审查另记。",
         "独立业务语义与复杂度治理暂缓；机械未命中不表示无间接影响。"
@@ -56205,12 +56282,39 @@
         "IMP-CORE-001",
         "IMP-CORE-003",
         "IMP-CORE-004",
-        "IMP-CORE-005"
+        "IMP-CORE-005",
+        "IMP-CORE-007"
       ],
       "impact_link_kind": "shared_or_potential_transitive_boundary",
       "impact_evidence_ids": [
-        "EV-DEFERRED-20261004"
+        "EV-DEFERRED-20261004",
+        "EV-B02-CORE034-FIRST-TODO-20261020"
       ]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-workflow/src/main/java/com/devops00/spectra/workflow/service/impl/WorkflowTaskTodoNotifier.java",
+      "role": "B02 Workflow 流程启动和任务推进共用待办通知组件",
+      "scope": "deferred_business",
+      "state": "enumerated",
+      "content_sha256": null,
+      "reviewed_rules": [],
+      "issue_ids": [],
+      "evidence_ids": ["EV-INVENTORY-20261003"],
+      "scope_reason": "Workflow 独立业务暂缓；B02 公共通知边界局部复核",
+      "impact_state": "public_boundary_reviewed",
+      "impact_content_sha256": "e93fea1977341ea5d001f44bcc6fb2f40bb8a5ecd76a9906b5773dbf60358177",
+      "impact_review_kind": "shared_boundary_source_review",
+      "shared_dependency_refs": [
+        "com.devops00.spectra.common.notification.NotificationRecipientDirectory",
+        "com.devops00.spectra.common.notification.NotificationService",
+        "com.devops00.spectra.common.notification.NotificationSystemActor"
+      ],
+      "behavior_candidates": [],
+      "impact_review_summary": "流程启动与后续任务共用明确办理人、系统身份和幂等键的站内待办写入；目录或通知命令异常不吞掉。真实两步流程首待办和后续待办已核对。",
+      "impact_review_limits": ["完整 Workflow 业务语义暂缓；故障回滚和双实例竞争未定点验证。"],
+      "impact_ids": ["IMP-CORE-007"],
+      "impact_link_kind": "shared_or_potential_transitive_boundary",
+      "impact_evidence_ids": ["EV-B02-CORE034-FIRST-TODO-20261020"]
     },
     {
       "path": "spectra-admin/spectra-modules/spectra-workflow/src/main/java/com/devops00/spectra/workflow/service/impl/TaskServiceImpl.java",
@@ -56225,7 +56329,7 @@
       ],
       "scope_reason": null,
       "impact_state": "public_boundary_reviewed",
-      "impact_content_sha256": "79835f95be999e333fdd1133ebc1d7a162e45e74b6eb448c76e9204d9b59f0df",
+      "impact_content_sha256": "c49970af8f29f297ec8ef9ff90352f0f7f1f8e74ef420ed3a1e603e43a2c5e37",
       "impact_review_kind": "shared_boundary_source_review",
       "shared_dependency_refs": [
         "com.devops00.spectra.common.exception.DataNotExistException",
@@ -56235,13 +56339,15 @@
         "com.devops00.spectra.common.notification.NotificationService",
         "com.devops00.spectra.common.notification.NotificationSystemActor",
         "com.devops00.spectra.common.notification.NotificationTemplateCode",
+        "com.devops00.spectra.common.port.security.SecurityContextAccessor",
+        "com.devops00.spectra.common.security.authorization.AuthorizationSnapshotProvider",
         "com.devops00.spectra.framework.persistence.pagination.PageFrom"
       ],
       "behavior_candidates": [
         "version",
         "Transactional"
       ],
-      "impact_review_summary": "分页排序既有核对保留；CORE-034 任务结果及待办从明确 operator/assignee 登录名解析，使用 WORKFLOW_TASK 身份按固定用途/模板入队。实际两步 Flowable 流程和通知事务、错误办理人、重放及单 JVM 双线程竞争已验证；HTTP 活授权、OA 回调和双实例仍未验收，独立 Workflow 业务暂缓。",
+      "impact_review_summary": "分页排序、任务当前主体及实时写权限边界保留；后续待办改由 WorkflowTaskTodoNotifier 与流程启动共用相同通知语义。真实两步 Flowable 核对首待办、结果、下一待办、重复业务键和竞争；故障回滚、OA 回调及双实例仍待验收，独立 Workflow 业务暂缓。",
       "impact_review_limits": [
         "完整读取供导入/公共符号及风险候选机械核对；未独立审查暂缓业务语义，不以未命中证明无间接影响。关键调用结合CodeGraph及人工职责审查另记。",
         "独立业务语义与复杂度治理暂缓；机械未命中不表示无间接影响。"
@@ -56264,7 +56370,9 @@
         "EV-B02-SORT-GATES-20261008",
         "EV-B02-CORE034-20261009",
         "EV-B02-CORE034-GATES-20261009",
-        "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019"
+        "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019",
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
+        "EV-B02-CORE034-FIRST-TODO-20261020"
       ],
       "remediation_reviews": [
         {
@@ -56286,6 +56394,20 @@
             "EV-B02-CORE034-20261009",
             "EV-B02-CORE034-GATES-20261009"
           ]
+        },
+        {
+          "checked_at": "2026-10-19",
+          "issue_id": "DIAG-CORE-034",
+          "content_sha256": "3f33bc11aa0e12fede4450189d756057940d7e95519a2ce8ed20a6c7f6f97a5e",
+          "scope": "仅 Workflow 任务公共 Service 的当前主体绑定、写操作实时授权和 OA 间接调用一致性；独立流程业务语义仍暂缓。",
+          "evidence_ids": ["EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019"]
+        },
+        {
+          "checked_at": "2026-10-20",
+          "issue_id": "DIAG-CORE-034",
+          "content_sha256": "c49970af8f29f297ec8ef9ff90352f0f7f1f8e74ef420ed3a1e603e43a2c5e37",
+          "scope": "仅后续待办与流程首待办共用通知组件及 OA/Workflow 公共边界；独立业务语义仍暂缓。",
+          "evidence_ids": ["EV-B02-CORE034-FIRST-TODO-20261020"]
         }
       ]
     },
@@ -68089,7 +68211,10 @@
     "EV-B02-CORE034-CONTROLLED-HTTP-20261018",
     "EV-B02-CORE034-SERVICE-AUTH-20261018",
     "EV-B02-CORE034-OA-QUARTZ-20261018",
-    "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019"
+    "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019",
+    "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
+    "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
+    "EV-B02-CORE034-FIRST-TODO-20261020"
       ],
       "impact_ids": [
         "IMP-CORE-007"
@@ -69851,7 +69976,7 @@
       "required_changes": [
         "Launch+Framework+所有业务端口/任务+Web反馈；保留暂缓域独立重构边界"
       ],
-      "deferred_boundary": "CORE-034 通知目录的匿名放行已消除，Workflow、OA 流程/合同及监控通知调用方已迁移显式运行身份，定点单测和编译通过；通知 Quartz/正式数据库投递和受控发送 HTTP/Service 权限已有单应用验证；OA 合同 Quartz 单实例提醒入队及双线程唯一领取已验证；Workflow 两步真实 Flowable 实例的结果/待办通知、错误办理人、重放和单 JVM 双线程竞争已验证；HTTP 活授权、OA 回调、双应用 Job 竞争和故障恢复仍未验收。CORE-032 缩权清理、唯一键恢复和并发角色行锁已接入公共授权写入，正式单进程 HTTP 登录/角色事务/重登录专项通过；2026-10-16 又补两个独立应用 JVM 的角色缩权跨进程撤销与重登录快照；OA/Workflow 无直接角色变更调用，仍通过公共安全上下文间接受影响，业务入口仍未运行。OA 合同 Quartz 上游改为显式运行身份与限字段系统读取，单实例正式 Job 已验证；基础设施恢复和后台任务整体仍待治理。",
+      "deferred_boundary": "CORE-034 通知目录的匿名放行已消除，Workflow、OA 流程/合同及监控通知调用方已迁移显式运行身份；通知 Quartz/正式数据库投递和受控发送 HTTP/Service 权限已有单应用验证；OA 合同 Quartz 单实例提醒入队及双线程唯一领取已验证；Workflow 真实两步实例的首待办、结果与下一待办按明确收件人写入，重复业务键拒绝且首待办只有一条，错误办理人、重放和单 JVM 双线程竞争已验证；任务 Service 当前主体与实时写权限、正式 HTTP 四写动作匿名/到期拒绝及四动作成功状态已验证。首待办渠道不可用时启动回滚及恢复后同业务键重试、无办理人或无法解析活跃办理人时跳过通知并继续启动、同主机双 JVM 同业务键仅一流程和首待办已验证；入队中途数据库故障、OA 回调、跨主机同业务键与双应用 Job 竞争和故障恢复仍未验收。CORE-032 缩权清理、唯一键恢复和并发角色行锁已接入公共授权写入，正式单进程 HTTP 登录/角色事务/重登录专项通过；2026-10-16 又补两个独立应用 JVM 的角色缩权跨进程撤销与重登录快照；OA/Workflow 无直接角色变更调用，仍通过公共安全上下文间接受影响，业务入口仍未运行。OA 合同 Quartz 上游改为显式运行身份与限字段系统读取，单实例正式 Job 已验证；基础设施恢复和后台任务整体仍待治理。",
       "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
@@ -69866,7 +69991,10 @@
     "EV-B02-CORE034-CONTROLLED-HTTP-20261018",
     "EV-B02-CORE034-SERVICE-AUTH-20261018",
     "EV-B02-CORE034-OA-QUARTZ-20261018",
-    "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019"
+    "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019",
+    "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
+    "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
+    "EV-B02-CORE034-FIRST-TODO-20261020"
       ],
       "verification": [
         "DB/Redis启动故障矩阵，保留Flyway既有失败保护",
@@ -73417,6 +73545,136 @@
       "limits": "单应用 JVM 内 Service 直接调用和合成认证上下文；未验证 HTTP 活授权、直接 Service 身份与 operator 一致性、流程首个待办、OA 回调、双应用竞争、故障恢复或外部供应商。CHECK-CORE-034 和 B02 保持进行中。"
     },
     {
+      "id": "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
+      "scope": "DIAG-CORE-034 / IMP-CORE-007 / CHECK-CORE-034 Workflow 任务 Service 当前主体与实时写权限",
+      "command_or_scenario": [
+        "CodeGraph 在 spectra-admin 核对 TaskServiceImpl、TaskController、OA 工作台与申请详情调用；在 spectra-ui 核对 Workflow 任务 API 与 OA 审批中心调用",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=TaskServiceAuthorizationTest,WorkflowInstanceNotificationFullAppTest,PaginationCallerBoundaryTest,FixedPaginationCallerTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' clean test -> exit 0, 63/63",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-workflow,spectra-launch '-Dspotless.ratchetFrom=origin/master' spotless:check -> exit 0 after formatting correction",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> exit 0, eight modules, 500 found, 142 skipped, 358 executed",
+        "pwsh -NoProfile -File scripts/check-governance-exceptions.ps1 -RootPath . -LedgerPath docs/开发指南/工程治理/ledger.json -SourceRoot spectra-admin -SuppressionFile spectra-admin/config/spotbugs/exclude.xml -> exit 0, 100 exceptions and 1744 files"
+      ],
+      "environment": "原生 Windows PowerShell 7.6；mise test / JDK 25 / 仓库 Maven Wrapper；专用 PostgreSQL devops00_spectra_db_test、Redis DB 5、正式 Flyway schema；单应用 JVM，随机合成用户、角色指派和 BPMN。",
+      "checked_at": "2026-10-19",
+      "result": "pass_with_declared_limits",
+      "exit_code": 0,
+      "summary": "任务 Service 在访问 Flowable 前绑定当前认证主体；四个写操作读取有效授权快照并要求 workflow:task:update。匿名、冒用、缺权限、空快照和读取故障均拒绝；真实流程验证角色自然到期后拒绝、通知与两线程唯一完成。既有分页排序边界保持 63/63，八模块 clean verify 通过。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-19-B02Workflow任务Service授权边界验证.md",
+        ".temp/b02/core034-workflow-auth-target.log",
+        ".temp/b02/core034-workflow-auth-target.exit",
+        ".temp/b02/core034-workflow-auth-spotless.log",
+        ".temp/b02/core034-workflow-auth-spotless.exit",
+        ".temp/b02/core034-workflow-auth-full-gate.log",
+        ".temp/b02/core034-workflow-auth-full-gate.exit",
+        ".temp/b02/core034-workflow-auth-governance.log",
+        ".temp/b02/core034-workflow-auth-governance.exit"
+      ],
+      "limits": "单应用 JVM 的 Service 直接调用；尚未运行 HTTP 任务动作权限矩阵、角色变化与动作同时竞争、OA 回调、双 JVM 竞争、故障恢复和外部通知供应商。CHECK-CORE-034 与 B02 保持进行中。"
+    },
+    {
+      "id": "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
+      "scope": "DIAG-CORE-034 / IMP-CORE-007 / CHECK-CORE-034 Workflow 任务正式 HTTP 活授权矩阵",
+      "command_or_scenario": [
+        "CodeGraph 在 spectra-admin 核对 TaskController 到 TaskService 以及 OA 工作台/详情间接调用；当前 Web API 保持 1.0.0",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowAuditRedactionHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' clean test -> exit 0, 2/2",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowAuditRedactionHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 401/403 拒绝、恢复后完成，以及驳回/转办/委派成功状态，exit 0, 3/3",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> exit 0, eight modules, 502 found, 144 skipped, 358 executed",
+        "pwsh -NoProfile -File scripts/check-governance-exceptions.ps1 -RootPath . -LedgerPath docs/开发指南/工程治理/ledger.json -SourceRoot spectra-admin -SuppressionFile spectra-admin/config/spotbugs/exclude.xml -> exit 0, 100 exceptions and 1744 files"
+      ],
+      "environment": "原生 Windows PowerShell 7.6；mise test / JDK 25 / Maven Wrapper；专用 PostgreSQL devops00_spectra_db_test、Redis DB 5 和随机合成用户及 Flowable 流程。",
+      "checked_at": "2026-10-20",
+      "result": "pass_with_declared_limits",
+      "exit_code": 0,
+      "summary": "正式 HTTP 登录后本人任务列表可读；四个写动作匿名及角色自然到期均以 401/403 拒绝且任务保持；恢复角色授权后完成成功，后续三个独立流程验证驳回、转办和委派成功及 Flowable 状态。八模块 clean verify 退出 0。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-20-B02Workflow任务HTTP授权验证.md",
+        ".temp/b02/core034-workflow-task-http-target.log",
+        ".temp/b02/core034-workflow-task-http-target.exit",
+        ".temp/b02/core034-workflow-task-http-spotless.log",
+        ".temp/b02/core034-workflow-task-http-spotless.exit",
+        ".temp/b02/core034-workflow-task-http-full-gate.log",
+        ".temp/b02/core034-workflow-task-http-full-gate.exit",
+        ".temp/b02/core034-workflow-task-http-governance.log",
+        ".temp/b02/core034-workflow-task-http-governance.exit",
+        ".temp/b02/core034-workflow-task-actions-target.log",
+        ".temp/b02/core034-workflow-task-actions-target.exit",
+        ".temp/b02/core034-workflow-task-actions-spotless.log",
+        ".temp/b02/core034-workflow-task-actions-spotless.exit",
+        ".temp/b02/core034-workflow-task-actions-full-gate.log",
+        ".temp/b02/core034-workflow-task-actions-full-gate.exit"
+      ],
+      "limits": "单应用 JVM；同时撤权竞争、两 JVM 竞争、OA 回调及故障恢复未验证。"
+    },
+    {
+      "id": "EV-B02-CORE034-FIRST-TODO-20261020",
+      "scope": "DIAG-CORE-034 / IMP-CORE-007 / CHECK-CORE-034 Workflow 流程启动首个待办通知",
+      "command_or_scenario": [
+        "CodeGraph 在 spectra-admin 核对 ProcessInstanceServiceImpl.start、TaskServiceImpl.notifyNextTasks、Workflow Controller 与 OA 申请/请假/采购/报销公共调用方",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowInstanceNotificationFullAppTest,TaskServiceAuthorizationTest,FixedPaginationCallerTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' clean test -> exit 0, 9/9",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-modules/spectra-workflow,spectra-launch '-Dspotless.ratchetFrom=origin/master' spotless:check -> exit 0",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowInstanceNotificationFullAppTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> notification channel unavailable rollback and same-business-key recovery, exit 0, 1/1",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowInstanceNotificationFullAppTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> missing recipient skips notification without stopping process start, exit 0, 1/1",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowInstanceNotificationFullAppTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' '-Dspotless.ratchetFrom=origin/master' test spotless:check -> unassigned first task skips notification without stopping process start, exit 0, 1/1; formatting passed",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowInstanceNotificationFullAppTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' '-Dspotless.ratchetFrom=origin/master' test spotless:check -> first two-JVM run: real dependency test exit 0, 1/1; Spotless exit 1 for test method line wrapping, fixed",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowInstanceNotificationFullAppTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' '-Dspotless.ratchetFrom=origin/master' test spotless:check -> retry exit 0, 1/1, two independent JVMs only one active instance and first todo",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> two-JVM business-key follow-up exit 0, eight modules, 502 found, 144 skipped, 358 executed",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> unassigned-task follow-up exit 0, eight modules, 502 found, 144 skipped, 358 executed",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> first missing-recipient gate exit 1, Launch Spotless test line-wrap only; fixed",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> retry exit 0, eight modules, 502 found, 144 skipped, 358 executed",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> exit 0, eight modules, 502 found, 144 skipped, 358 executed",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' '-DargLine=-Djava.io.tmpdir=D:\\Develop\\Workspace\\spectra-docs\\.temp\\b02\\junit-tmp' clean verify -> failure-recovery test follow-up, exit 0, eight modules, 502 found, 144 skipped, 358 executed",
+        "pwsh -NoProfile -File scripts/check-governance-exceptions.ps1 -RootPath . -LedgerPath docs/开发指南/工程治理/ledger.json -SourceRoot spectra-admin -SuppressionFile spectra-admin/config/spotbugs/exclude.xml -> exit 0, 100 exceptions and 1745 files"
+      ],
+      "environment": "原生 Windows PowerShell 7.6；mise test / JDK 25 / Maven Wrapper；专用 PostgreSQL devops00_spectra_db_test、Redis DB 5、正式 Flyway schema；单应用与两个独立应用 JVM，随机合成用户、两步 BPMN。",
+      "checked_at": "2026-10-20",
+      "result": "pass_with_declared_limits",
+      "exit_code": 0,
+      "summary": "启动后首待办按明确办理人产生一条通知；重复启动拒绝且通知保持一条。关闭通知渠道后启动失败，业务键下无实例、通知计数不变；恢复后同业务键启动成功并产生首待办。无办理人或无法解析活跃办理人时流程启动成功且通知计数不变。两个独立 JVM 同业务键竞争仅一实例、一任务和一条预期收件人的首待办。后续结果和下一待办、角色到期拒绝及双线程竞争继续通过。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-20-B02Workflow首个待办通知验证.md",
+        ".temp/b02/core034-first-todo-target.log",
+        ".temp/b02/core034-first-todo-target.exit",
+        ".temp/b02/core034-first-todo-spotless.log",
+        ".temp/b02/core034-first-todo-spotless.exit",
+        ".temp/b02/core034-first-todo-full-gate.log",
+        ".temp/b02/core034-first-todo-full-gate.exit",
+        ".temp/b02/core034-first-todo-governance.log",
+        ".temp/b02/core034-first-todo-governance.exit",
+        ".temp/b02/core034-first-todo-failure-target.log",
+        ".temp/b02/core034-first-todo-failure-target.exit",
+        ".temp/b02/core034-first-todo-failure-spotless.log",
+        ".temp/b02/core034-first-todo-failure-spotless.exit",
+        ".temp/b02/core034-first-todo-failure-full-gate.log",
+        ".temp/b02/core034-first-todo-failure-full-gate.exit",
+        ".temp/b02/core034-first-todo-failure-governance.log",
+        ".temp/b02/core034-first-todo-failure-governance.exit",
+        ".temp/b02/core034-missing-recipient-target.log",
+        ".temp/b02/core034-missing-recipient-target.exit",
+        ".temp/b02/core034-missing-recipient-full-gate.log",
+        ".temp/b02/core034-missing-recipient-full-gate.exit",
+        ".temp/b02/core034-missing-recipient-full-gate-retry.log",
+        ".temp/b02/core034-missing-recipient-full-gate-retry.exit",
+        ".temp/b02/core034-missing-recipient-governance.log",
+        ".temp/b02/core034-missing-recipient-governance.exit",
+        ".temp/b02/core034-unassigned-target.log",
+        ".temp/b02/core034-unassigned-target.exit",
+        ".temp/b02/core034-unassigned-full-gate.log",
+        ".temp/b02/core034-unassigned-full-gate.exit",
+        ".temp/b02/core034-unassigned-governance.log",
+        ".temp/b02/core034-unassigned-governance.exit",
+        ".temp/b02/core034-business-key-two-process-target.log",
+        ".temp/b02/core034-business-key-two-process-target.exit",
+        ".temp/b02/core034-business-key-two-process-target-retry.log",
+        ".temp/b02/core034-business-key-two-process-target-retry.exit",
+        ".temp/b02/core034-business-key-two-process-full-gate.log",
+        ".temp/b02/core034-business-key-two-process-full-gate.exit",
+        ".temp/b02/core034-business-key-two-process-governance.log",
+        ".temp/b02/core034-business-key-two-process-governance.exit"
+      ],
+      "limits": "本机两个独立应用 JVM 共享 PostgreSQL/Redis；通过通知渠道不可用验证前置命令失败和恢复，验证了无办理人及无可解析活跃收件人任务的跳过语义、同业务键竞争仅一实例与一首待办；未验证跨主机竞争、通知入队中途数据库命令失败、OA 回调、数据库或 Redis 故障恢复和外部供应商。"
+    },
+    {
       "id": "EV-B02-COMMON14-20261010",
       "scope": "DIAG-CORE-040 Common 通知请求 14 条 SpotBugs 容器暴露修复",
       "command_or_scenario": [
@@ -76282,14 +76540,14 @@
       }
     ],
     "scope_counts": {
-      "included": 1663,
+      "included": 1667,
       "shared_impact": 30,
-      "deferred_business": 438,
+      "deferred_business": 439,
       "excluded": 24
     },
     "pending_review_filter": "coverage where scope in [included, shared_impact] and state != reviewed",
     "pending_impact_filter": "coverage where scope == deferred_business and impact_state == pending_analysis",
-    "recent_bounded_refresh": "2026-10-19 CORE-034 Workflow 实例局部复核新增 Launch 真实 Flowable 测试与证据报告，更新 Workflow 公共通知调用边界、知识库及 B02/影响项/行为检查。专用 PostgreSQL/Redis 定点 1/1，八模块门禁结果见专项证据。未重新执行全工作区枚举。",
+    "recent_bounded_refresh": "2026-10-20 CORE-034 Workflow 首待办与同业务键竞争局部复核：流程启动按业务键取 PostgreSQL 事务锁，更新 Launch 双 JVM 真实依赖测试、专项证据、知识库及 B02/影响项/行为检查。专用 PostgreSQL/Redis 原定点 9/9、故障恢复 1/1、无法解析收件人 1/1、无办理人 1/1、双 JVM 竞争 1/1；八模块门禁见专项证据。未重新执行全工作区枚举。",
 "classification_limits": "2026-10-08 bounded refresh added 8 sorting files and recorded 38 current file digests. 2026-10-09 bounded BASE-003 refresh added the Redis test and evidence report. BASE-004 added the Lua store test and evidence report. BASE-007 registers the existing but previously omitted SecuritySessionStoreTest and adds its evidence report. BASE-018 registers the previously omitted SecurityRedisCounter and SecurityCounterRedisTest plus a new script-result test and evidence report. CORE-034 registers the previously omitted AuthenticationBoundaryTest, a system actor and focused test plus an evidence report; updates Common/Core knowledge and OA/Workflow public caller impact digests. 2026-10-10 test environment refresh enumerates the preexisting private .mise.test.toml and new local .miserc.local.toml without reading or hashing them. CORE-019 bounded refresh adds Common business conflict, Core Root conflict, Framework conflict test and the evidence report, then refreshes directly changed source/doc digests. Framework SpotBugs bounded refresh adds TokenDigestServiceTest and ResponseEncryptAdviceTest. BASE-006 bounded refresh adds SecuritySessionAdmissionStore and its evidence report, updating directly changed source, tests and knowledge digests. 2026-10-11 static gate refresh adds RequestSnapshotTest and the gate evidence report, updating directly changed source and knowledge digests. CORE-020 bounded refresh adds a real Redis test, cache-management unit test and evidence report, updating directly changed source and knowledge digests. CORE-032 bounded refresh adds the Boundary reconciler, synthetic PostgreSQL test and evidence report, updating changed source and knowledge digests. CORE-022 bounded refresh registers the existing age test, adds write-clock and 401 response tests plus evidence report, and updates changed source and knowledge digests. BASE-003 Core caller refresh adds its real Redis test and evidence report, updating the user-permissions knowledge digest. BASE-004 current refresh adds one evidence report, updates the Lua store, its failure-path test and affected knowledge digests, and records the current full gate. CORE-019 current refresh adds one repository unit test and one evidence report, updates initialization and repository source, PostgreSQL tests and knowledge digests, and records the current full gate. BC-BASE-008 scope refresh adds one isolated PostgreSQL test and one evidence report, updates Framework scope sources, tests and knowledge digests, and records the 311-test full gate. OA Mapper bounded refresh adds one Launch PostgreSQL test and one evidence report, updates affected knowledge digests, and records the final 313-test full gate. OA meeting page bounded refresh adds one Launch PostgreSQL MVC test and one evidence report, updates affected knowledge digests, and records the 315-test full gate. 2026-10-12 BASE-003 two-process refresh adds one Launch HTTP test and one evidence report, updates affected knowledge digests and records the current 315-test segmented full gate. CORE-032 HTTP refresh adds one Launch full-app HTTP test, updates role service and affected knowledge digests, and records a separate full-app Flyway test plus 315-test segmented full gate. 2026-10-14 CORE-019/022 凭据入口局部刷新新增一份证据文档、更新直接变动的后端源码与测试及知识库摘要，记录八模块 317 项分段门禁和正式 HTTP 8 项；UserServiceImpl 全文件旧职责审查仍为 stale，仅本次改密入口登记局部复核。Other stale included files and deferred independent business still require their own review; this is not a fresh whole-workspace enumeration.",
     "content_digest_policy": "Actual reviewed content SHA256; deferred impact-only input uses impact_content_sha256; private/excluded input never hashed. Ledger self digest: PowerShell 7.6 ConvertFrom-Json -DateKind String / ConvertTo-Json -Depth 100 -Compress with self content_sha256 null.",
     "phase1_baseline": {
@@ -77387,7 +77645,7 @@
         ],
         "state": "partially_executed",
         "scenario": "通知普通管理端口与后台运行端口边界混用；OA/Workflow后台受众及未来内部调用必须迁移显式运行身份，不能靠空上下文扩大权限。",
-        "validation": "普通目录查询无认证身份拒绝；显式系统身份限制登记的来源、用途、模板与明确用户 ID。Core 原定点 10/10；单应用真实 PostgreSQL/Redis/Flyway 下通知 Quartz 和服务监控系统身份整组 4/4：后台入队投递与重复触发不重复投递、渠道不可用 BLOCKED 和恢复后新任务成功。受控发送正式 HTTP 1/1：匿名、错误 token 与受众变化拒绝，并发消费只产生一个 Request/Task，重放返回同一结果。Service 直接授权单测 5/5、正式角色到期定点 1/1，缺身份、缺权限、快照异常及到期拒绝均在副作用前。OA 合同 Quartz 正式触发 1/1：后台限字段读取成功入队，错误身份和归档拒绝，重复触发与双线程扫描唯一请求。Workflow 两步真实 Flowable 流程 1/1：结果和下一待办按明确办理人入队，错误办理人及重放拒绝，双线程竞争只有一次完成及一个结果请求；八模块 clean verify 发现 494、跳过 142、执行 352 项。整项仍未通过。",
+        "validation": "普通目录查询无认证身份拒绝；显式系统身份限制登记的来源、用途、模板与明确用户 ID。Core 原定点 10/10；通知 Quartz 和服务监控系统身份整组 4/4，受控发送正式 HTTP 1/1、Service 授权单测 5/5 与角色到期 1/1，OA 合同 Quartz 正式触发 1/1。Workflow 两步真实 Flowable 流程核对明确收件人、错误办理人、重放和双线程唯一完成；任务 Service 当前主体与实时写权限定点 63/63。正式 HTTP 任务定点 3/3：四写动作匿名/到期 401/403 且无副作用，四写动作成功状态已验证。流程启动首待办新增定点整组 9/9：首待办一条且收件人为第一办理人，重复业务键拒绝且不新增通知；八模块 clean verify 发现 502、跳过 144、执行 358 项。首待办渠道不可用定点 1/1：启动失败、实例回滚和通知计数不变，恢复后同业务键成功。无可解析活跃办理人定点 1/1、无办理人定点 1/1：均启动成功且通知计数不变。两个独立 JVM 同业务键启动定点 1/1：仅一实例、一任务及一条首待办。整项仍未通过。",
         "impact_ids": [
           "IMP-CORE-007"
         ],
@@ -77398,9 +77656,12 @@
           "EV-B02-CORE034-CONTROLLED-HTTP-20261018",
           "EV-B02-CORE034-SERVICE-AUTH-20261018",
           "EV-B02-CORE034-OA-QUARTZ-20261018",
-          "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019"
+          "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019",
+          "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
+          "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
+          "EV-B02-CORE034-FIRST-TODO-20261020"
         ],
-        "required_environment": "仍需 Workflow 任务 HTTP 活授权及直接 Service 身份与 operator 一致性、流程首个待办与 OA 回调；受控发送跨实例消费及角色变更与 Apply 同时竞争、双实例 OA 合同/通知 Quartz 竞争及故障恢复；OA 合同 Quartz 与 Workflow 实例的单 JVM 路径已定点验证，同影响图的其他 DataScope 后台拒绝和角色快照按各自专项验证。"
+        "required_environment": "Workflow 首待办、任务 HTTP 四写动作成功和匿名/到期拒绝已验证；首待办渠道不可用时启动事务回滚及重试、无办理人和无法解析活跃办理人的跳过语义、同主机两个独立 JVM 同业务键竞争已验证；仍需入队中途数据库故障、OA 回调、受控发送跨实例消费及角色变更与 Apply 同时竞争、跨主机同业务键及 OA 合同/通知 Quartz 竞争、Workflow 任务角色变化与动作同时竞争及故障恢复；同影响图其他 DataScope 后台拒绝和角色快照按各自专项验证。"
       },
       {
         "id": "CHECK-CORE-035",
