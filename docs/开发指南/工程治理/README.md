@@ -125,6 +125,8 @@ GOV-007 已完成后端/Web Skill 的入口、受影响示例、修改前后场�
 
 范围依据是第一阶段路径及职责候选分类，并非已经分析调用链：后端 OA/Workflow 的 `src/`、Web 对应业务页面/API/类型、插件 elements/features 和流程示例记为 `deferred_business`；模块 POM、启动装配、公共配置、测试入口和规则仍登记。插件公共导出/类型/辅助/宿主面板、Web 流程宿主候选及 Launch 混合数据库迁移记为 `shared_impact`。知识库、本地 Skill 及历史报告作为规则或证据输入纳入；不由历史报告推定当前源码 reviewed。第二阶段按实际定义、调用和职责复核这些初步边界，必要时提升暂缓文件为公共一致性范围。
 
+2026-10-26 的 [[开发指南/工程治理/2026-10-26-B02授权后台调用方整体验证|CHECK-CORE-034 授权后台调用方整体验证]]补齐通知入队与 OA 回调中途数据库故障回滚、受控发送与撤权的双向提交顺序、双 JVM 缩权竞争、Workflow 写入实时授权行锁、三类 OA 回调九种结局及同主机双 JVM 合同 Quartz/Worker 唯一投递。真实依赖定点测试和八模块 `verify` 退出 0。用户确认无法提供第二台测试主机，真实跨主机环节登记为未运行的定点验收例外；`CHECK-CORE-034` 据此置 `passed`，B02 仍为 `in_progress`，不推定整个集中治理周期已验收。
+
 `inventory.directory_exclusions` 记录实际遇到的排除目录、原因及 `applies_to: all_descendant_files`；该目录下每个文件继承 `excluded/enumerated`，不展开巨大的依赖和生成树。这不是整业务目录排除。排除目录名集合为 `.git`、`node_modules`、`.venv`、`.codegraph`、`.idea`、`.obsidian`、`.temp`、`.playwright-mcp`、`target`、`dist`、`dist-ssr`、`build`、`coverage`、`.cache`、`.mise-data`、`.maven-repository`、`.pnpm-store`、`.npm`、`.yarn`、`logs`、`out`、`test-results`、`playwright-report`、`docker-data`、`docker-volumes`、`.codex-tmp`。新增同名手写目录时必须复核排除合理性，不自动认为其治理已通过。
 
 依赖目录、包缓存、Git 内部数据库、CodeGraph 索引、构建/测试产物和运行临时状态分别排除，原始生成链路、POM、锁文件、构建配置另行纳入。私有 `.mise.local.toml`、`.mise.test.toml`、`.miserc.local.toml`、实际 `.env` 文件、密钥/密钥库及可能含凭据的本机配置仅枚举路径，禁止读取或摘要；example/template 示例配置继续纳入。二进制静态资源不套用手写源码规则，其引用和打包入口仍待审查。

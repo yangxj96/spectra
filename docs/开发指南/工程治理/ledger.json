@@ -209,10 +209,11 @@
         "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
         "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
         "EV-B02-CORE034-FIRST-TODO-20261020",
-        "EV-B02-CORE034-OA-REIMBURSEMENT-20261022"
+        "EV-B02-CORE034-OA-REIMBURSEMENT-20261022",
+        "EV-B02-CORE034-CLOSE-20261026"
         ],
         "state": "in_progress",
-"progress_summary": "2026-10-16 首轮收口将 BC-BASE-001/002/003、CHECK-CORE-020/022 置为 passed，八模块真实依赖分段 clean verify 317/317 与静态门禁通过。2026-10-18 补 CHECK-CORE-019 的独立 Root error_code：Framework 11/11、合成 PostgreSQL Root 19/19。授权关系和凭据按真实时间自然到期的单进程正式 HTTP：人数 2→1、旧 Access 失权或 401、最后 Root 停用 409，Root 整组 10/10；两个独立应用 JVM 自然失效整组 6/6。单实例唯一 Root 隔离 Redis 停启整组 2/2；随后两个独立应用共同隔离 Redis 停启验证两端 503、数据库状态/人数保持、分别恢复后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409，双进程整组 7/7。八模块单元与静态 clean verify 复跑退出 0，发现 480 项、跳过真实依赖等 135 项、执行 345 项。此前真实依赖混跑因 Core 合成简化 schema 与 Launch 正式 Flyway schema 冲突退出 1，按分段证据记录。单端 TCP 转发器隔离一端连接又验证失联端上下文/登录/停用 503、直连端原 Session 200 与 Root 下限 409、恢复后原 Session 两端继续可用，定点 1/1；八模块单元与静态 clean verify 最终退出 0。OA 通讯录和 Workflow 流程定义的两个双 JVM 正式读取入口随 Root 角色/凭据自然失效分别 200→403/401，仍有效 Root 保持 200，双进程整组 8/8、八模块门禁复跑退出 0。2026-10-18 CHECK-CORE-023 补 MOCK 日志脱敏、正式 HTTP 渠道不可用拒绝/Redis 清理及入队到 Delivery 单次投递，单元 2/2、真实依赖 1/1、八模块门禁 347/347 执行通过；该检查置 passed。当时仍未完成：CHECK-CORE-019 OA/Workflow 数据范围、写入与后台间接入口；CHECK-CORE-032 部门重组与受众业务；CHECK-CORE-034 Workflow 流程实例、双实例 Quartz 与受控发送跨实例消费及角色变更竞争；以及旧格式会话、非原子故障窗口、B08 浏览器与其他影响范围。本轮通知 Quartz 和服务监控系统身份两类真实依赖整组 4/4，八模块最终 clean verify 发现 486、跳过 139、执行 347；CHECK-CORE-034 受控发送正式 HTTP 1/1，匿名/错误令牌/受众变化拒绝、同步并发 Apply 唯一请求及重放通过；本轮八模块 clean verify 发现 487、跳过 140、执行 347。CHECK-CORE-034 受控发送 Service 直接授权单测 5/5、正式角色到期定点 1/1；八模块 clean verify 发现 492、跳过 140、执行 352，门禁退出 0。OA 合同 Quartz 上游显式身份与限字段读取正式依赖 1/1，手动无身份/错误系统身份拒绝、归档跳过、重复触发与双线程扫描唯一请求；八模块 clean verify 发现 493、跳过 141、执行 352，退出 0。Workflow 两步真实 Flowable 实例通知定点 1/1：错误办理人及重放拒绝、明确收件人、双线程竞争唯一完成/结果请求；八模块 clean verify 发现 494、跳过 142、执行 352，退出 0。Workflow 首个待办按明确办理人使用显式系统身份写入，重复业务键拒绝且通知保持一条；真实依赖定点 9/9，八模块门禁发现 502、跳过 144、执行 358，退出 0。首待办通知渠道不可用时启动回滚且通知计数不变，恢复后同业务键成功，定点 1/1。无可解析活跃办理人时流程启动且不新增通知，真实依赖定点 1/1；无办理人任务同样启动且不新增通知，定点 1/1。两个独立应用 JVM 同业务键仅一实例及首待办，定点 1/1。报销驳回 OA 回调状态、原因与通知及重放拒绝定点 1/1。CHECK-CORE-034 维持 partially_executed。2026-10-22 CHECK-CORE-032 补正式部门合并/拆分、通知受众、OA/Workflow 读取与角色缩权重登录，目标 1/1 和八模块 verify 通过，置 passed。2026-10-22 CHECK-CORE-019 双 JVM OA 会议 SELF 范围、响应写入与 Workflow 定义暂停/恢复通过，Root 自然到期两端 403、凭据到期两端 401，定点 1/1；八模块 verify 发现 494、跳过 136、执行 358，静态门禁通过。2026-10-22 用户确认无法提供真实跨主机单端网络故障测试环节，要求按现有证据收口；该未运行场景作为 CHECK-CORE-019 的定点验收例外登记，本项置 passed。B02 的其他检查和故障窗口不因本项完成而推定通过，批次仍 in_progress，未满足 done_when。2026-10-23 CHECK-CORE-034 补受控发送同主机双 JVM 并发 Apply 与跨实例重放，定点 1/1、八模块 verify 发现 494/跳过 136/执行 358 且退出 0；其他后台故障竞争仍未验证，CHECK-CORE-034 与 B02 保持进行中。"
+"progress_summary": "2026-10-16 首轮收口将 BC-BASE-001/002/003、CHECK-CORE-020/022 置为 passed，八模块真实依赖分段 clean verify 317/317 与静态门禁通过。2026-10-18 补 CHECK-CORE-019 的独立 Root error_code：Framework 11/11、合成 PostgreSQL Root 19/19。授权关系和凭据按真实时间自然到期的单进程正式 HTTP：人数 2→1、旧 Access 失权或 401、最后 Root 停用 409，Root 整组 10/10；两个独立应用 JVM 自然失效整组 6/6。单实例唯一 Root 隔离 Redis 停启整组 2/2；随后两个独立应用共同隔离 Redis 停启验证两端 503、数据库状态/人数保持、分别恢复后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409，双进程整组 7/7。八模块单元与静态 clean verify 复跑退出 0，发现 480 项、跳过真实依赖等 135 项、执行 345 项。此前真实依赖混跑因 Core 合成简化 schema 与 Launch 正式 Flyway schema 冲突退出 1，按分段证据记录。单端 TCP 转发器隔离一端连接又验证失联端上下文/登录/停用 503、直连端原 Session 200 与 Root 下限 409、恢复后原 Session 两端继续可用，定点 1/1；八模块单元与静态 clean verify 最终退出 0。OA 通讯录和 Workflow 流程定义的两个双 JVM 正式读取入口随 Root 角色/凭据自然失效分别 200→403/401，仍有效 Root 保持 200，双进程整组 8/8、八模块门禁复跑退出 0。2026-10-18 CHECK-CORE-023 补 MOCK 日志脱敏、正式 HTTP 渠道不可用拒绝/Redis 清理及入队到 Delivery 单次投递，单元 2/2、真实依赖 1/1、八模块门禁 347/347 执行通过；该检查置 passed。当时仍未完成：CHECK-CORE-019 OA/Workflow 数据范围、写入与后台间接入口；CHECK-CORE-032 部门重组与受众业务；CHECK-CORE-034 Workflow 流程实例、双实例 Quartz 与受控发送跨实例消费及角色变更竞争；以及旧格式会话、非原子故障窗口、B08 浏览器与其他影响范围。本轮通知 Quartz 和服务监控系统身份两类真实依赖整组 4/4，八模块最终 clean verify 发现 486、跳过 139、执行 347；CHECK-CORE-034 受控发送正式 HTTP 1/1，匿名/错误令牌/受众变化拒绝、同步并发 Apply 唯一请求及重放通过；本轮八模块 clean verify 发现 487、跳过 140、执行 347。CHECK-CORE-034 受控发送 Service 直接授权单测 5/5、正式角色到期定点 1/1；八模块 clean verify 发现 492、跳过 140、执行 352，门禁退出 0。OA 合同 Quartz 上游显式身份与限字段读取正式依赖 1/1，手动无身份/错误系统身份拒绝、归档跳过、重复触发与双线程扫描唯一请求；八模块 clean verify 发现 493、跳过 141、执行 352，退出 0。Workflow 两步真实 Flowable 实例通知定点 1/1：错误办理人及重放拒绝、明确收件人、双线程竞争唯一完成/结果请求；八模块 clean verify 发现 494、跳过 142、执行 352，退出 0。Workflow 首个待办按明确办理人使用显式系统身份写入，重复业务键拒绝且通知保持一条；真实依赖定点 9/9，八模块门禁发现 502、跳过 144、执行 358，退出 0。首待办通知渠道不可用时启动回滚且通知计数不变，恢复后同业务键成功，定点 1/1。无可解析活跃办理人时流程启动且不新增通知，真实依赖定点 1/1；无办理人任务同样启动且不新增通知，定点 1/1。两个独立应用 JVM 同业务键仅一实例及首待办，定点 1/1。报销驳回 OA 回调状态、原因与通知及重放拒绝定点 1/1。CHECK-CORE-034 维持 partially_executed。2026-10-22 CHECK-CORE-032 补正式部门合并/拆分、通知受众、OA/Workflow 读取与角色缩权重登录，目标 1/1 和八模块 verify 通过，置 passed。2026-10-22 CHECK-CORE-019 双 JVM OA 会议 SELF 范围、响应写入与 Workflow 定义暂停/恢复通过，Root 自然到期两端 403、凭据到期两端 401，定点 1/1；八模块 verify 发现 494、跳过 136、执行 358，静态门禁通过。2026-10-22 用户确认无法提供真实跨主机单端网络故障测试环节，要求按现有证据收口；该未运行场景作为 CHECK-CORE-019 的定点验收例外登记，本项置 passed。B02 的其他检查和故障窗口不因本项完成而推定通过，批次仍 in_progress，未满足 done_when。2026-10-23 CHECK-CORE-034 补受控发送同主机双 JVM 并发 Apply 与跨实例重放，定点 1/1、八模块 verify 发现 494/跳过 136/执行 358 且退出 0；2026-10-26 又补数据库中途故障回滚/恢复、授权竞争双向顺序、跨 JVM 缩权/受控 Apply、Workflow 写入行锁与角色竞争、九条 OA 回调路径及双 JVM Quartz/Worker；目标测试和八模块 verify 通过。真实跨主机未运行，用户确认作为 CHECK-CORE-034 定点验收例外，该检查置 passed；B02 保持 in_progress，不推定整个治理周期 accepted。"
       },
       {
         "id": "B03",
@@ -1336,7 +1337,7 @@
       "role": "B02 分页请求边界或专项测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b493bb345a19228a7d31da7cd60b0721dc9ef08cc97c30241e2be3811ad7cee6",
+      "content_sha256": "44fc4a82a457b14530eb9752a2784ce18104ca3d663368d7ea547095a5ae2acb",
       "reviewed_rules": [
         "04 §5 接口/排序输入安全",
         "04 §12 验证与证据"
@@ -1348,9 +1349,10 @@
       "evidence_ids": [
         "EV-B02-SORT-20261008",
         "EV-B02-SORT-GATES-20261008",
-        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019"
+        "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
+        "EV-B02-CORE034-CLOSE-20261026"
       ],
-      "review_summary": "保留 Workflow 固定分页排序的 null/空集合边界；Task Service 增加主体绑定后测试使用合成当前用户继续核对既有分页路径。",
+      "review_summary": "保留 Workflow 固定分页排序的 null/空集合边界；Task Service 增加授权写事务端口后迁移测试构造参数，仍用合成当前用户核对既有分页路径。",
       "review_limits": [
         "限定分页排序；不证明完整门禁/B02其他问题或全周期验收。"
       ],
@@ -1491,12 +1493,12 @@
       "role": "B02 OA 合同提醒系统身份、正式 Quartz 与并发领取测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ca3a2bf48caa7d1a7548bddb747068692f637444e2940c8e986565737b05abbe",
+      "content_sha256": "026b001db195da691616991c149cd237ff158e388c89c9dd036a2234cc6abb8c",
       "reviewed_rules": ["04 §7 后台显式身份与范围", "04 §9 并发领取", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-CORE-034"],
-      "evidence_ids": ["EV-B02-CORE034-OA-QUARTZ-20261018"],
-      "review_summary": "专用 PostgreSQL/Redis 下真实 Quartz 触发、重复触发、错误身份拒绝、归档合同跳过及两路并发扫描唯一入队。",
-      "review_limits": ["单应用 JVM；双应用集群竞争和数据库故障恢复未运行。"],
+      "evidence_ids": ["EV-B02-CORE034-OA-QUARTZ-20261018", "EV-B02-CORE034-CLOSE-20261026"],
+      "review_summary": "专用 PostgreSQL/Redis 下真实 Quartz 触发、重复触发、错误身份拒绝、归档合同跳过；同主机两个独立 JVM 同时触发合同 Job 仅一请求，共享 Worker 后收件箱与投递各一条。",
+      "review_limits": ["真实跨主机调度与网络故障按 CHECK-CORE-034 定点例外未运行。"],
       "review_kind": "isolated_postgres_redis_oa_contract_quartz_test_review",
       "impact_ids": ["IMP-CORE-007"]
     },
@@ -1519,12 +1521,12 @@
       "role": "B02 通知受控发送 Preview/Apply 正式 HTTP、PostgreSQL/Redis 与并发消费测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "65bcc5f76bda687389c6a049b2d606fbc1080c9418824113366b1140b48da313",
+      "content_sha256": "d564e38937dac0fee56ca94da079aa5bcebe3b5f8d501e39a64341ad62331a95",
       "reviewed_rules": ["04 §7 后台身份与数据范围", "04 §9 状态竞争", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-CORE-034"],
-      "evidence_ids": ["EV-B02-CORE034-CONTROLLED-HTTP-20261018", "EV-B02-CORE034-SERVICE-AUTH-20261018", "EV-B02-CORE034-CROSS-PROCESS-20261023", "EV-B02-CORE034-REVOKE-RACE-20261023", "EV-B02-CORE034-PUBLIC-REVOKE-RACE-20261026"],
-      "review_summary": "真实 HTTP 验证匿名、错误令牌与受众变更拒绝；同步并发 Apply 只创建一个逻辑 Request/Task，重放返回同一结果。合成安全上下文直接调用 Service 验证角色到期后拒绝且 Preview/Request 不变。2026-10-23 增加同主机两个独立 JVM 同时 Apply 同一 Preview，仅一 Request/Task，第二实例重放幂等；补专用 PostgreSQL 用户行锁下撤权先提交、Apply 等待后拒绝且 Preview/Request 不变。2026-10-26 使用正式公开撤权 Service 在事务中撤销合成 Root，Apply 等待后拒绝且旧 Session 失效。",
-      "review_limits": ["两个 JVM 位于同一主机；公开撤权竞争为单 JVM 双线程；角色定义整体缩权及跨实例撤权竞争未覆盖。"],
+      "evidence_ids": ["EV-B02-CORE034-CONTROLLED-HTTP-20261018", "EV-B02-CORE034-SERVICE-AUTH-20261018", "EV-B02-CORE034-CROSS-PROCESS-20261023", "EV-B02-CORE034-REVOKE-RACE-20261023", "EV-B02-CORE034-PUBLIC-REVOKE-RACE-20261026", "EV-B02-CORE034-CLOSE-20261026"],
+      "review_summary": "真实 HTTP 验证匿名、错误令牌、受众变化拒绝及同主机双 JVM Preview 唯一消费。正式公开 Assignment 撤权与 Apply 的两种提交顺序均按用户行锁串行；入队中途 Task 表锁超时使 Request/Preview 回滚，恢复后同 Preview 只创建一条请求。",
+      "review_limits": ["两个 JVM 位于同一主机；真实跨主机按 CHECK-CORE-034 定点例外未运行。"],
       "review_kind": "isolated_postgres_redis_controlled_send_full_http_test_review",
       "impact_ids": ["IMP-CORE-007"]
     },
@@ -1725,6 +1727,62 @@
       "impact_ids": ["IMP-CORE-007"]
     },
     {
+      "path": "docs/开发指南/工程治理/2026-10-26-B02授权后台调用方整体验证.md",
+      "role": "B02 CHECK-CORE-034 后台授权与 OA/Workflow 公共调用方整体验证证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "a7af92778e870682bb39573f44eb728f5c6fa1ffb63fa1eda556996b6552357d",
+      "reviewed_rules": ["04 §7 实时授权与显式后台身份", "04 §9 事务与竞争", "04 §13 真实依赖门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-CLOSE-20261026"],
+      "review_summary": "记录受控发送和 Workflow 授权竞争、OA 回调矩阵及中途故障恢复、双 JVM Quartz/Worker 与八模块门禁。",
+      "review_limits": ["真实跨主机未运行；按用户 2026-10-26 的决定作为本检查定点验收例外；外部邮件供应商未实发。"],
+      "review_kind": "documented_core034_full_behavior_evidence_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-common/src/main/java/com/devops00/spectra/common/security/authorization/AuthorizationMutationFence.java",
+      "role": "B02 Workflow 写事务授权串行化公共端口",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "9df88039caf9713d9f7b0f8b116b4642ecd57f25da5a5725227fe13d32290901",
+      "reviewed_rules": ["04 §2 模块边界", "04 §7 实时授权", "04 §9 写事务"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-CLOSE-20261026"],
+      "review_summary": "Workflow 通过窄端口请求 Core 在同一写事务内锁定当前用户；失败不能降级为旧快照放行。",
+      "review_limits": ["端口语义由 Core JDBC 实现和 Flowable 正式依赖测试验证。"],
+      "review_kind": "workflow_authorization_mutation_port_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/security/authorization/service/impl/JdbcAuthorizationMutationFence.java",
+      "role": "B02 Core 授权写事务用户行锁实现",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "441507b0e9296eb31eb6e5247a37c24ffb798f3138af84c6de37a2864c86796b",
+      "reviewed_rules": ["04 §7 实时授权", "04 §9 事务和并发", "04 §13 故障验证"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-CLOSE-20261026"],
+      "review_summary": "要求活动写事务，锁 sys_user 行并显式检查 ACTIVE；缺失、停用或数据库故障拒绝或传播失败。",
+      "review_limits": ["采用当前 PostgreSQL 行锁顺序；真实跨主机未运行。"],
+      "review_kind": "core_authorization_mutation_fence_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/security/authorization/service/impl/JdbcAuthorizationMutationFenceTest.java",
+      "role": "B02 Core 授权写事务锁成功和失败单测",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "e8296313bc82275a1d74ade4e5349198039907175bc325eb5fc8d011b904975f",
+      "reviewed_rules": ["04 §7 实时授权", "04 §13 成功失败测试"],
+      "issue_ids": ["DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-CORE034-CLOSE-20261026"],
+      "review_summary": "三项覆盖无事务、空/停用用户、活动用户和数据库锁异常传播。",
+      "review_limits": ["Mockito 单测；角色竞争和真实数据库行锁由 Launch 全应用专项覆盖。"],
+      "review_kind": "core_authorization_mutation_fence_test_review",
+      "impact_ids": ["IMP-CORE-007"]
+    },
+    {
       "path": "docs/开发指南/工程治理/2026-10-22-B02有效Root业务范围与写入验证.md",
       "role": "B02 CHECK-CORE-019 双 JVM OA 数据范围与写入、Workflow 定义写入证据",
       "scope": "included",
@@ -1757,12 +1815,12 @@
       "role": "B02 Workflow 任务 Service 身份和授权边界单测",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8be1962395200edd6f68c07abae8283860255207147f00d87f5b1b093b4bd155",
+      "content_sha256": "48a389284523d66816192d6125ed862ac2135da34ad541909ac471e8181fe3e1",
       "reviewed_rules": ["04 §7 应用 Service 最终授权", "04 §13 测试与证据"],
       "issue_ids": ["DIAG-CORE-034"],
-      "evidence_ids": ["EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019"],
-      "review_summary": "六项单测覆盖无身份、冒用、缺权限、快照未知或故障、本人查询和授权转办，拒绝发生在 Flowable 副作用前。",
-      "review_limits": ["Mockito 隔离；真实数据库角色到期由同组 Flowable 全应用测试覆盖。"],
+      "evidence_ids": ["EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019", "EV-B02-CORE034-CLOSE-20261026"],
+      "review_summary": "七项单测覆盖无身份、冒用、缺权限、授权快照未知或故障、用户行锁故障、本人查询和授权转办；拒绝发生在 Flowable 副作用前。",
+      "review_limits": ["Mockito 隔离；角色竞争和数据库故障由正式 Flowable 专项覆盖。"],
       "review_kind": "workflow_task_service_authorization_unit_test_review",
       "impact_ids": ["IMP-CORE-007"]
     },
@@ -1771,12 +1829,12 @@
       "role": "B02 Workflow 实际 Flowable 流程实例通知与竞争测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "709ff566135b4de93ba147cdafc4b1640ed43051cf3e665262b3448176387678",
+      "content_sha256": "8093a2ece3884b1e0bbaf034162345726c3549e05f9c81dea9b9c30fafdba6d0",
       "reviewed_rules": ["04 §7 后台显式身份", "04 §9 状态竞争", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-CORE-034"],
-      "evidence_ids": ["EV-B02-CORE034-WORKFLOW-INSTANCE-20261019", "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019", "EV-B02-CORE034-FIRST-TODO-20261020", "EV-B02-CORE034-OA-REIMBURSEMENT-20261022"],
-      "review_summary": "随机两步 BPMN、随机合成用户及实际 Flowable/通知持久化，检查首待办、重复启动、后续结果/待办、重放和双线程竞争；临时关闭通知渠道时启动回滚、无实例或通知残留，恢复后同业务键重试成功；无办理人或无法解析活跃办理人时不写通知且流程仍启动；两个独立 JVM 同业务键竞争仅一实例与一条首待办；真实报销 BPMN 驳回后 OA 状态、原因和单条通知已验证。",
-      "review_limits": ["Service 直接调用、双 JVM 位于同一主机；未覆盖跨主机竞争、其他 OA 回调和回调故障。"],
+      "evidence_ids": ["EV-B02-CORE034-WORKFLOW-INSTANCE-20261019", "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019", "EV-B02-CORE034-FIRST-TODO-20261020", "EV-B02-CORE034-OA-REIMBURSEMENT-20261022", "EV-B02-CORE034-CLOSE-20261026"],
+      "review_summary": "真实 Flowable 验证首待办、结果、下一待办、重复业务键与双线程/双 JVM 竞争；OA 报销驳回回调更新行锁超时后 Flowable、OA、通知整体回滚并可重试；任务写入与角色收缩用户行锁竞争后失权拒绝；请假、采购、报销九条回调结局按明确申请人投递且重放幂等。",
+      "review_limits": ["Service 直接调用、两个 JVM 位于同一主机；真实跨主机按 CHECK-CORE-034 定点例外未运行。"],
       "review_kind": "isolated_real_dependency_workflow_instance_test_review",
       "impact_ids": ["IMP-CORE-007"]
     },
@@ -1939,12 +1997,12 @@
       "role": "Core 正式 HTTP 角色缩权重登录、双 JVM 联动、部门重组与 OA/Workflow 公共入口集成测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "786bb68249f917c8733ebf7cab40fe458a6b898eebdad63989f58d817bd2e7a1",
+      "content_sha256": "1f2e428ba856043d1c373a241b818403d950d88063edd6e41e7c8f3fe291d377",
       "reviewed_rules": ["04 §7 授权快照", "04 §8 安全 Redis", "04 §9 原子状态迁移", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-CORE-032", "DIAG-CORE-034"],
-      "evidence_ids": ["EV-B02-CORE032-HTTP-20261012", "EV-B02-CORE032-TWO-PROCESS-20261016", "EV-B02-CORE032-RESTRUCTURE-20261022", "EV-B02-CORE034-ROLE-SHRINK-RACE-20261026"],
-      "review_summary": "正式 Flyway schema 与 Core HTTP 登录/授权预览/并发应用/重登录验证 200/409、权限收缩和 Boundary 清理；双 JVM 拒绝旧 Access；合成部门合并拆分重映射授权部门规则、刷新通知受众，并穿透 OA/Workflow 公共读取入口。新增 BUSINESS 角色定义移除受控发送 Apply 权限的事务竞争，Apply 等待提交后拒绝、旧 Access 失效、重登录权限收缩。",
-      "review_limits": ["角色缩权与受控发送竞争为单 JVM 双线程、缩权写入在前；反向顺序、双 JVM 同时缩权、Web 浏览器及其他 OA/Workflow 故障未覆盖。"],
+      "evidence_ids": ["EV-B02-CORE032-HTTP-20261012", "EV-B02-CORE032-TWO-PROCESS-20261016", "EV-B02-CORE032-RESTRUCTURE-20261022", "EV-B02-CORE034-ROLE-SHRINK-RACE-20261026", "EV-B02-CORE034-CLOSE-20261026"],
+      "review_summary": "正式 Flyway schema 验证角色缩权、重登录、部门重组与 OA/Workflow 公共读取。新增 BUSINESS 角色缩权与受控发送竞争；两个独立 JVM 中角色缩权事务与另一实例 Apply 同时发生时无越权请求，旧 Access 失效、新登录权限收缩。",
+      "review_limits": ["两个 JVM 位于同一主机；真实跨主机竞争按 CHECK-CORE-034 定点例外未运行。"],
       "review_kind": "isolated_postgres_redis_full_core_http_test_review",
       "impact_ids": ["IMP-CORE-007"]
     },
@@ -4540,7 +4598,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1b7c1c92018ae34484aa05c8434e0968a827f2f45e7126a0ceb42918f4fe6959",
+      "content_sha256": "b7076606dfbbbb42ba9542a5322f0785d5a8ef4256e8d36ecd06567db356a5a9",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4594,7 +4652,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4bc908b7eef9ce62afa8b722241f452bd44d3bf15706e5183770ead48e9c2eaf",
+      "content_sha256": "b38f90aff144e823f4cf99a9e646b557bf72edbe580e65b989cfcb93c8e5047f",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4625,7 +4683,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "eecd5579799ca5d53095b5f0c2460552d2cb72a0432b2090631e7dee19bed01b",
+      "content_sha256": "bfc46c6bf88c4636fa8c2fdf3a3bf8de9ccad1e8bd6d18c7c955fda0b0f3ea0a",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5349,7 +5407,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "de13041ddddd8b686c14d3671a3847508f58fc46a04d89cabcbd73c3bd65b87f",
+      "content_sha256": "6b6db8506a5aa4b01104dbf8958da367828f13cd5db2bdd1eb041eac79eba3c0",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5533,7 +5591,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "dd905dffb15e62f9d91866c7a1ae23e8a396f07bda9acc0221d4fe1c1ad4268a",
+      "content_sha256": "5f1639d71e91b8225d12683c073089e9c07225155db9496c03454ac8055e65ea",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -56422,7 +56480,7 @@
       ],
       "scope_reason": null,
       "impact_state": "public_boundary_reviewed",
-      "impact_content_sha256": "c49970af8f29f297ec8ef9ff90352f0f7f1f8e74ef420ed3a1e603e43a2c5e37",
+      "impact_content_sha256": "b2ffe9d81ad167199f53d289d55b26b9da05381f8dff80d9e304c1b213bd8079",
       "impact_review_kind": "shared_boundary_source_review",
       "shared_dependency_refs": [
         "com.devops00.spectra.common.exception.DataNotExistException",
@@ -56434,13 +56492,14 @@
         "com.devops00.spectra.common.notification.NotificationTemplateCode",
         "com.devops00.spectra.common.port.security.SecurityContextAccessor",
         "com.devops00.spectra.common.security.authorization.AuthorizationSnapshotProvider",
+        "com.devops00.spectra.common.security.authorization.AuthorizationMutationFence",
         "com.devops00.spectra.framework.persistence.pagination.PageFrom"
       ],
       "behavior_candidates": [
         "version",
         "Transactional"
       ],
-      "impact_review_summary": "分页排序、任务当前主体及实时写权限边界保留；后续待办改由 WorkflowTaskTodoNotifier 与流程启动共用相同通知语义。真实两步 Flowable 核对首待办、结果、下一待办、重复业务键和竞争；故障回滚、OA 回调及双实例仍待验收，独立 Workflow 业务暂缓。",
+      "impact_review_summary": "分页排序、任务当前主体及实时写权限边界保留；四写动作在业务事务内先锁用户行、再读当前授权，角色缩权和任务动作串行。真实 Flowable 验证角色竞争及 OA 回调数据库中途故障回滚恢复；首待办、结果、下一待办和同主机双 JVM 竞争另有专项。独立 Workflow 业务重构仍暂缓。",
       "impact_review_limits": [
         "完整读取供导入/公共符号及风险候选机械核对；未独立审查暂缓业务语义，不以未命中证明无间接影响。关键调用结合CodeGraph及人工职责审查另记。",
         "独立业务语义与复杂度治理暂缓；机械未命中不表示无间接影响。"
@@ -56465,7 +56524,8 @@
         "EV-B02-CORE034-GATES-20261009",
         "EV-B02-CORE034-WORKFLOW-INSTANCE-20261019",
         "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
-        "EV-B02-CORE034-FIRST-TODO-20261020"
+        "EV-B02-CORE034-FIRST-TODO-20261020",
+        "EV-B02-CORE034-CLOSE-20261026"
       ],
       "remediation_reviews": [
         {
@@ -68314,7 +68374,8 @@
     "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
     "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
     "EV-B02-CORE034-FIRST-TODO-20261020",
-    "EV-B02-CORE034-OA-REIMBURSEMENT-20261022"
+    "EV-B02-CORE034-OA-REIMBURSEMENT-20261022",
+    "EV-B02-CORE034-CLOSE-20261026"
       ],
       "impact_ids": [
         "IMP-CORE-007"
@@ -70077,7 +70138,7 @@
       "required_changes": [
         "Launch+Framework+所有业务端口/任务+Web反馈；保留暂缓域独立重构边界"
       ],
-"deferred_boundary": "CORE-034 通知目录的匿名放行已消除，Workflow、OA 流程/合同及监控通知调用方已迁移显式运行身份；通知 Quartz/正式数据库投递和受控发送 HTTP/Service 权限已有单应用验证；OA 合同 Quartz 单实例提醒入队及双线程唯一领取已验证；Workflow 真实两步实例的首待办、结果与下一待办按明确收件人写入，重复业务键拒绝且首待办只有一条，错误办理人、重放和单 JVM 双线程竞争已验证；任务 Service 当前主体与实时写权限、正式 HTTP 四写动作匿名/到期拒绝及四动作成功状态已验证。首待办渠道不可用时启动回滚及恢复后同业务键重试、无办理人或无法解析活跃办理人时跳过通知并继续启动、同主机双 JVM 同业务键仅一流程和首待办已验证；报销驳回 OA 回调状态及通知、重放拒绝已验证；受控发送同主机双 JVM Preview/Apply 消费仅一 Request/Task 且跨实例重放已验证；入队中途数据库故障、其他 OA 回调、跨主机同业务键与双应用 Job 竞争和故障恢复仍未验收。CORE-032 缩权清理、唯一键恢复和并发角色行锁已接入公共授权写入，正式单进程 HTTP 登录/角色事务/重登录专项通过；2026-10-16 又补两个独立应用 JVM 的角色缩权跨进程撤销与重登录快照；OA/Workflow 无直接角色变更调用，公共权限读取入口已在正式合成数据上验证缩权前 200、旧 Access 401、重登录后 403；部门合并/拆分与通知受众也已验证，CORE-032 检查通过。OA 合同 Quartz 上游改为显式运行身份与限字段系统读取，单实例正式 Job 已验证；基础设施恢复和后台任务整体仍待治理。",
+"deferred_boundary": "CORE-034 通知目录的匿名放行已消除，Workflow、OA 流程/合同及监控通知调用方已迁移显式运行身份；通知 Quartz/正式数据库投递和受控发送 HTTP/Service 权限已有单应用验证；OA 合同 Quartz 单实例提醒入队及双线程唯一领取已验证；Workflow 真实两步实例的首待办、结果与下一待办按明确收件人写入，重复业务键拒绝且首待办只有一条，错误办理人、重放和单 JVM 双线程竞争已验证；任务 Service 当前主体与实时写权限、正式 HTTP 四写动作匿名/到期拒绝及四动作成功状态已验证。首待办渠道不可用时启动回滚及恢复后同业务键重试、无办理人或无法解析活跃办理人时跳过通知并继续启动、同主机双 JVM 同业务键仅一流程和首待办已验证；报销驳回 OA 回调状态及通知、重放拒绝已验证；受控发送同主机双 JVM Preview/Apply 消费仅一 Request/Task 且跨实例重放已验证；入队中途数据库故障、OA 回调矩阵与中途故障、同主机双 JVM Quartz/Worker 竞争及 Workflow 写入角色竞争已通过；真实跨主机同业务键和网络故障未运行，按用户确认的 CHECK-CORE-034 定点例外登记。CORE-032 缩权清理、唯一键恢复和并发角色行锁已接入公共授权写入，正式单进程 HTTP 登录/角色事务/重登录专项通过；2026-10-16 又补两个独立应用 JVM 的角色缩权跨进程撤销与重登录快照；OA/Workflow 无直接角色变更调用，公共权限读取入口已在正式合成数据上验证缩权前 200、旧 Access 401、重登录后 403；部门合并/拆分与通知受众也已验证，CORE-032 检查通过。OA 合同 Quartz 上游改为显式运行身份与限字段系统读取，单实例正式 Job 已验证；基础设施恢复和后台任务整体仍待治理。",
       "state": "pending",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
@@ -70101,7 +70162,8 @@
     "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
     "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
     "EV-B02-CORE034-FIRST-TODO-20261020",
-    "EV-B02-CORE034-OA-REIMBURSEMENT-20261022"
+    "EV-B02-CORE034-OA-REIMBURSEMENT-20261022",
+    "EV-B02-CORE034-CLOSE-20261026"
       ],
       "verification": [
         "DB/Redis启动故障矩阵，保留Flyway既有失败保护",
@@ -73705,6 +73767,41 @@
         ".temp/b02/core034-role-definition-race-full-gate.log"
       ],
       "limits": "单 JVM 双线程、角色缩权写入在前；反向提交顺序、双 JVM 同时缩权和其他后台故障未验证。CHECK-CORE-034 与 B02 保持进行中。"
+    },
+    {
+      "id": "EV-B02-CORE034-CLOSE-20261026",
+      "scope": "DIAG-CORE-034 / IMP-CORE-007 / CHECK-CORE-034 受控发送、Workflow、OA 与 Quartz 后台授权整体验证",
+      "command_or_scenario": [
+        "CodeGraph 在 spectra-admin 逐段复核受控发送、角色/Assignment、Workflow 任务、OA 回调、合同 Quartz 和通知 Worker；既有 spectra-ui 调用方保持 1.0.0 API",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=NotificationControlledSendFullHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；数据库中途锁超时回滚并恢复、Apply 先于公开撤权提交",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=TaskServiceAuthorizationTest,WorkflowInstanceNotificationFullAppTest#rejectingReimbursementTaskUpdatesOaApplicationAndSendsOneNotice' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 退出 0，8/8；Workflow 用户行锁与角色竞争、OA 回调中途故障回滚重试",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=JdbcAuthorizationMutationFenceTest' '-Dsurefire.failIfNoSpecifiedTests=false' test -> 退出 0，3/3；无事务、空或停用用户拒绝，活动用户通过，数据库锁异常传播",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowInstanceNotificationFullAppTest#rejectingReimbursementTaskUpdatesOaApplicationAndSendsOneNotice' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 活动用户校验后退出 0，1/1；真实 Flowable 角色竞争与 OA 回调中途故障回滚恢复",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=RoleAuthorizationFullHttpTest#roleChangeRevokesSessionAcrossProcesses' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；两 JVM 缩权与受控 Apply 竞争",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=OaContractReminderQuartzFullHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；两 JVM 合同 Job 与 Worker 唯一请求、站内信和投递",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=WorkflowInstanceNotificationFullAppTest#oaCallbackVariantsUseExplicitRecipientAndRemainIdempotent' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 退出 0，1/1；请假、采购、报销三类回调的三种结局及重放",
+        "mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest,!OaMeetingFullHttpFlywayTest,!SessionTwoProcessHttpTest,!RoleAuthorizationFullHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' verify -> 退出 0，八模块与静态门禁全部通过",
+        "pwsh -NoProfile -File scripts/check-governance-exceptions.ps1 -RootPath . -LedgerPath docs/开发指南/工程治理/ledger.json -SourceRoot spectra-admin -SuppressionFile spectra-admin/config/spotbugs/exclude.xml -> 退出 0，100 条例外、1749 文件"
+      ],
+      "environment": "原生 Windows PowerShell 7.6、mise test、JDK 25、Maven Wrapper、专用 PostgreSQL devops00_spectra_db_test、Redis DB 5；随机合成用户和 OA/Workflow 业务。",
+      "checked_at": "2026-10-26",
+      "result": "pass_with_declared_limits",
+      "exit_code": 0,
+      "summary": "通知入队与 OA 回调中途数据库故障回滚并可重试；受控 Apply/撤权双向提交、双 JVM 角色缩权与旧会话失效；Workflow 四写入口在事务内锁住活动用户并读取实时授权；三类 OA 回调九种结局明确受众且重放幂等；双 JVM 合同 Quartz 和 Worker 唯一请求、收件箱和投递。最终八模块 verify 与真实 Flowable 定点复跑均退出 0。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-26-B02授权后台调用方整体验证.md",
+        ".temp/b02/core034-notification-db-fault-targeted.log",
+        ".temp/b02/core034-apply-first-targeted.log",
+        ".temp/b02/core034-workflow-fence-targeted.log",
+        ".temp/b02/core034-fence-active-user.log",
+        ".temp/b02/core034-fence-final-flowable.log",
+        ".temp/b02/core034-cross-jvm-role-race.log",
+        ".temp/b02/core034-contract-two-jvm-worker.log",
+        ".temp/b02/core034-oa-callback-matrix.log",
+        ".temp/b02/core034-acceptance-full-gate.log",
+        ".temp/b02/core034-acceptance-governance.log"
+      ],
+      "limits": "两个 JVM 在同一 Windows 主机；真实跨主机同业务键和单端网络故障未运行，按用户本轮决定列为 CHECK-CORE-034 定点验收例外。外部邮件供应商未实发；RegionServiceTest 和独立真实依赖 HTTP 专项不在该八模块混跑命令内，相关场景另有定点证据。B02 批次及治理周期不由本检查推定完成。"
     },
     {
       "id": "EV-B02-CORE034-SERVICE-AUTH-20261018",
@@ -77925,9 +78022,18 @@
         "issue_ids": [
           "DIAG-CORE-034"
         ],
-        "state": "partially_executed",
+        "state": "passed",
         "scenario": "通知普通管理端口与后台运行端口边界混用；OA/Workflow后台受众及未来内部调用必须迁移显式运行身份，不能靠空上下文扩大权限。",
-"validation": "普通目录查询无认证身份拒绝；显式系统身份限制登记的来源、用途、模板与明确用户 ID。Core 原定点 10/10；通知 Quartz 和服务监控系统身份整组 4/4，受控发送正式 HTTP 1/1、Service 授权单测 5/5 与角色到期 1/1，OA 合同 Quartz 正式触发 1/1。Workflow 两步真实 Flowable 流程核对明确收件人、错误办理人、重放和双线程唯一完成；任务 Service 当前主体与实时写权限定点 63/63。正式 HTTP 任务定点 3/3：四写动作匿名/到期 401/403 且无副作用，四写动作成功状态已验证。流程启动首待办新增定点整组 9/9：首待办一条且收件人为第一办理人，重复业务键拒绝且不新增通知；八模块 clean verify 发现 502、跳过 144、执行 358 项。首待办渠道不可用定点 1/1：启动失败、实例回滚和通知计数不变，恢复后同业务键成功。无可解析活跃办理人定点 1/1、无办理人定点 1/1：均启动成功且通知计数不变。两个独立 JVM 同业务键启动定点 1/1：仅一实例、一任务及一条首待办。报销驳回实际 OA 回调定点 1/1：状态及原因回写、单条申请人通知和重放拒绝。2026-10-23 受控发送同主机双 JVM 同一 Preview 同步 Apply 定点 1/1：共享请求/任务各一条，第二实例重放幂等；八模块 verify 发现 494、跳过 136、执行 358，退出 0。其他故障竞争仍未完成，整项保持 partially_executed。",
+        "acceptance_exception": {
+          "id": "EX-B02-CORE034-CROSS-HOST-20261026",
+          "requirement": "真实跨主机同业务键、后台 Quartz/Worker 竞争及单端网络故障",
+          "decision": "2026-10-26 用户在当前会话明确表示无第二台测试主机，要求将该环节标记完成；以已通过的同主机双独立 JVM、专用 PostgreSQL/Redis、故障回滚恢复及公开授权竞争证据作为本检查的定点替代验收。",
+          "substitute_evidence_ids": ["EV-B02-CORE034-CROSS-PROCESS-20261023", "EV-B02-CORE034-CLOSE-20261026"],
+          "unverified": "真实跨主机同业务键、调度竞争及单端网络故障未运行；不能从本机双 JVM 证据推定真实跨主机已通过。",
+          "risk": "不同物理主机的时钟、网络和连接恢复时序可能暴露本机测试未覆盖的行为。",
+          "reevaluate_when": "部署跨主机实例或具备第二台连接专用测试依赖的 Windows 主机时。"
+        },
+"validation": "普通目录查询无认证身份拒绝；显式系统身份限制登记的来源、用途、模板与明确用户 ID。Core 原定点 10/10；通知 Quartz 和服务监控系统身份整组 4/4，受控发送正式 HTTP 1/1、Service 授权单测 5/5 与角色到期 1/1，OA 合同 Quartz 正式触发 1/1。Workflow 两步真实 Flowable 流程核对明确收件人、错误办理人、重放和双线程唯一完成；任务 Service 当前主体与实时写权限定点 63/63。正式 HTTP 任务定点 3/3：四写动作匿名/到期 401/403 且无副作用，四写动作成功状态已验证。流程启动首待办新增定点整组 9/9：首待办一条且收件人为第一办理人，重复业务键拒绝且不新增通知；八模块 clean verify 发现 502、跳过 144、执行 358 项。首待办渠道不可用定点 1/1：启动失败、实例回滚和通知计数不变，恢复后同业务键成功。无可解析活跃办理人定点 1/1、无办理人定点 1/1：均启动成功且通知计数不变。两个独立 JVM 同业务键启动定点 1/1：仅一实例、一任务及一条首待办。报销驳回实际 OA 回调定点 1/1：状态及原因回写、单条申请人通知和重放拒绝。2026-10-23 受控发送同主机双 JVM 同一 Preview 同步 Apply 定点 1/1：共享请求/任务各一条，第二实例重放幂等；八模块 verify 发现 494、跳过 136、执行 358，退出 0。2026-10-26 补通知入队与 OA 回调中途数据库故障回滚/恢复、Apply 先提交的反向授权竞争、两 JVM 缩权/受控 Apply、Workflow 任务写入用户行锁与角色竞争、请假/采购/报销九条回调路径，以及双 JVM 合同 Quartz/Worker 唯一投递；定点专项均通过，八模块 verify 退出 0。真实跨主机环节按用户确认登记为未运行的定点验收例外，本检查置 passed，不推定 B02 完成。",
         "impact_ids": [
           "IMP-CORE-007"
         ],
@@ -77946,9 +78052,10 @@
           "EV-B02-CORE034-WORKFLOW-SERVICE-AUTH-20261019",
           "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
           "EV-B02-CORE034-FIRST-TODO-20261020",
-          "EV-B02-CORE034-OA-REIMBURSEMENT-20261022"
+          "EV-B02-CORE034-OA-REIMBURSEMENT-20261022",
+          "EV-B02-CORE034-CLOSE-20261026"
         ],
-"required_environment": "Workflow 首待办、任务 HTTP 四写动作成功和匿名/到期拒绝已验证；首待办渠道不可用时启动事务回滚及重试、无办理人和无法解析活跃办理人的跳过语义、同主机两个独立 JVM 同业务键竞争、受控发送同主机双 JVM 跨实例消费已验证；受控发送 Apply 与正式公开 Assignment 撤权 Service 单 JVM 竞争、BUSINESS 角色定义缩权写入在前的竞争也已验证。仍需入队中途数据库故障、其他 OA 回调及回调中途故障、Apply 先持锁的反向顺序、跨实例同时缩权或撤权竞争、跨主机同业务键及 OA 合同/通知 Quartz 竞争、Workflow 任务角色变化与动作同时竞争及故障恢复；同影响图其他 DataScope 后台拒绝和角色快照按各自专项验证。"
+"required_environment": "Workflow 首待办、任务 HTTP 四写动作成功和匿名/到期拒绝已验证；首待办渠道不可用时启动事务回滚及重试、无办理人和无法解析活跃办理人的跳过语义、同主机两个独立 JVM 同业务键竞争、受控发送同主机双 JVM 跨实例消费已验证；受控发送 Apply 与正式公开 Assignment 撤权 Service 单 JVM 竞争、BUSINESS 角色定义缩权写入在前的竞争也已验证。本轮补齐入队中途数据库故障回滚、OA 回调九条路径及回调中途故障恢复、Apply 先持锁的反向顺序、同主机跨实例角色缩权与受控发送竞争、单 JVM 公开 Assignment 撤权正反竞争、OA 合同与通知 Worker 双 JVM 竞争、Workflow 任务角色变化与动作竞争及故障恢复；同影响图其他 DataScope 后台拒绝和角色快照由 CHECK-CORE-019/032 专项证据覆盖。真实跨主机未运行，按 EX-B02-CORE034-CROSS-HOST-20261026 定点例外接受，部署跨主机时重评。"
       },
       {
         "id": "CHECK-CORE-035",
