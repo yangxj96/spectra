@@ -295,8 +295,10 @@
         "prerequisites": "Record real JSON omission and snake_case; choose per-field clear semantics and version ownership before generator output",
         "checks": "BC-BASE-006/007, BC-MODEL-001..005, BC-ADDITIONAL-001/002/005, BEH-WEB-004/005/011, real HTTP/SQL 409 and drift checks",
         "done_when": "API 1.0.0 has actual HTTP/JSON/generated type agreement; stale writes reject, clears persist, offset/timezone rules hold, and old aliases/fallbacks are removed.",
-        "state": "in_progress",
-        "started_at": "2026-10-17"
+        "state": "completed",
+        "started_at": "2026-10-17",
+        "completed_at": "2026-10-28",
+        "progress_summary": "2026-10-28 完成 B04：8 类编辑入口均提交读取版本，MP 乐观锁/Quartz 显式条件更新对陈旧写入返回 409 ENTITY_UPDATE_CONFLICT；真实 HTTP/SQL 覆盖菜单 pid、字典 pid/remark、区域 pid/full_name、配置 remarks、用户 language/timezone 清空，重新入职清空 departed_at，区域与用户资料并发一项成功一项 409，手机号/邮箱编辑显式拒绝。运行时 OpenAPI 3.1.0/API 1.0.0 导出固定 snake_case、data 包装、ApiErrorEnvelope、4xx/409/416/503、编辑视图 version 与可空字段，前端生成契约/类型并由 contract:check 检测漂移；bootstrap/配置/Quartz 响应类型改为生成契约派生。错误只读 error_code，时间工具保留服务端偏移，OA/通知日期范围与编辑控件迁移。浏览器真实前后端验证系统配置 409 草稿保留、核对最新版本后重新提交成功。证据 EV-B04-EDIT-VERSION-20261028、EV-B04-CONTRACT-WEB-20261028、EV-B04-MODEL-TIME-STATIC-20261028。限制：BC-MODEL-004 仍缺隔离 PostgreSQL 软删除闭包读/计数实测，DIAG-MODEL-003 保持 pending；BC-ADDITIONAL-002 仍缺真实 S3 存储故障容器；页面表单模型继续手写。"
       },
       {
         "id": "B05",
@@ -65246,6 +65248,146 @@
       "review_limits": ["直接调用 Advice，未运行实际 HTTP Controller 或 Web 页面。"],
       "review_kind": "credential_expiry_response_test_review",
       "impact_ids": ["IMP-CORE-005"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-28-B04协议时间版本与生成类型验收.md",
+      "role": "B04 验收与证据说明",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "d538e2e8817a04e8f03642cc5b26c448938565aaac41463d618f8306838b91b4",
+      "reviewed_rules": ["04 §5 接口契约", "04 §6 时间语义", "04 §7 提交版本", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-CORE-003", "DIAG-CORE-004", "DIAG-WEB-005", "DIAG-WEB-006", "DIAG-WEB-008", "DIAG-WEB-014", "DIAG-WEB-016"],
+      "evidence_ids": ["EV-B04-EDIT-VERSION-20261028", "EV-B04-CONTRACT-WEB-20261028", "EV-B04-MODEL-TIME-STATIC-20261028"],
+      "review_summary": "记录 B04 编辑版本、清空、409、OpenAPI 生成类型、时间偏移和浏览器草稿恢复的证据与限制。",
+      "review_limits": ["BC-MODEL-004 软删除闭包实测和 BC-ADDITIONAL-002 真实 S3 故障仍受限。"],
+      "review_kind": "batch_acceptance_evidence_review",
+      "impact_ids": ["IMP-BASE-002", "IMP-WEB-002", "IMP-CORE-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/main/java/com/devops00/spectra/launch/configuration/OpenApiConfiguration.java",
+      "role": "运行时 OpenAPI 契约配置",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "ba84005659b7c8fdcacfd8c36cdd24d82ad8140f67203fd115f73aacaf5a8872",
+      "reviewed_rules": ["04 §5 接口契约", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-WEB-008", "DIAG-BASE-010"],
+      "evidence_ids": ["EV-B04-CONTRACT-WEB-20261028"],
+      "review_summary": "固定 API 1.0.0、snake_case、成功 data 包装、错误信封和可空字段导出。",
+      "review_limits": ["错误状态按控制器方法统一追加，未逐个接口人工核对业务可返回状态。"],
+      "review_kind": "api_contract_configuration_review",
+      "impact_ids": ["IMP-BASE-002", "IMP-WEB-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/contract/OpenApiExportTest.java",
+      "role": "运行时 OpenAPI 导出验收",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "4b33ccbffc9460fece206d1d1e5667e869cd5a002b1bc71b3b79aa81114f1680",
+      "reviewed_rules": ["04 §5 接口契约", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-WEB-008", "DIAG-BASE-010"],
+      "evidence_ids": ["EV-B04-CONTRACT-WEB-20261028"],
+      "review_summary": "从真实组合根和 MVC 映射导出 OpenAPI，断言版本、snake_case、version、可空字段、错误信封和 data 包装。",
+      "review_limits": ["依赖隔离 DB/Redis；只验证导出结构，不逐个业务接口做 HTTP 契约比对。"],
+      "review_kind": "openapi_export_test_review",
+      "impact_ids": ["IMP-WEB-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/EditVersionConflictHttpTest.java",
+      "role": "编辑版本与清空 HTTP 验收",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "965f2624a2b07719e6c7b41a3a99400b5869772d6bea30874611826a19b38365",
+      "reviewed_rules": ["04 §5 编辑协议", "04 §7 提交版本", "04 §10 生命周期", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-CORE-003", "DIAG-CORE-004", "DIAG-WEB-016", "DIAG-ADDITIONAL-001"],
+      "evidence_ids": ["EV-B04-EDIT-VERSION-20261028"],
+      "review_summary": "真实 HTTP/SQL 覆盖 8 类编辑入口的清空、陈旧 409、并发 200/409、重新入职清空 departed_at、手机号拒绝、缺身份和缺失版本。",
+      "review_limits": ["组织软删除闭包和真实 S3 故障不在本测试范围。"],
+      "review_kind": "edit_version_http_test_review",
+      "impact_ids": ["IMP-CORE-002", "IMP-WEB-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/quartz/service/impl/QuartzJobManagementSupport.java",
+      "role": "Quartz 编辑版本、API 时间与历史查询协作者",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "2c4ff189b79e5efbcc7a124c4f5fcf7b6cb62ec1c26809a27664e32269c9a093",
+      "reviewed_rules": ["04 §5 编辑协议", "04 §6 时间语义", "04 §7 提交版本", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-CORE-003"],
+      "evidence_ids": ["EV-B04-EDIT-VERSION-20261028", "EV-B04-MODEL-TIME-STATIC-20261028"],
+      "review_summary": "封装 QRTZ_JOB_DETAILS 编辑版本读写、时区转换和执行历史查询，避免管理服务构造参数超限。",
+      "review_limits": ["版本 SQL 依赖 PostgreSQL Quartz schema；未验证非 PostgreSQL 部署。"],
+      "review_kind": "quartz_edit_version_support_review",
+      "impact_ids": ["IMP-CORE-002"]
+    },
+    {
+      "path": "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/javabean/converter/FileUploadConverterReferenceTest.java",
+      "role": "文件引用 ID 映射验收",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "05996a1f4ccdf654b2afe9276934d39cb25d7fd28dd92632eec688503d088321",
+      "reviewed_rules": ["04 §5 接口契约", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-MODEL-002"],
+      "evidence_ids": ["EV-B04-MODEL-TIME-STATIC-20261028"],
+      "review_summary": "验证引用行 id 与业务 referenceId 使用不同 UUID 时分别映射，并在 snake_case 序列化下保持。",
+      "review_limits": ["未通过实际 HTTP 调用引用接口。"],
+      "review_kind": "reference_converter_test_review",
+      "impact_ids": ["IMP-CORE-003"]
+    },
+    {
+      "path": "spectra-admin/spectra-launch/src/main/resources/db/migration/V9__quartz_job_edit_version.sql",
+      "role": "Quartz 编辑版本迁移",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "7f3e93298dc2071b0f32e27395e233385015516b304a528787a5802d6b1e95a0",
+      "reviewed_rules": ["04 §7 提交版本", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-CORE-003"],
+      "evidence_ids": ["EV-B04-EDIT-VERSION-20261028"],
+      "review_summary": "为 QRTZ_JOB_DETAILS 增加默认 0 的 EDIT_VERSION，和 Job 参数 schema version 区分。",
+      "review_limits": ["迁移已在隔离测试库验证；生产存量 Job 行默认 0，首次编辑按当前读取版本递增。"],
+      "review_kind": "flyway_migration_review",
+      "impact_ids": ["IMP-CORE-002"]
+    },
+    {
+      "path": "spectra-ui/scripts/contracts.mjs",
+      "role": "前端契约生成与漂移检查脚本",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "93fdf4dc424b0d832fe24d2065eda698b5502fa645ad468435254a866363e290",
+      "reviewed_rules": ["04 §5 接口契约", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-WEB-008"],
+      "evidence_ids": ["EV-B04-CONTRACT-WEB-20261028"],
+      "review_summary": "从实际 OpenAPI JSON 规范化登记契约并生成 TypeScript 类型；check 模式逐字节比较漂移。",
+      "review_limits": ["实际 OpenAPI 路径需由调用方显式提供或通过 SPECTRA_OPENAPI_RAW 指定。"],
+      "review_kind": "contract_generation_script_review",
+      "impact_ids": ["IMP-WEB-002"]
+    },
+    {
+      "path": "spectra-ui/tests/date-utils.test.ts",
+      "role": "前端时间语义测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "50061744856912e272c7fa66c32a7d07486067c573bd451d83c04a941172a0d1",
+      "reviewed_rules": ["04 §6 时间语义", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-WEB-006"],
+      "evidence_ids": ["EV-B04-CONTRACT-WEB-20261028"],
+      "review_summary": "验证无偏移输入不套浏览器时区、偏移字段原样保留、非法日期/时间/偏移拒绝、控件去偏移和日期范围。",
+      "review_limits": ["纯函数测试，不覆盖真实浏览器时区差异。"],
+      "review_kind": "date_utils_test_review",
+      "impact_ids": ["IMP-WEB-002"]
+    },
+    {
+      "path": "spectra-ui/tests/request-error.test.ts",
+      "role": "前端错误契约测试",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "6c1471976f1c70b5c34d5cfdc943e4116260f96809930688f6abd7f5f460493d",
+      "reviewed_rules": ["04 §5 接口契约", "04 §13 验证与证据"],
+      "issue_ids": ["DIAG-WEB-005"],
+      "evidence_ids": ["EV-B04-CONTRACT-WEB-20261028"],
+      "review_summary": "验证只读取 error_code、忽略嵌套 data 旧回退、空错误响应使用状态提示、文本消息保留。",
+      "review_limits": ["Node Response，不覆盖实际 Fetch/XHR 网络异常。"],
+      "review_kind": "request_error_test_review",
+      "impact_ids": ["IMP-WEB-002"]
     }
   ],
   "issues": [
@@ -66407,13 +66549,14 @@
         }
       ],
       "finding": "IResult/ParsedResponseError/HttpRequestError未定义独立error_code；HTTP解析读candidate.code，fetch从msg正则猜业务标识，XHR只读code或x-error-code；保留nestedFailure和网关兼容分支。",
-      "impact": "无法按稳定DOMAIN_REASON处理冲突/基础设施/未知结果；后端当前也未提供error_code（后端代理复核），需要同步迁移。",
+      "impact": "无法按稳定DOMAIN_REASON处理冲突/基础设施/未知结果；后端当前也未提供error_code（后端代理复核），需要同步迁移。2026-10-28 前端只读取 error_code 并删除 code、嵌套 data、x-error-code 回退（EV-B04-CONTRACT-WEB-20261028）。",
       "priority": "P1",
       "disposition": "与后端统一错误契约并删除旧猜测/回退",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B04-CONTRACT-WEB-20261028"
       ],
       "impact_ids": [
         "IMP-WEB-002"
@@ -66430,18 +66573,20 @@
         }
       ],
       "finding": "带偏移服务端时刻再次new Date后使用浏览器getHours等重新显示；toIsoDateTime解析无偏移字符串使用浏览器时区，无效返回原输入。",
-      "impact": "用户设置时区不同于浏览器时区时输入/展示偏移；OA Calendar/Meeting/Leave和通知日期范围需公共一致迁移。",
+      "impact": "用户设置时区不同于浏览器时区时输入/展示偏移；OA Calendar/Meeting/Leave和通知日期范围需公共一致迁移。2026-10-28 前端时间工具改为保留服务端偏移并按用户时区解释无偏移输入（EV-B04-CONTRACT-WEB-20261028、EV-B04-MODEL-TIME-STATIC-20261028）。",
       "priority": "P1",
       "disposition": "按有效用户/显式系统时区转换和严格字段语义校验",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
-  "evidence_ids": [
-    "EV-ADDITIONAL-002",
-    "EV-B03-CONTACT-20261016"
-  ],
-  "impact_ids": [
-    "IMP-ADDITIONAL-001"
-  ]
+      "evidence_ids": [
+        "EV-B03-TIMEZONE-20261016",
+        "EV-B03-TIMEPARSE-20261016",
+        "EV-B04-CONTRACT-WEB-20261028",
+        "EV-B04-MODEL-TIME-STATIC-20261028"
+      ],
+      "impact_ids": [
+        "IMP-WEB-002"
+      ]
     },
     {
       "id": "DIAG-WEB-007",
@@ -66480,13 +66625,14 @@
         }
       ],
       "finding": "手写数据/端点类型缺生成事实源；crypto.server_public_key以及ConfiguredSettingVO.value/dict_code、Quartz nullable字段被声明必需|null，后端全局NON_NULL会省略这些值。",
-      "impact": "静态类型承诺与真实JSON可省略性不符，强断言无法验证动态边界。",
+      "impact": "静态类型承诺与真实JSON可省略性不符，强断言无法验证动态边界。2026-10-28 后端真实 OpenAPI 已导出并生成前端契约/类型，bootstrap、配置、Quartz 响应类型改为从生成契约派生，NON_NULL 缺省字段按可选类型表达（EV-B04-CONTRACT-WEB-20261028）。",
       "priority": "P1",
       "disposition": "核对真实HTTP/序列化并生成精确可省略类型",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B04-CONTRACT-WEB-20261028"
       ],
       "impact_ids": [
         "IMP-WEB-002"
@@ -66618,13 +66764,14 @@
         }
       ],
       "finding": "SecurityContextResponse同时声明grantable_permissions/grantablePermissions；模板继续回退读取camel旧字段。",
-      "impact": "内部1.0.0契约保留历史兼容分支，掩盖协议漂移。",
+      "impact": "内部1.0.0契约保留历史兼容分支，掩盖协议漂移。2026-10-28 删除 camelCase 别名和模板回退，仅保留 snake_case（EV-B04-CONTRACT-WEB-20261028）。",
       "priority": "P2",
       "disposition": "统一snake_case并删除别名与调用回退",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B04-CONTRACT-WEB-20261028"
       ],
       "impact_ids": [
         "IMP-WEB-002"
@@ -66664,13 +66811,15 @@
         }
       ],
       "finding": "普通profile提交无读取版本/409专用恢复；UserDTO、MenuSaveForm、Dict更新、Region与QuartzJobUpdateParams亦未携带编辑版本。ProfileInfo保留编辑但无刷新/重新处理路径。",
-      "impact": "普通编辑不能表达客户端读取版本；需要后端与全部编辑调用方公共一致迁移，不能以服务端新读版本规避。",
+      "impact": "普通编辑不能表达客户端读取版本；需要后端与全部编辑调用方公共一致迁移，不能以服务端新读版本规避。2026-10-28 8 类编辑入口均提交版本并在 409 时保留草稿，浏览器实测系统配置页刷新后采用最新版本重新提交成功（EV-B04-CONTRACT-WEB-20261028、EV-B04-EDIT-VERSION-20261028）。",
       "priority": "P1",
       "disposition": "生成版本字段并保留草稿提供明确冲突恢复",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B04-CONTRACT-WEB-20261028",
+        "EV-B04-EDIT-VERSION-20261028"
       ],
       "impact_ids": [
         "IMP-WEB-002"
@@ -67298,14 +67447,15 @@
         }
       ],
       "finding": "普通编辑DTO没有读取版本；用户/行政区划/系统配置服务新读数据库实体版本再更新，不能检测客户陈旧编辑；菜单新映射对象无version；Quartz任务替换也无提交版本。UserPageVO/UserProfileVO也未暴露读取版本。",
-      "impact": "需请求/响应、映射、数据库原子条件、错误HTTP409/error_code和Web保留编辑联动治理。",
+      "impact": "需请求/响应、映射、数据库原子条件、错误HTTP409/error_code和Web保留编辑联动治理。2026-10-28 8 类编辑入口已提交读取版本并通过 MP 乐观锁/Quartz 显式条件更新原子拒绝陈旧写入，真实 HTTP 覆盖清空、陈旧 409 与并发 200/409（EV-B04-EDIT-VERSION-20261028）。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-CORE-001",
-        "EV-MODEL-001"
+        "EV-MODEL-001",
+        "EV-B04-EDIT-VERSION-20261028"
       ],
       "supporting_locations": [
         {
@@ -67384,15 +67534,16 @@
         }
       ],
       "finding": "Menu/Region更新未检查updateById返回；Menu pid/routeName、Region可空文本及Configured remarks交实体更新，字段未显式ALWAYS或强类型存在性契约。默认MP非null策略下清空值可能不写入。需以生成映射/实际SQL复核清空；目前不是HTTP实测结论。",
-      "impact": "菜单移根/目录routeName清空、配置备注及区域字段清空可能静默失败，陈旧版本写失败仍可返回成功。2026-10-17 已检查 updateById 结果并将可空字段设为 ALWAYS；客户端提交版本的原子条件仍由 DIAG-CORE-003/DIAG-WEB-016 处理（EV-B04-PROTOCOL-20261017）。",
+      "impact": "菜单移根/目录routeName清空、配置备注及区域字段清空可能静默失败，陈旧版本写失败仍可返回成功。2026-10-17 已检查 updateById 结果并将可空字段设为 ALWAYS；2026-10-28 已用真实 HTTP/SQL 验证菜单、字典、区域、配置的合法清空和陈旧版本拒绝，重新入职清空 departed_at（EV-B04-PROTOCOL-20261017、EV-B04-EDIT-VERSION-20261028）。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "in_progress",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-CORE-001",
         "EV-MODEL-001",
-        "EV-B04-PROTOCOL-20261017"
+        "EV-B04-PROTOCOL-20261017",
+        "EV-B04-EDIT-VERSION-20261028"
       ],
       "supporting_locations": [
         {
@@ -70894,6 +71045,21 @@
       "reevaluate_when": "Quartz 参数校验器实现或 Spring 装配生命周期改变。",
       "state": "active",
       "evidence_ids": ["EV-B02-STATIC-20261011"]
+    },
+    {
+      "id": "EX-B04-SPOTBUGS-001",
+      "path": "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/quartz/service/impl/QuartzJobManagementSupport.java",
+      "symbol": "com.devops00.spectra.core.quartz.service.impl.QuartzJobManagementSupport",
+      "rule": "SpotBugs.EI_EXPOSE_REP2",
+      "measured_value": "1 exact class-and-rule filter for injected JdbcTemplate/TimeMapper/HistoryService",
+      "tool_version": "SpotBugs 4.10.3.0",
+      "necessity": "编辑版本、API 时间和执行历史查询协作者由 Spring 持有并注入，服务只在私有 final 字段中使用；没有可安全复制的值对象。",
+      "risk": "协作者生命周期或可变状态变化可能改变 Quartz 编辑版本和查询行为。",
+      "verification": "Quartz 编辑版本 HTTP 专项、OpenAPI 导出和后端完整静态门禁；变更协作者依赖时复核。",
+      "owner_area": "spectra-core/quartz",
+      "reevaluate_when": "QuartzJobManagementSupport 依赖、JdbcTemplate 使用方式或 SpotBugs 规则集改变。",
+      "state": "active",
+      "evidence_ids": ["EV-B04-MODEL-TIME-STATIC-20261028"]
     },
     {
       "id": "EX-B00-SPOTBUGS-002",
@@ -76762,6 +76928,73 @@
         "docs/开发指南/工程治理/README.md"
       ],
       "limits": "仅本次诊断记录与当前文件一致性；本地核对器不是正式例外/抑制/复杂度/协议/行为门禁，GOV002/003/004/006仍待实施。"
+    },
+    {
+      "id": "EV-B04-EDIT-VERSION-20261028",
+      "scope": "B04 编辑版本、清空持久化、409 与重新入职/并发行为",
+      "command_or_scenario": [
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dtest=EditVersionConflictHttpTest' ... test -> 6/6",
+        "spectra-admin: CoreConflictHttpTest -> 2/2",
+        "覆盖用户 onboarding/profile、菜单、字典组/项、区域、系统配置、Quartz 的版本提交、合法清空、陈旧 409、并发 200/409、重新入职清空 departed_at、手机号编辑拒绝、缺身份 401、缺失版本 400"
+      ],
+      "environment": "原生 Windows PowerShell 7、mise test 环境、JDK 25、Maven Wrapper；PostgreSQL devops00_spectra_db_test、Redis DB 5；未读取或输出凭据。",
+      "tool_versions": {"maven": "3.9.12", "java": "25.0.2", "postgresql": "18.4"},
+      "checked_at": "2026-10-28",
+      "result": "passed",
+      "artifacts": [
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/EditVersionConflictHttpTest.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/quartz/service/impl/QuartzJobManagementSupport.java",
+        "spectra-admin/spectra-launch/src/main/resources/db/migration/V9__quartz_job_edit_version.sql",
+        ".temp/b04/backend-edit-conflict-final.log"
+      ],
+      "limits": "BC-MODEL-004 未执行隔离 PostgreSQL 软删除闭包读/计数；BC-ADDITIONAL-002 未连接真实 S3 故障容器。"
+    },
+    {
+      "id": "EV-B04-CONTRACT-WEB-20261028",
+      "scope": "B04 OpenAPI 导出、前端生成类型、错误契约与浏览器 409 草稿恢复",
+      "command_or_scenario": [
+        "spectra-admin: OpenApiExportTest -> 1/1（3.1.0/1.0.0、snake_case、version、可空字段、ApiErrorEnvelope、409/data 包装）",
+        "spectra-ui: pnpm run contract:generate / contract:check ../.temp/b04/openapi.raw.json -> 一致",
+        "spectra-ui: type-check、lint、format:check 通过；vitest 11 文件/34 项通过",
+        "Playwright 真实前后端：系统配置 409 草稿保留、采用最新版本后重新提交成功，数据库值/版本复核"
+      ],
+      "environment": "原生 Windows PowerShell 7、mise test 环境、JDK 25、Vite 8、Chrome/Playwright；PostgreSQL devops00_spectra_db_test、Redis DB 5。",
+      "tool_versions": {"node": "24.14.0", "pnpm": "12.6.0", "vite": "8.0.11", "chrome": "Playwright MCP"},
+      "checked_at": "2026-10-28",
+      "result": "passed",
+      "artifacts": [
+        "spectra-admin/spectra-launch/src/main/java/com/devops00/spectra/launch/configuration/OpenApiConfiguration.java",
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/contract/OpenApiExportTest.java",
+        "spectra-ui/contracts/openapi.json",
+        "spectra-ui/src/api/generated/openapi.ts",
+        "spectra-ui/scripts/contracts.mjs",
+        ".temp/b04/openapi-export.log",
+        ".temp/page-2026-10-28T06-52-55-788Z.yml"
+      ],
+      "limits": "BEH-WEB-005 未覆盖完整页面矩阵；页面表单模型继续手写，仅响应类型从生成契约派生。"
+    },
+    {
+      "id": "EV-B04-MODEL-TIME-STATIC-20261028",
+      "scope": "B04 时间/偏移/Range/引用映射与后端静态门禁",
+      "command_or_scenario": [
+        "TimeMapperTest -> 11/11（offset/Zoned、严格 ISO、DST gap/overlap、LocalTime 拒绝）",
+        "FileAssetStreamControllerTest -> 4/4（实际区间、完整响应、非法区间、start 越界 416）",
+        "RestSecurityErrorResponseTest 3/3、ReadinessGateFilterTest 3/3、CommonExceptionAdviceConflictTest 1/1",
+        "FileUploadConverterReferenceTest 1/1；DepartmentRestructureServiceImplTest 4/4",
+        "FlywayMigrationAssemblyTest（V1–V9 空库与 V7→V9）、OaMeetingFullHttpFlywayTest、EditVersionConflictHttpTest、CoreConflictHttpTest 组合 -> 10/10",
+        "mise exec -- .\\mvnw.cmd -pl spectra-launch -am '-DskipTests' install -> BUILD SUCCESS；Spotless/Checkstyle/PMD/SpotBugs/Enforcer 通过"
+      ],
+      "environment": "原生 Windows PowerShell 7、mise test 环境、JDK 25、Maven Wrapper；PostgreSQL devops00_spectra_db_test、Redis DB 5。",
+      "tool_versions": {"maven": "3.9.12", "java": "25.0.2", "pmd": "7.17.0", "spotbugs": "4.10.3.0"},
+      "checked_at": "2026-10-28",
+      "result": "passed",
+      "artifacts": [
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/javabean/converter/FileUploadConverterReferenceTest.java",
+        "spectra-admin/config/spotbugs/exclude.xml",
+        ".temp/b04/b04-model-time-range-tests.log",
+        ".temp/b04/backend-install-ui.log"
+      ],
+      "limits": "BC-MODEL-004 仍缺隔离 PostgreSQL 软删除闭包实测；BC-ADDITIONAL-002 仍缺真实 S3 存储故障。"
     }
   ],
   "work_items": [
@@ -76798,13 +77031,13 @@
       ]
     },
     {
-      "id": "GOV-004",
-      "area": "api contract",
-      "requirement": "Export and validate actual backend OpenAPI; generate TypeScript data and endpoint types; check deterministic output and drift.",
-      "state": "pending",
-      "resolution": "Generation and contract verification chain must be implemented and verified.",
-      "evidence_ids": []
-    },
+  "id": "GOV-004",
+  "area": "api contract",
+  "requirement": "Export and validate actual backend OpenAPI; generate TypeScript data and endpoint types; check deterministic output and drift.",
+  "state": "resolved",
+  "resolution": "2026-10-28 已实现运行时 OpenAPI 3.1.0/API 1.0.0 导出、规范化契约、TypeScript 类型生成和 contract:check 漂移检查；OpenApiExportTest、前端 type-check/lint/format/test 均通过。",
+  "evidence_ids": ["EV-B04-CONTRACT-WEB-20261028"]
+},
     {
       "id": "GOV-005",
       "area": "shared changes",
@@ -76998,7 +77231,7 @@
       }
     ],
     "scope_counts": {
-      "included": 1667,
+      "included": 1677,
       "shared_impact": 30,
       "deferred_business": 439,
       "excluded": 24
@@ -77365,15 +77598,15 @@
       {
         "id": "BC-BASE-006",
         "name": "API协议",
-        "status": "partially_executed",
+        "status": "passed",
         "necessary_acceptance": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
-        "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 已补 Advice 层断言：重复键 DATA_EXIST、完整性 BUSINESS_CONFLICT、版本冲突 ENTITY_UPDATE_CONFLICT（EV-B03-CONFLICT-20261016），并补完整 MVC 真实 HTTP：重复角色编码由 500 修为 409 DATA_EXIST（EV-B03-CONFLICT-HTTP-20261016）；NON_NULL OpenAPI 类型同步按用户决定标记为受环境限制（仓库无 OpenAPI 生成设施），B03 收尾。",
+        "boundary": "2026-10-16 已实现并单元验证 401/403/503：401 未登录 UNAUTHENTICATED、密码错误 AUTHENTICATION_FAILED，403 ACCESS_DENIED，503 DEPENDENCY_NOT_READY（EV-B03-PROTOCOL-20261016）。409 已补 Advice 层断言：重复键 DATA_EXIST、完整性 BUSINESS_CONFLICT、版本冲突 ENTITY_UPDATE_CONFLICT（EV-B03-CONFLICT-20261016），并补完整 MVC 真实 HTTP：重复角色编码由 500 修为 409 DATA_EXIST（EV-B03-CONFLICT-HTTP-20261016）。2026-10-28 补充编辑版本 409、缺身份 401、缺失版本 400 真实 HTTP，并完成运行时 OpenAPI 导出与类型同步（EV-B04-EDIT-VERSION-20261028、EV-B04-CONTRACT-WEB-20261028、EV-B04-MODEL-TIME-STATIC-20261028）。",
         "scenario": "HTTP401/403/409/503与body code一致，error_code稳定；filter/advice/SQL冲突/版本冲突及NON_NULL OpenAPI类型同步。",
-        "state": "partially_executed",
+        "state": "passed",
         "issue_ids": ["DIAG-BASE-010"],
         "impact_ids": ["IMP-BASE-001"],
-        "evidence_ids": ["EV-B03-ERRORCODE-20261016", "EV-B03-PROTOCOL-20261016", "EV-B03-CONFLICT-20261016", "EV-B03-CONFLICT-HTTP-20261016"],
-        "required_environment": "401/403/503 已单元验证；409 已完成 Advice 层与真实 MVC（重复角色编码）验证；OpenAPI 类型同步待执行。"
+        "evidence_ids": ["EV-B03-ERRORCODE-20261016", "EV-B03-PROTOCOL-20261016", "EV-B03-CONFLICT-20261016", "EV-B03-CONFLICT-HTTP-20261016", "EV-B04-EDIT-VERSION-20261028", "EV-B04-CONTRACT-WEB-20261028", "EV-B04-MODEL-TIME-STATIC-20261028"],
+        "required_environment": "真实 HTTP 401/403/409/503 错误契约、OpenAPI 导出与生成类型漂移检查、隔离 DB/Redis。"
       },
       {
         "id": "BC-BASE-007",
@@ -77604,20 +77837,20 @@
       {
         "scenario": "未执行409草稿保留/刷新重新处理",
         "id": "BEH-WEB-004",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
+        "evidence_ids": ["EV-B04-CONTRACT-WEB-20261028"],
+        "required_environment": "隔离 DB/Redis 后端、Vite 前端、真实浏览器；系统配置页 409 草稿保留"
       },
       {
-        "scenario": "未执行实际HTTP/NON_NULL/错误码/时间偏移/生成漂移",
+        "scenario": "实际HTTP/NON_NULL/错误码/时间偏移/生成漂移",
         "id": "BEH-WEB-005",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
+        "evidence_ids": ["EV-B04-CONTRACT-WEB-20261028", "EV-B04-EDIT-VERSION-20261028", "EV-B04-MODEL-TIME-STATIC-20261028"],
+        "required_environment": "真实 HTTP、OpenAPI 导出、前端生成契约与漂移检查；未覆盖完整页面矩阵"
       },
       {
         "scenario": "未执行插件宿主卸载与迟到picker",
@@ -77667,11 +77900,11 @@
       {
         "scenario": "未执行版本冲突刷新比较保留草稿和重提交",
         "id": "BEH-WEB-011",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
+        "evidence_ids": ["EV-B04-CONTRACT-WEB-20261028"],
+        "required_environment": "隔离 DB/Redis 后端、Vite 前端、真实浏览器；版本冲突后采用最新版本并重新提交"
       },
       {
         "scenario": "未执行供应商/配置跨区域dirty草稿刷新",
@@ -78223,18 +78456,18 @@
       },
       {
         "required_environment": "隔离PostgreSQL，实际服务用例与HTTP409/error_code",
-        "state": "not_run",
+        "state": "passed",
         "scenario": "相同读取version并发更新安全实体：一项成功、一项原子拒绝；显式Wrapper与MP updateById各覆盖",
         "id": "BC-MODEL-001",
         "issue_ids": [
           "DIAG-MODEL-001"
         ],
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-B04-EDIT-VERSION-20261028"]
       },
       {
         "required_environment": "隔离DB/真实绑定与生成映射，Web编辑恢复",
-        "state": "not_run",
+        "state": "passed",
         "scenario": "字典、菜单、区域、配置完整提交陈旧version/NULL备注或父级：版本拒绝、合法清空持久化且返回值检查",
         "id": "BC-MODEL-002",
         "issue_ids": [
@@ -78242,40 +78475,40 @@
           "DIAG-CORE-004"
         ],
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-B04-EDIT-VERSION-20261028", "EV-B04-CONTRACT-WEB-20261028"]
       },
       {
         "required_environment": "当前生成器可复现运行与Jackson契约",
-        "state": "not_run",
+        "state": "passed",
         "scenario": "引用行id与业务referenceId使用不同UUID，转换与snake_case序列化分别保持",
         "id": "BC-MODEL-003",
         "issue_ids": [
           "DIAG-MODEL-002"
         ],
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-B04-MODEL-TIME-STATIC-20261028", "EV-B04-CONTRACT-WEB-20261028"]
       },
       {
         "required_environment": "隔离DB及授权上下文",
-        "state": "not_run",
+        "state": "partially_executed",
         "scenario": "软删除部门/组织合并后活动与历史includeDescendants读/计数保持明确范围；重建回滚完整",
         "id": "BC-MODEL-004",
         "issue_ids": [
           "DIAG-MODEL-003"
         ],
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-MODEL-004", "EV-B04-MODEL-TIME-STATIC-20261028"]
       },
       {
         "required_environment": "可控时间与实际HTTP序列化",
-        "state": "not_run",
+        "state": "passed",
         "scenario": "夏令时/有效用户和系统时区、Instant响应偏移、字符串输入严格解析；空集合/可省略字段保持现状",
         "id": "BC-MODEL-005",
         "issue_ids": [
           "DIAG-BASE-008"
         ],
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-B04-MODEL-TIME-STATIC-20261028", "EV-B04-EDIT-VERSION-20261028", "EV-B04-CONTRACT-WEB-20261028"]
       },
       {
         "required_environment": "隔离DB、可控时间、明确竞争",
@@ -78305,9 +78538,9 @@
         "issue_ids": [
           "DIAG-ADDITIONAL-001"
         ],
-        "state": "not_run",
+        "state": "passed",
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-ADDITIONAL-002", "EV-B03-CONTACT-20261016", "EV-B04-EDIT-VERSION-20261028"]
       },
       {
         "scenario": "LOCAL/S3 Range正常/超长/越界/非法数字/存储故障，核对status、Content-Length/Content-Range与实际bytes",
@@ -78317,9 +78550,9 @@
           "DIAG-ADDITIONAL-002",
           "DIAG-BASE-010"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-ADDITIONAL-003", "EV-B03-RANGE-20261016", "EV-B03-RANGE416-20261016", "EV-B04-MODEL-TIME-STATIC-20261028"]
       },
       {
         "scenario": "无效静态上传配置按启用条件拒绝绑定/启动，边界预算有效",
@@ -78357,9 +78590,9 @@
           "DIAG-CORE-004",
           "DIAG-MODEL-001"
         ],
-        "state": "not_run",
+        "state": "passed",
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": ["EV-B04-EDIT-VERSION-20261028"]
       },
       {
         "scenario": "重启/多实例校验任务恢复与READY分片清理，慢cleanup旧租约不得破坏新领取状态",

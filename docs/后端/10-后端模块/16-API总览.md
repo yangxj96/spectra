@@ -83,7 +83,7 @@ tags:
 |---|---|---|---|
 | `MenuController` | spectra-core | `/menu/**` | 菜单 CRUD / 完整管理树 / 当前用户授权树 |
 | `DepartmentController` | spectra-core | `/department/**` | 活动部门树查询；新增/编辑/移动使用 AuthorizationController 的组织 Impact Preview/Apply |
-| `RegionController` | spectra-core | `/region/**` | 区域查询（省/市/区县/乡镇街道/村级） |
+| `RegionController` | spectra-core | `/region/**` | 区域查询（省/市/区县/乡镇街道/村级）；`GET /region/{id}` 返回当前区域及编辑版本 |
 | `DictController` | spectra-core | `/dict/**` | 字典组 / 字典项管理；字典项仅启用或禁用、不提供删除，禁用项保留历史标签，默认项按组唯一；状态操作和默认项操作见系统管理说明 |
 | `ConfiguredController` | spectra-core | `/configured/**` | `GET /configured/settings` 按业务分类读取配置表单；`PUT /configured/batch` 在单个事务内保存当前分类 |
 | `ServiceMonitorController` | spectra-core | `/service/monitor/**` | 服务监控总览、30 分钟/6 小时/24 小时历史趋势、告警规则/事件/摘要、JVM 运行时只读诊断和受控线程/堆转储任务；读取、告警配置、诊断分别受 `system:monitor:read`、`system:monitor:alert`、`system:monitor:configure`、`system:monitor:diagnose` 保护 |
