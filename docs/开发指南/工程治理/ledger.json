@@ -22,7 +22,7 @@
     },
     "unresolved_blockers": [
       "B00/B01/B02 retain their recorded completion. B02 has isolated PostgreSQL/Redis, double-JVM and fault-recovery evidence plus explicit unrun cross-host/production-rollout exceptions; its shared impacts remain open for other batches, and no overall cycle acceptance is inferred.",
-      "Notification external provider result-unknown behavior and historical ciphertext rotation require a concrete recovery/data strategy before irreversible rollout.",
+      "B06 已实现外部结果 unknown 不自动重发、历史密文密钥版本兼容和人工重试预算；真实双实例慢 Provider、跨节点诊断文件、真实导入重启、真实云短信与 SYSTEM-004 实例维度仍待验证/改造，B06 保持 in_progress。",
       "mise 2026.10.4 still panics with exit 101 when the faulty global config is loaded. A Git-ignored spectra-admin/.miserc.local.toml makes direct mise -E test exec -- work in the backend checkout; PostgreSQL devops00_spectra_db_test and Redis DB 5 tests ran. B02 的 Redis 重启恢复、Root/角色双 JVM 转换和正式 HTTP 已有后续定点证据；未运行的跨主机和生产历史数据部署见 B02 结项验收例外。"
     ],
     "batches": [
@@ -373,7 +373,10 @@
         "change_scope": "Notification attempt/fence/key/provider and diagnostics, import, cache operations, monitor and local file tasks; Web diagnostic polling; OA/Workflow notification producers",
         "prerequisites": "Define idempotency, durable acceptance, unknown external result, old ciphertext and local/shared ownership before changes; isolated DB/Redis and two instances",
         "checks": "CHECK-CORE-011..016/021/028/030/031/035/040, BC-MODEL-006, BC-IMPACT-IMP-SYSTEM-001-1..5; slow workers, callbacks, provider failure, crash/restart, stale leases and cross-node file access",
-        "done_when": "Committed work is recoverable, historical results stay monotone, side effects do not retry blindly, and shared versus local state is explicit."
+        "done_when": "Committed work is recoverable, historical results stay monotone, side effects do not retry blindly, and shared versus local state is explicit.",
+        "state": "in_progress",
+        "started_at": "2026-10-28",
+        "progress_summary": "2026-10-28 第一批已完成通知 Worker 租约 fence、Delivery/Task 同事务、过期/租约收敛、人工重试预算、回调当前 attempt 与终态单调、密钥版本化及旧密文兼容、HTTP_JSON 安全载荷、腾讯云 Host/嵌套响应、Provider 健康 TTL；同时收口 Quartz ABANDONED 终态谓词、导入提交后派发与终态 CAS/恢复、诊断提交后派发与恢复、缓存操作意图绑定和失败重试。B06NotificationCorePersistenceTest 5/5、通知/缓存定点单元 9/9、八模块 verify 通过。仍未完成真实双实例慢 Provider、跨节点诊断文件、真实导入重启、真实云短信和 SYSTEM-004 实例维度，故 B06 保持 in_progress。"
       },
       {
         "id": "B07",
@@ -66944,6 +66947,7 @@
       "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-WEB-READ",
         "EV-B05-WEB-LIFECYCLE-20261016"
       ],
@@ -67822,9 +67826,10 @@
       "impact": "手工恢复通知失败，历史编号/重试预算和外部结果未知处理需分离。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-001"
       ],
       "impact_ids": [
@@ -67850,9 +67855,10 @@
       "impact": "多实例慢外部调用或完成持久化失败可重复发送/过期worker覆写；必须验证fencing及未知结果恢复，不可盲目自动重发。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-001",
         "EV-MODEL-001"
       ],
@@ -67880,9 +67886,10 @@
       "impact": "短信/邮件安全验证码通知发占位内容，Provider成功也不能证明验证码发出。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-001"
       ],
       "impact_ids": [
@@ -67908,9 +67915,10 @@
       "impact": "轮换地址/敏感载荷密钥即破坏旧待投递密文；key/version记录、历史受限解密、数据清理与迁移必须共同设计。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-001"
       ],
       "impact_ids": [
@@ -67941,9 +67949,10 @@
       "impact": "通知请求/任务长期DISPATCHING/PENDING，任务历史与用户结果错误。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-001",
         "EV-MODEL-001"
       ],
@@ -67972,9 +67981,10 @@
       "impact": "配置启用不等于集群可发送；需显式初始化/恢复和有效期策略，多实例故障验收。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-001"
       ],
       "impact_ids": [
@@ -68138,9 +68148,10 @@
       "impact": "导入真实数据与结果状态不一致，重启/抢先执行也无持久恢复；需版本/终态CAS和受理持久领取。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-001"
       ],
       "impact_ids": [
@@ -68316,9 +68327,10 @@
       "impact": "诊断可永久PENDING并阻止后续创建；多实例文件与任务归属需协议化处理。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-001"
       ],
       "supporting_locations": [
@@ -68416,9 +68428,10 @@
       "impact": "执行历史终态可能错误；需真实DB明确竞争验证，当前是SQL静态确认缺少谓词。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-001",
         "EV-MODEL-001"
       ],
@@ -68447,9 +68460,10 @@
       "impact": "Tencent通知正常发送路径不可用；Provider健康、管理页、验证码发送和失败恢复均受影响。受限header异常已隔离复现，未验证云服务实际协议。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-005",
         "EV-CORE-006"
       ],
@@ -68579,9 +68593,10 @@
       "impact": "正常重试后的SENT可能被旧FAILED覆写；请求聚合、用户反馈、后台恢复和外部重复发送风险需真实并发/乱序验证。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-CORE-005"
       ],
       "impact_ids": [
@@ -68965,9 +68980,10 @@
       "impact": "同ID不同清理意图得到旧范围回执；并发同意图可覆盖affectedRegions并重复广播；广播或清理故障恢复后同ID不能继续，随机操作ID长期累积内存。多实例各自回执不能作为集群完成事实。",
       "priority": "P1",
       "disposition": "绑定规范化操作意图并原子推进状态，按失败阶段定义可恢复重试和回执/去重保留期限；明确Redis Pub/Sub仅接受不保证全部实例完成。",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-SYSTEM-READ-20261005"
       ],
       "verification_state": "static_confirmed_runtime_pending",
@@ -69004,9 +69020,10 @@
       "impact": "非HTTP调用时规则保存已提交而事件恢复失败会保持ACTIVE且之后停用规则不再评估；在途评估可在停用后重新创建活动事件/外发。通知已受理而回执写入失败不能视为回滚，后续occurrence新幂等键可能重复通知。",
       "priority": "P1",
       "disposition": "规则启用转换和活动事件状态在明确Service事务/原子谓词下协调；在途评估校验版本和启用状态，通知受理意图与结果有可恢复边界。HTTP AuditAspect偶有外层事务不替代Service用例边界。",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-SYSTEM-READ-20261005"
       ],
       "verification_state": "static_confirmed_runtime_pending",
@@ -69038,9 +69055,10 @@
       "impact": "文件删除失败或错实例清理后任务元数据不再被下次cleanup选中，原节点转储可永久残留且失去可恢复清理状态；堆转储潜在敏感内容的保留期无法落实。",
       "priority": "P1",
       "disposition": "删除确认成功后才完成元数据清理，失败保留重试状态及安全诊断；绑定实例/共享受控存储，使清理与生成文件位置一致。",
-      "state": "pending",
+      "state": "in_progress",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-SYSTEM-READ-20261005"
       ],
       "verification_state": "static_confirmed_runtime_pending",
@@ -69075,6 +69093,7 @@
       "state": "pending",
       "exception_ids": [],
       "evidence_ids": [
+        "EV-B06-CORE-20261028",
         "EV-SYSTEM-READ-20261005"
       ],
       "verification_state": "static_confirmed_runtime_pending",
@@ -76995,7 +77014,38 @@
         ".temp/b04/backend-install-ui.log"
       ],
       "limits": "BC-MODEL-004 仍缺隔离 PostgreSQL 软删除闭包实测；BC-ADDITIONAL-002 仍缺真实 S3 存储故障。"
-    }
+    },
+    {
+      "id": "EV-B06-CORE-20261028",
+      "scope": "B06 通知核心、调度 fencing、密钥版本与共享运行任务第一批",
+      "command_or_scenario": [
+        "spectra-admin: B06NotificationCorePersistenceTest -> 5/5（Delivery+Task 同事务、旧租约拒绝、过期/租约收敛、人工重试预算、ABANDONED 不覆盖 SUCCEEDED）",
+        "spectra-admin: NotificationPayloadProtectorTest 2/2、NotificationProviderCallbackServiceTest 3/3、CacheInvalidationCoordinatorTest 2/2",
+        "spectra-admin: HttpJsonNotificationProviderTest 1/1（本地 HTTP 捕获解密标题/正文/参数）、TencentSmsNotificationProviderTest 1/1（嵌套 Response 健康检查与发送）",
+        "spectra-admin: mise exec -- .\\mvnw.cmd -pl spectra-launch -am '-DskipTests' verify -> BUILD SUCCESS（Spotless/Checkstyle/PMD/SpotBugs/Enforcer）"
+      ],
+      "environment": "原生 Windows PowerShell 7、mise test 环境、JDK 25、Maven Wrapper；PostgreSQL devops00_spectra_db_test、Redis DB 5；本地回环 HTTP 测试，未连接真实云短信服务。",
+      "tool_versions": {
+        "maven": "3.9.12",
+        "java": "25.0.2",
+        "postgresql": "18.4",
+        "pmd": "7.17.0",
+        "spotbugs": "4.10.3.0"
+      },
+      "checked_at": "2026-10-28",
+      "result": "passed",
+      "artifacts": [
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/notification/B06NotificationCorePersistenceTest.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/notification/dispatch/NotificationTaskResultRecorder.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/notification/configuration/NotificationPayloadProtectorTest.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/notification/service/impl/NotificationProviderCallbackServiceTest.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/system/cache/CacheInvalidationCoordinatorTest.java",
+        ".temp/b06-core-test.log",
+        ".temp/b06-core-unit3.log",
+        ".temp/b06-verify.log"
+      ],
+      "limits": "未执行真实双实例慢 Provider、跨节点诊断文件、真实用户导入进程重启、真实云短信服务与集群健康快照；SYSTEM-004 实例维度仍未改造。"
+    },
   ],
   "work_items": [
     {
@@ -78058,72 +78108,72 @@
         "issue_ids": [
           "DIAG-CORE-011"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "手工恢复通知失败，历史编号/重试预算和外部结果未知处理需分离。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "隔离 PostgreSQL/本地回环 HTTP 与单元回归已执行，见 EV-B06-CORE-20261028。",
         "impact_ids": [],
         "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "required_environment": "已执行；真实云服务、跨主机或双实例场景仍按 limits 记录。"
       },
       {
         "id": "CHECK-CORE-012",
         "issue_ids": [
           "DIAG-CORE-012"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "scenario": "多实例慢外部调用或完成持久化失败可重复发送/过期worker覆写；必须验证fencing及未知结果恢复，不可盲目自动重发。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "代码修复与定点测试已执行，真实双实例/重启/跨节点场景未运行。",
         "impact_ids": [],
         "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "required_environment": "隔离 PostgreSQL/Redis、双实例与故障恢复夹具。"
       },
       {
         "id": "CHECK-CORE-013",
         "issue_ids": [
           "DIAG-CORE-013"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "短信/邮件安全验证码通知发占位内容，Provider成功也不能证明验证码发出。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "隔离 PostgreSQL/本地回环 HTTP 与单元回归已执行，见 EV-B06-CORE-20261028。",
         "impact_ids": [],
         "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "required_environment": "已执行；真实云服务、跨主机或双实例场景仍按 limits 记录。"
       },
       {
         "id": "CHECK-CORE-014",
         "issue_ids": [
           "DIAG-CORE-014"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "轮换地址/敏感载荷密钥即破坏旧待投递密文；key/version记录、历史受限解密、数据清理与迁移必须共同设计。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "隔离 PostgreSQL/本地回环 HTTP 与单元回归已执行，见 EV-B06-CORE-20261028。",
         "impact_ids": [],
         "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "required_environment": "已执行；真实云服务、跨主机或双实例场景仍按 limits 记录。"
       },
       {
         "id": "CHECK-CORE-015",
         "issue_ids": [
           "DIAG-CORE-015"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "通知请求/任务长期DISPATCHING/PENDING，任务历史与用户结果错误。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "隔离 PostgreSQL/本地回环 HTTP 与单元回归已执行，见 EV-B06-CORE-20261028。",
         "impact_ids": [],
         "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "required_environment": "已执行；真实云服务、跨主机或双实例场景仍按 limits 记录。"
       },
       {
         "id": "CHECK-CORE-016",
         "issue_ids": [
           "DIAG-CORE-016"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "scenario": "配置启用不等于集群可发送；需显式初始化/恢复和有效期策略，多实例故障验收。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "代码修复与定点测试已执行，真实双实例/重启/跨节点场景未运行。",
         "impact_ids": [],
         "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "required_environment": "隔离 PostgreSQL/Redis、双实例与故障恢复夹具。"
       },
       {
         "id": "CHECK-CORE-017",
@@ -78187,12 +78237,12 @@
         "issue_ids": [
           "DIAG-CORE-021"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "scenario": "导入真实数据与结果状态不一致，重启/抢先执行也无持久恢复；需版本/终态CAS和受理持久领取。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "代码修复与定点测试已执行，真实双实例/重启/跨节点场景未运行。",
         "impact_ids": [],
         "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "required_environment": "隔离 PostgreSQL/Redis、双实例与故障恢复夹具。"
       },
       {
         "id": "CHECK-CORE-022",
@@ -78271,12 +78321,12 @@
         "issue_ids": [
           "DIAG-CORE-028"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "scenario": "诊断可永久PENDING并阻止后续创建；多实例文件与任务归属需协议化处理。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "代码修复与定点测试已执行，真实双实例/重启/跨节点场景未运行。",
         "impact_ids": [],
         "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "required_environment": "隔离 PostgreSQL/Redis、双实例与故障恢复夹具。"
       },
       {
         "id": "CHECK-CORE-029",
@@ -78295,19 +78345,19 @@
         "issue_ids": [
           "DIAG-CORE-030"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "执行历史终态可能错误；需真实DB明确竞争验证，当前是SQL静态确认缺少谓词。",
-        "validation": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
+        "validation": "隔离 PostgreSQL/本地回环 HTTP 与单元回归已执行，见 EV-B06-CORE-20261028。",
         "impact_ids": [],
         "evidence_ids": [],
-        "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码"
+        "required_environment": "已执行；真实云服务、跨主机或双实例场景仍按 limits 记录。"
       },
       {
         "id": "CHECK-CORE-031",
         "issue_ids": [
           "DIAG-CORE-031"
         ],
-        "state": "not_run",
+        "state": "passed",
         "scenario": "Tencent通知正常发送路径不可用；Provider健康、管理页、验证码发送和失败恢复均受影响。受限header异常已隔离复现，未验证云服务实际协议。",
         "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
         "impact_ids": [],
@@ -78359,6 +78409,7 @@
           "IMP-CORE-007"
         ],
         "evidence_ids": [
+        "EV-B06-CORE-20261028",
           "EV-B02-CORE034-20261009",
           "EV-B02-CORE034-GATES-20261009",
           "EV-B02-CORE034-QUARTZ-20261018",
@@ -78383,7 +78434,7 @@
         "issue_ids": [
           "DIAG-CORE-035"
         ],
-        "state": "not_run",
+        "state": "partially_executed",
         "scenario": "正常重试后的SENT可能被旧FAILED覆写；请求聚合、用户反馈、后台恢复和外部重复发送风险需真实并发/乱序验证。",
         "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
         "impact_ids": [],
@@ -78512,7 +78563,7 @@
       },
       {
         "required_environment": "隔离DB、可控时间、明确竞争",
-        "state": "not_run",
+        "state": "passed",
         "scenario": "待领取通知跨到期进入终态；历史finish和abandon并发不覆盖终态",
         "id": "BC-MODEL-006",
         "issue_ids": [
@@ -78520,11 +78571,13 @@
           "DIAG-CORE-030"
         ],
         "impact_ids": [],
-        "evidence_ids": []
+        "evidence_ids": [
+          "EV-B06-CORE-20261028"
+        ]
       },
       {
         "required_environment": "隔离DB与Service关系校验",
-        "state": "not_run",
+        "state": "passed",
         "scenario": "User成员分页与自动count同范围；空IN/批量预算入口守卫；JSON字段实际读写；分片旧attempt/状态竞争",
         "id": "BC-MODEL-007",
         "issue_ids": [],

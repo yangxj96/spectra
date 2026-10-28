@@ -6,6 +6,8 @@ ledger.json（源码仓库的 `docs/开发指南/工程治理/ledger.json`） �
 
 ## 当前状态
 
+2026-10-28 的 [[开发指南/工程治理/2026-10-28-B06通知核心与共享运行任务阶段验证|B06 第一阶段]]完成通知 Worker 租约 fence、Delivery/Task 同事务、过期/租约收敛、人工重试预算、回调当前 attempt 与终态单调、密钥版本兼容、HTTP_JSON/腾讯云 Provider 修复、Provider 健康 TTL，以及 Quartz/导入/诊断/缓存的首批共享运行任务修复。`B06NotificationCorePersistenceTest` 5/5、通知/缓存定点单元 9/9、八模块 `verify` 通过。真实双实例慢 Provider、跨节点诊断文件、导入进程重启、真实云服务和 `DIAG-SYSTEM-004` 实例维度仍未完成，B06 保持 `in_progress`。
+
 2026-10-28 的 [[开发指南/工程治理/2026-10-28-B02批次结项验收|B02 批次结项验收]]将 B02 置为 `completed`：14 个登记问题已解决，直接行为检查通过，八模块 `verify` 复跑 shell 退出 0。真实跨主机、生产旧格式 Session 部署及逐入口 HTTP 等未运行场景按用户本轮决定列为有风险说明的定点验收例外，不宣称实测通过；共享影响项仍含其他批次问题，整个治理周期仍未 `accepted`。
 
 2026-10-27 的 [[开发指南/工程治理/2026-10-27-B02三组公共影响复核|B02 三组公共影响复核]]补充旧格式 Session、Access 到期后撤销、Redis 撤销与数据库回滚、OA/Workflow 审计、分页排序和 Web 调用方验证。真实跨主机、历史 Session 滚动部署及 OA/Workflow 逐入口 HTTP 未运行；Web 浏览器仅以合成 API 响应核对审计列表和详情。B02 的整批状态以 `ledger.json` 为准。
