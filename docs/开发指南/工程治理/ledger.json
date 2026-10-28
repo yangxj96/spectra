@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "standard": "docs/开发指南/04-工作区工程标准.md",
-  "updated_at": "2026-10-26",
+  "updated_at": "2026-10-28",
   "status": "unification_in_progress",
   "remediation_cycle": {
     "id": "CYCLE-20261005",
@@ -21,9 +21,9 @@
       "evidence_ids": ["EV-CYCLE-TEST-ENV-20261010"]
     },
     "unresolved_blockers": [
-      "B00 retains its recorded completion. B02 sorting, BASE-003 revocation, BASE-004 replay fencing, BASE-005 two-process natural Session expiry and CORE-019 effective-Root writes have isolated PostgreSQL/Redis evidence within their stated scopes. Other Root/role paths across processes, Redis fault recovery, replay/quota competition and browser scenarios still require batch evidence; no acceptance is inferred from fixture availability.",
+      "B00/B01/B02 retain their recorded completion. B02 has isolated PostgreSQL/Redis, double-JVM and fault-recovery evidence plus explicit unrun cross-host/production-rollout exceptions; its shared impacts remain open for other batches, and no overall cycle acceptance is inferred.",
       "Notification external provider result-unknown behavior and historical ciphertext rotation require a concrete recovery/data strategy before irreversible rollout.",
-      "mise 2026.10.4 still panics with exit 101 when the faulty global config is loaded. A Git-ignored spectra-admin/.miserc.local.toml now makes direct mise -E test exec -- work in the backend checkout; PostgreSQL devops00_spectra_db_test and Redis DB 5 tests ran. The earlier Session TTL/login-time and effective-Root count failures passed after BASE-005/CORE-019 changes. BASE-006 has shared Redis reservation evidence; selected two-application-process HTTP Session revocation and natural expiry passed, while actual Redis restart, Root/role cross-process transitions and remaining full HTTP paths remain open."
+      "mise 2026.10.4 still panics with exit 101 when the faulty global config is loaded. A Git-ignored spectra-admin/.miserc.local.toml makes direct mise -E test exec -- work in the backend checkout; PostgreSQL devops00_spectra_db_test and Redis DB 5 tests ran. B02 的 Redis 重启恢复、Root/角色双 JVM 转换和正式 HTTP 已有后续定点证据；未运行的跨主机和生产历史数据部署见 B02 结项验收例外。"
     ],
     "batches": [
       {
@@ -117,7 +117,7 @@
         ],
         "change_scope": "Framework Redis session/fence/lock and audit/sort boundaries; Core effective Root, identity bucket, credentials, role snapshot and explicit background identity; affected OA/Workflow callers",
         "prerequisites": "B00 Redis/DB fixtures and full caller/role migration inventory; use the cycle-level backend test environment for real dependency evidence. Coordinate session revocation with B08 Web identity reset",
-        "checks": "BC-BASE-001..005, BC-BASE-008, CHECK-CORE-019..023, CHECK-CORE-032/034; concurrent replay and two instances, null versus empty, fail-closed, role shrink/relogin and audit redaction",
+        "checks": "BC-BASE-001..005, BC-BASE-008, CHECK-CORE-019/020/022/023/032/034; concurrent replay and two instances, null versus empty, fail-closed, role shrink/relogin and audit redaction. CHECK-CORE-021 belongs to B06.",
         "done_when": "Security state is authoritative under concurrency and faults; all affected callers use the same authorization and identity semantics.",
         "evidence_ids": [
           "EV-B02-SORT-20261008",
@@ -210,9 +210,13 @@
         "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
         "EV-B02-CORE034-FIRST-TODO-20261020",
         "EV-B02-CORE034-OA-REIMBURSEMENT-20261022",
-        "EV-B02-CORE034-CLOSE-20261026"
-        ],
-        "state": "in_progress",
+        "EV-B02-CORE034-CLOSE-20261026",
+        "EV-B02-IMPACT-REVIEW-20261028",
+        "EV-B02-BATCH-CLOSE-20261028"
+      ],
+        "state": "completed",
+        "completed_at": "2026-10-28",
+        "completion_summary": "B02 登记的 14 个问题均 resolved，直接行为检查 BC-BASE-001..005/008 与 CHECK-CORE-019/020/022/023/032/034 passed；Framework/Core/OA/Workflow/Web 共同契约和调用方由真实依赖、双 JVM、单端 Redis 故障、合成浏览器及八模块 verify 证据覆盖。2026-10-28 八模块 verify shell 退出 0。真实跨主机、线上旧格式 Session 滚动部署、提交瞬间进程崩溃及全入口 HTTP/浏览器端到端未运行，按用户本轮决定与文档所列风险/替代证据作为 B02 定点验收例外；其他批次共享影响项保持开放，整个治理周期不据此 accepted。",
 "progress_summary": "2026-10-16 首轮收口将 BC-BASE-001/002/003、CHECK-CORE-020/022 置为 passed，八模块真实依赖分段 clean verify 317/317 与静态门禁通过。2026-10-18 补 CHECK-CORE-019 的独立 Root error_code：Framework 11/11、合成 PostgreSQL Root 19/19。授权关系和凭据按真实时间自然到期的单进程正式 HTTP：人数 2→1、旧 Access 失权或 401、最后 Root 停用 409，Root 整组 10/10；两个独立应用 JVM 自然失效整组 6/6。单实例唯一 Root 隔离 Redis 停启整组 2/2；随后两个独立应用共同隔离 Redis 停启验证两端 503、数据库状态/人数保持、分别恢复后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409，双进程整组 7/7。八模块单元与静态 clean verify 复跑退出 0，发现 480 项、跳过真实依赖等 135 项、执行 345 项。此前真实依赖混跑因 Core 合成简化 schema 与 Launch 正式 Flyway schema 冲突退出 1，按分段证据记录。单端 TCP 转发器隔离一端连接又验证失联端上下文/登录/停用 503、直连端原 Session 200 与 Root 下限 409、恢复后原 Session 两端继续可用，定点 1/1；八模块单元与静态 clean verify 最终退出 0。OA 通讯录和 Workflow 流程定义的两个双 JVM 正式读取入口随 Root 角色/凭据自然失效分别 200→403/401，仍有效 Root 保持 200，双进程整组 8/8、八模块门禁复跑退出 0。2026-10-18 CHECK-CORE-023 补 MOCK 日志脱敏、正式 HTTP 渠道不可用拒绝/Redis 清理及入队到 Delivery 单次投递，单元 2/2、真实依赖 1/1、八模块门禁 347/347 执行通过；该检查置 passed。当时仍未完成：CHECK-CORE-019 OA/Workflow 数据范围、写入与后台间接入口；CHECK-CORE-032 部门重组与受众业务；CHECK-CORE-034 Workflow 流程实例、双实例 Quartz 与受控发送跨实例消费及角色变更竞争；以及旧格式会话、非原子故障窗口、B08 浏览器与其他影响范围。本轮通知 Quartz 和服务监控系统身份两类真实依赖整组 4/4，八模块最终 clean verify 发现 486、跳过 139、执行 347；CHECK-CORE-034 受控发送正式 HTTP 1/1，匿名/错误令牌/受众变化拒绝、同步并发 Apply 唯一请求及重放通过；本轮八模块 clean verify 发现 487、跳过 140、执行 347。CHECK-CORE-034 受控发送 Service 直接授权单测 5/5、正式角色到期定点 1/1；八模块 clean verify 发现 492、跳过 140、执行 352，门禁退出 0。OA 合同 Quartz 上游显式身份与限字段读取正式依赖 1/1，手动无身份/错误系统身份拒绝、归档跳过、重复触发与双线程扫描唯一请求；八模块 clean verify 发现 493、跳过 141、执行 352，退出 0。Workflow 两步真实 Flowable 实例通知定点 1/1：错误办理人及重放拒绝、明确收件人、双线程竞争唯一完成/结果请求；八模块 clean verify 发现 494、跳过 142、执行 352，退出 0。Workflow 首个待办按明确办理人使用显式系统身份写入，重复业务键拒绝且通知保持一条；真实依赖定点 9/9，八模块门禁发现 502、跳过 144、执行 358，退出 0。首待办通知渠道不可用时启动回滚且通知计数不变，恢复后同业务键成功，定点 1/1。无可解析活跃办理人时流程启动且不新增通知，真实依赖定点 1/1；无办理人任务同样启动且不新增通知，定点 1/1。两个独立应用 JVM 同业务键仅一实例及首待办，定点 1/1。报销驳回 OA 回调状态、原因与通知及重放拒绝定点 1/1。CHECK-CORE-034 维持 partially_executed。2026-10-22 CHECK-CORE-032 补正式部门合并/拆分、通知受众、OA/Workflow 读取与角色缩权重登录，目标 1/1 和八模块 verify 通过，置 passed。2026-10-22 CHECK-CORE-019 双 JVM OA 会议 SELF 范围、响应写入与 Workflow 定义暂停/恢复通过，Root 自然到期两端 403、凭据到期两端 401，定点 1/1；八模块 verify 发现 494、跳过 136、执行 358，静态门禁通过。2026-10-22 用户确认无法提供真实跨主机单端网络故障测试环节，要求按现有证据收口；该未运行场景作为 CHECK-CORE-019 的定点验收例外登记，本项置 passed。B02 的其他检查和故障窗口不因本项完成而推定通过，批次仍 in_progress，未满足 done_when。2026-10-23 CHECK-CORE-034 补受控发送同主机双 JVM 并发 Apply 与跨实例重放，定点 1/1、八模块 verify 发现 494/跳过 136/执行 358 且退出 0；2026-10-26 又补数据库中途故障回滚/恢复、授权竞争双向顺序、跨 JVM 缩权/受控 Apply、Workflow 写入行锁与角色竞争、九条 OA 回调路径及双 JVM Quartz/Worker；目标测试和八模块 verify 通过。真实跨主机未运行，用户确认作为 CHECK-CORE-034 定点验收例外，该检查置 passed；B02 保持 in_progress，不推定整个治理周期 accepted。"
       },
       {
@@ -1871,7 +1875,7 @@
       "role": "两个独立应用 JVM 的正式 Core 凭据重载、客户端/踢旧撤销与会话策略跨进程集成测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "5045ffd89030a78defd0d774b85b85cd10f27daa3a18a44ea6146303da3b1858",
+      "content_sha256": "348331c408a14e1457b4f7ac23ea399c0f78076d863409a988fd2fd04ed87383",
       "reviewed_rules": ["04 §7 有效 Root", "04 §8 安全 Redis", "04 §10 会话生命周期", "04 §13 真实依赖与门禁"],
       "issue_ids": ["DIAG-CORE-022", "DIAG-BASE-003", "DIAG-CORE-019"],
       "evidence_ids": ["EV-B02-CORE022-TWO-PROCESS-20261016", "EV-B02-BASE002-CLIENT-REVOKE-20261016", "EV-B02-CORE019-POLICY-TWO-PROCESS-20261016", "EV-B02-CORE022-NATURAL-20261016", "EV-B02-BASE002-EXPIRED-CLIENT-20261016", "EV-B02-CORE019-NATURAL-TWO-PROCESS-20261018", "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018", "EV-B02-CORE019-ONE-END-REDIS-20261018", "EV-B02-CORE019-OA-WORKFLOW-20261018", "EV-B02-CORE019-BUSINESS-20261022"],
@@ -4455,7 +4459,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1a01f7f30456e513b442b75e81d5b914ed32d58b1d22b94ff2082f18ab183bad",
+      "content_sha256": "e57ec7d30aff5e295e6bdd642332a160f7eef855b6bbec25078ee5dfed5c0884",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -4719,7 +4723,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "6be990336c10f149a25141b2dddccc88c35f154923b29931b90778bb7d59637b",
+      "content_sha256": "2b25844466ca6a1afeca533183e964cf18749a8134e1328813a5de1da8c1e17a",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5403,11 +5407,39 @@
       "impact_ids": []
     },
     {
+      "path": "docs/开发指南/工程治理/2026-10-28-B02批次结项验收.md",
+      "role": "B02 安全事实源与授权核心批次结项及定点验收例外证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "752a10fa9e8b7ac219fc8d29410e6790935a4464c1dcfb49e718246c9c741476",
+      "reviewed_rules": ["04 §7 授权", "04 §8 安全 Redis", "04 §9 并发", "04 §10 会话", "04 §12 审计排序", "04 §13 门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-BASE-001", "DIAG-BASE-002", "DIAG-BASE-003", "DIAG-BASE-004", "DIAG-BASE-005", "DIAG-BASE-006", "DIAG-BASE-007", "DIAG-BASE-018", "DIAG-CORE-019", "DIAG-CORE-020", "DIAG-CORE-022", "DIAG-CORE-023", "DIAG-CORE-032", "DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-BATCH-CLOSE-20261028"],
+      "review_summary": "逐项核对 B02 已解决问题、必要行为检查、本机真实依赖门禁、跨项目调用方及明确未运行的定点验收例外；共享影响和全周期继续开放。",
+      "review_limits": ["不把跨主机、生产历史数据部署、逐入口 HTTP 或后端浏览器联动记为实测通过。"],
+      "review_kind": "documented_b02_batch_acceptance_with_declared_exceptions",
+      "impact_ids": ["IMP-BASE-001", "IMP-BASE-003", "IMP-BASE-005", "IMP-CORE-001", "IMP-CORE-007"]
+    },
+    {
+      "path": "docs/开发指南/工程治理/2026-10-27-B02三组公共影响复核.md",
+      "role": "B02 Session、审计排序、Core 授权与跨项目调用方复核证据",
+      "scope": "included",
+      "state": "reviewed",
+      "content_sha256": "2e28def6586f37558bbba9c230737c835ec5e716e726ef260a5b868022fc29df",
+      "reviewed_rules": ["04 §7 授权", "04 §8 安全 Redis", "04 §10 会话生命周期", "04 §12 审计排序", "04 §13 真实依赖与门禁", "05 集中治理验收"],
+      "issue_ids": ["DIAG-BASE-003", "DIAG-BASE-018", "DIAG-CORE-019", "DIAG-CORE-034"],
+      "evidence_ids": ["EV-B02-IMPACT-REVIEW-20261028"],
+      "review_summary": "记录旧格式 Session 失败拒绝、Redis 撤销与数据库回滚窗口、OA/Workflow 审计和排序边界、Core 异常传播与 Web 合成调用方核对。",
+      "review_limits": ["真实历史数据部署、跨主机单端故障、所有审计入口逐一 HTTP 及后端联动浏览器未运行。"],
+      "review_kind": "documented_b02_cross_project_impact_review",
+      "impact_ids": ["IMP-BASE-001", "IMP-BASE-003", "IMP-BASE-005", "IMP-CORE-001", "IMP-CORE-007"]
+    },
+    {
       "path": "docs/开发指南/工程治理/ledger.json",
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "6b6db8506a5aa4b01104dbf8958da367828f13cd5db2bdd1eb041eac79eba3c0",
+      "content_sha256": "8817e21e943fd80de0ed86a1593be9ce20ded83833690ddad85b0bbf27c422c4",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -5591,7 +5623,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "5f1639d71e91b8225d12683c073089e9c07225155db9496c03454ac8055e65ea",
+      "content_sha256": "db74cbd8ecdc60950a07130f7da5c23d3085ce2909545ce93e2007520a8a3a5f",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -12662,7 +12694,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "fa2eebad24c94207260a74b1e47f31f5fbbe23fde7b4ae96b5947fc94a05842f",
+      "content_sha256": "979ac68bec1d480f2a3ef58b17a7f9ae8da975eb2d89b68dd702dc98dd3060d0",
       "reviewed_rules": ["04§7", "04§8", "04§13"],
       "issue_ids": ["DIAG-CORE-034"],
       "evidence_ids": ["EV-B03-WF-AUDIT-20261016", "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020"],
@@ -20232,7 +20264,7 @@
       "role": "B02 安全会话隔离 Redis 合成测试",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "00892f9d957a01c939067547e27d74cb21d243fd5c4eb5fa43ee882aedea404f",
+      "content_sha256": "ab28ce24f50bed8c9a85f0f6bb250acc17fd4922acc977c891e5066658c38eb7",
       "reviewed_rules": [
         "04 §8 安全 Redis 事实源",
         "04 §10 会话生命周期",
@@ -27651,7 +27683,7 @@
       "role": "后端 spectra-core / security",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "70762423f932deec068a6b892c9988322f52660f833fd6e2a267a23b36f72b8a",
+      "content_sha256": "d2306ffad35f3e2be4a0cfdd4f962d2f29550ab284a476f5bc7cf3a3b8c13fd5",
       "reviewed_rules": [
         "04§2",
         "04§4",
@@ -27667,13 +27699,14 @@
       "evidence_ids": [
         "EV-INVENTORY-20261003",
         "EV-CORE-001",
-        "EV-B02-CORE019-IDENTITY-20261013"
+        "EV-B02-CORE019-IDENTITY-20261013",
+        "EV-B02-IMPACT-REVIEW-20261028"
       ],
       "scope_reason": null,
       "impact_state": null,
-      "review_summary": "按 userId 重载活动 LOCAL PASSWORD/EMAIL/SMS 身份、凭证和用户，经 Assembler 复核；正式 EMAIL 登录和旧 Access 验证与有效 Root 计数一致，未知或外部身份拒绝。",
+      "review_summary": "按 userId 重载活动 LOCAL PASSWORD/EMAIL/SMS 身份、凭证和用户，经 Assembler 复核；正式 EMAIL 登录和旧 Access 验证与有效 Root 计数一致，未知或外部身份拒绝；只有明确 LoginException 视为不可用，数据库和授权快照异常传播。",
       "review_limits": [
-        "catch RuntimeException 转 null 仍会合并基础设施与无用户的故障分类；跨进程及 Redis 故障未运行。"
+        "跨进程及 Redis 故障由其他 B02 定点证据覆盖；本文件复核只验证 Loader 异常边界。"
       ],
       "review_kind": "source_responsibility_and_failure_path_review",
       "impact_ids": ["IMP-CORE-001", "IMP-BASE-003"]
@@ -44401,11 +44434,11 @@
       "role": "Session 用户重载本地身份与未知身份单测",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "df0806f7cb7a775c9363af11008c557b620117a40f0a98e0f6c5391e18f3cb69",
+      "content_sha256": "046ac269cc3c72c8f9a71652804a70332769de09b68fd42050b540c996809458",
       "reviewed_rules": ["04 §7 有效 Root", "04 §8 安全 Redis", "04 §12 行为验证"],
       "issue_ids": ["DIAG-CORE-019"],
-      "evidence_ids": ["EV-B02-CORE019-IDENTITY-20261013"],
-      "review_summary": "验证 SMS 本地身份可重载，外部或未知身份不能重载；EMAIL 身份由正式 HTTP 专项覆盖。",
+      "evidence_ids": ["EV-B02-CORE019-IDENTITY-20261013", "EV-B02-IMPACT-REVIEW-20261028"],
+      "review_summary": "验证 SMS 本地身份可重载，外部或未知身份不能重载；同一用户只有一个本地身份可用时不越过不可用身份，明确 LoginException 返回不可登录，授权快照运行故障原样传播；EMAIL 身份由正式 HTTP 专项覆盖。",
       "review_limits": ["身份协作者为模拟对象；正式数据库与 Redis 路径由 HTTP 专项覆盖。"],
       "review_kind": "unit_test_review",
       "impact_ids": ["IMP-CORE-001", "IMP-BASE-003"]
@@ -59709,7 +59742,7 @@
       "role": "Web plugin 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "ef7f0df53a95f60082973f10d0adfe9972946cf18f9262f9f4afacc9a459dd61",
+      "content_sha256": "db8a8cedd956bd39980ed5ba25e6fe7a34a31714909878dada2ca80b5a134723",
       "reviewed_rules": [
         "§3 复杂度适用范围",
         "§4 工具版本",
@@ -59991,7 +60024,7 @@
       "role": "Web plugin 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "9043c9ddced639af9ded211b3900ee56bc85e6a0758ebcab9b7f79210433aa83",
+      "content_sha256": "407b0c8a68baf43f5bade14b4ce57850e3ebbc947a98c3fe22a59bd735cb2e8a",
       "reviewed_rules": [
         "§8 会话隔离",
         "§11 Pinia生命周期"
@@ -60982,7 +61015,7 @@
       "role": "Web views 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "372c15620124250a6bb067b0fc9f9488b0c603605075fc39e3c478bdb73636fe",
+      "content_sha256": "67e686627d7604a8123ffb32244bb594f5b64d86cbe4a4c38a907627be52351e",
       "reviewed_rules": [
         "04 §11 Web组织、类型与反馈",
         "04 §5 API、错误与类型契约",
@@ -63581,7 +63614,7 @@
       "role": "Web views 源码或类型",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "b9fe6f7d1ecc95d383ac736a2fae2e07f41477b9c8fc48ce18f41fc78517a34b",
+      "content_sha256": "56d0a3d1428cd8cfd43e0ceb226320d123c6161f877d6d924183420ff2121cc7",
       "reviewed_rules": [
         "04 §11 Web组织、类型与反馈",
         "04 §5 API、错误与类型契约",
@@ -64062,7 +64095,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8a79ff7bd0f8a3afdd106b476bda48b51c2548018217ef0560e3a22409d0c87d",
+      "content_sha256": "8da6b1ffe060d349ad7db5881d2d67537f39b6db6e3936aac98f99c79dd89e2b",
       "reviewed_rules": [
         "§13 行为及实际验证边界"
       ],
@@ -64085,7 +64118,7 @@
       "role": "测试与夹具",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "0d490dfe5edea0bab62057dd67f5c8fa7a604d725a49a292a88e2da6b0fa66fa",
+      "content_sha256": "bdd56609c3f2fbdaf455d4638b783233b407308efad3992eccdd48ed85e13f65",
       "reviewed_rules": [
         "§13 行为及实际验证边界"
       ],
@@ -69172,13 +69205,15 @@
         "EV-B02-BASE001-20261011",
         "EV-B02-BASE001-GATES-20261011",
         "EV-B02-BASE005-HTTP-20261016",
-        "EV-B03-ERRORCODE-20261016"
+        "EV-B03-ERRORCODE-20261016",
+        "EV-B02-IMPACT-REVIEW-20261028",
+        "EV-B02-BATCH-CLOSE-20261028"
       ],
       "verification": [
         "合成 PostgreSQL 的切面、嵌套快照、reason、事务与日志专项通过；Framework 校验日志和审计存储 503 单元测试通过；OA/Workflow 编译，Web 调用字段形状已核对；改密正式 HTTP 写入正式 sys_audit_event 并脱敏通过。"
       ],
       "limits": [
-        "OA/Workflow 逐入口真实 HTTP/Web 审计消费未运行；DIAG-BASE-010 错误协议未完成。"
+        "OA/Workflow 逐入口真实 HTTP 未运行；Web 只以合成 API 响应完成浏览器审计列表/详情消费，未与真实后端联调。DIAG-BASE-010 的错误协议另见 B03 证据。"
       ]
     },
     {
@@ -69301,7 +69336,9 @@
     "EV-B02-BASE003-FAULT-RECOVERY-20261016",
     "EV-B02-BASE002-EXPIRED-CLIENT-20261016",
     "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018",
-    "EV-B02-CORE019-ONE-END-REDIS-20261018"
+    "EV-B02-CORE019-ONE-END-REDIS-20261018",
+    "EV-B02-IMPACT-REVIEW-20261028",
+    "EV-B02-BATCH-CLOSE-20261028"
       ],
       "verification": [
         "真实隔离Redis测试并发重放、Access过期Refresh有效、ALLOW多客户端、多实例登录限制、Redis异常/null与正常empty。",
@@ -69316,7 +69353,7 @@
         "CORE-019 两个独立应用 JVM 共用隔离 Redis 停启：停机时旧 Root Access、停用和登录两端 503，恢复后旧 Access/Refresh 两端 401、新 Access 两端 200、最后 Root 停用两端 409；Core 双进程整组 7/7。"
       ],
       "limits": [
-    "BASE-003/004/005/006/007/018 已有当前源码和隔离 Redis 专项；双进程正式 HTTP Access 撤销、Access/Refresh 自然失效与轮换、BC-BASE-001 两进程重放/并发/配额，以及 Core 角色事务/重新登录和共同隔离 Redis 停启专项通过。单端网络隔离、Access 到期后各撤销入口跨进程、Redis 撤销与数据库提交非原子窗口和 Web 浏览器入口仍待完成。"
+    "BASE-003/004/005/006/007/018 有隔离 Redis 专项；Access 到期后按用户、按客户端及 KICK_OLD 的双 JVM 拒绝已在当前源码复跑，合成旧字段拒绝和 Redis 撤销后数据库回滚已验证。真实跨主机网络、历史旧格式 Session 滚动部署、数据库提交后进程故障及 B08 Web 身份失效完整浏览器场景未运行。"
       ]
     },
     {
@@ -69405,7 +69442,9 @@
         "EV-B02-BASE008-OA-MEETING-20261011",
         "EV-B02-BASE008-OA-HTTP-20261012",
         "EV-B02-BASE008-CORE-PAGE-20261016",
-        "EV-B03-PAGE-20261016"
+        "EV-B03-PAGE-20261016",
+        "EV-B02-IMPACT-REVIEW-20261028",
+        "EV-B02-BATCH-CLOSE-20261028"
       ],
       "verification": [
         "Core agent负责各From/version/CAS证据；OA合同/文档/附件与Flowable主体查询只作共享影响验收，资源上限与引用权限需纳入后续必要改造。",
@@ -69415,7 +69454,7 @@
       ],
       "limits": [
         "本范围不重复认领 Core 各 Mapper 实体具体缺陷；cache key 碰撞仍为候选，未断言现网越权或泄漏。",
-        "不关闭 DIAG-BASE-011/019；正式 Core 身份装配、会议以外业务入口、全部分页入口、双实例与浏览器未验证。"
+        "不关闭 DIAG-BASE-011/019；54 项排序入口边界及 Core 审计/OA 会议正式 HTTP 已验证，会议以外所有业务分页的真实 HTTP、双实例分页与浏览器排序交互未逐一验证。"
       ]
     },
     {
@@ -69785,7 +69824,9 @@
     "EV-B02-CORE019-REDIS-TWO-PROCESS-20261018",
     "EV-B02-CORE019-ONE-END-REDIS-20261018",
     "EV-B02-CORE019-OA-WORKFLOW-20261018",
-    "EV-B02-CORE019-BUSINESS-20261022"
+    "EV-B02-CORE019-BUSINESS-20261022",
+    "EV-B02-IMPACT-REVIEW-20261028",
+    "EV-B02-BATCH-CLOSE-20261028"
       ],
       "verification": [
         "隔离DB/Redis权限范围与撤权故障",
@@ -70163,7 +70204,9 @@
     "EV-B02-CORE034-WORKFLOW-TASK-HTTP-20261020",
     "EV-B02-CORE034-FIRST-TODO-20261020",
     "EV-B02-CORE034-OA-REIMBURSEMENT-20261022",
-    "EV-B02-CORE034-CLOSE-20261026"
+    "EV-B02-CORE034-CLOSE-20261026",
+    "EV-B02-IMPACT-REVIEW-20261028",
+    "EV-B02-BATCH-CLOSE-20261028"
       ],
       "verification": [
         "DB/Redis启动故障矩阵，保留Flyway既有失败保护",
@@ -73767,6 +73810,51 @@
         ".temp/b02/core034-role-definition-race-full-gate.log"
       ],
       "limits": "单 JVM 双线程、角色缩权写入在前；反向提交顺序、双 JVM 同时缩权和其他后台故障未验证。CHECK-CORE-034 与 B02 保持进行中。"
+    },
+    {
+      "id": "EV-B02-BATCH-CLOSE-20261028",
+      "scope": "B02 安全事实源与授权核心批次结项：14 个问题、直接行为检查、五项共享影响中的 B02 切片与定点验收例外",
+      "command_or_scenario": [
+        "正式台账核对：B02 的 14 个 issue_ids 均 resolved；BC-BASE-001..005/008 与 CHECK-CORE-019/020/022/023/032/034 均 passed；CHECK-CORE-021 归 B06，其他批次共享影响保持原状态",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest,!OaMeetingFullHttpFlywayTest,!SessionTwoProcessHttpTest,!RoleAuthorizationFullHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' verify -> 2026-10-28 shell 退出 0，八模块 SUCCESS；真实依赖专项按既有 B02 证据单独运行",
+        "本轮真实依赖专项：双进程过期 Access 撤销与 OA/Workflow 审计 6/6；旧 Session 字段和数据库回滚窗口 3/3；审计/排序 67/67；Core Loader 4/4；Web 类型、测试、Lint、构建和格式退出 0，Vitest 23/23",
+        "工作区治理例外核对 -> 退出 0，100 条例外、1749 文件；三个仓库 git diff --check 退出 0；覆盖文件 SHA256、证据引用与台账自摘要核对通过"
+      ],
+      "environment": "原生 Windows PowerShell、mise test、JDK 25/Node 24、Maven Wrapper、专用 PostgreSQL devops00_spectra_db_test、Redis DB 5；随机合成数据，不读取本机凭据或真实业务数据。",
+      "checked_at": "2026-10-28",
+      "result": "pass_with_declared_limits",
+      "exit_code": 0,
+      "summary": "B02 本机可执行的目标行为、真实依赖、跨进程和完整门禁已验收，14 个登记问题解决；依据用户对本机无法联机/异机验证环节的决定，以明确未运行事实、风险和替代证据登记定点验收例外，批次 completed。共享影响项和整个治理周期保持开放。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-28-B02批次结项验收.md",
+        "docs/开发指南/工程治理/2026-10-27-B02三组公共影响复核.md",
+        "spectra-admin/.temp/b02/b02-final-acceptance-verify.log"
+      ],
+      "limits": "真实跨主机、生产历史 Session 部署、数据库提交瞬间进程崩溃、逐入口 OA/Workflow HTTP、全业务分页及后端联动浏览器未运行；定点例外的风险与继续验证责任见结项文档，不得称其已测试通过。"
+    },
+    {
+      "id": "EV-B02-IMPACT-REVIEW-20261028",
+      "scope": "B02 三组公共影响复核：Session 与撤销、审计和排序、Core 授权及 OA/Workflow/Web 调用方",
+      "command_or_scenario": [
+        "CodeGraph 分别复核 spectra-admin 的 Session、审计、分页、Core 授权与 OA/Workflow 调用链，以及 spectra-ui 的身份失效、审计消费和角色编辑调用方",
+        "mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -am '-Dspectra.test.groups.exclude=' '-Dtest=SessionTwoProcessHttpTest#revocationAfterAccessExpiryRejectsRefreshAcrossProcesses,CoreTwoProcessHttpTest#clientRevokeAndKickOldAfterAccessExpiryAcrossProcesses,OaAuditRedactionHttpTest,WorkflowAuditRedactionHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspectra.test.real-deps=true' test -> 退出 0，6/6",
+        "DatabaseSecurityUserLoaderTest 定点测试 -> 修正测试断言后退出 0，4/4；授权快照和数据库异常传播",
+        "SecuritySessionLifecycleRedisTest 两个旧格式案例与 CoreTwoProcessHttpTest 数据库回滚案例，真实依赖 -> 退出 0，3/3",
+        "AuditSanitizationTest、AuditRedactionFullHttpTest、OaAuditRedactionHttpTest、WorkflowAuditRedactionHttpTest、PaginationCallerBoundaryTest、FixedPaginationCallerTest，真实依赖 -> 退出 0，67/67",
+        "spectra-ui: mise exec -- pnpm type-check、test、lint、build、format:check -> 各退出 0，Vitest 9 文件 23/23；MCP Playwright 用合成 API 响应核对审计列表与详情脱敏消费",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd '-Dspectra.test.groups.exclude=' '-Dtest=*Test,!RegionServiceTest,!OaMeetingFullHttpFlywayTest,!SessionTwoProcessHttpTest,!RoleAuthorizationFullHttpTest' '-Dsurefire.failIfNoSpecifiedTests=false' '-Dspotless.ratchetFrom=origin/master' verify -> Maven 日志八模块 SUCCESS、BUILD SUCCESS；工具会话失效，未直接取得 shell 退出码",
+        "workspace: pwsh -NoProfile -File scripts/check-governance-exceptions.ps1 -RootPath . -LedgerPath docs/开发指南/工程治理/ledger.json -SourceRoot spectra-admin -SuppressionFile spectra-admin/config/spotbugs/exclude.xml -> 退出 0，100 条例外、1749 文件；三个仓库 git diff --check 均退出 0"
+      ],
+      "environment": "原生 Windows PowerShell、mise test、JDK 25、Node 24、Maven Wrapper、专用 PostgreSQL devops00_spectra_db_test、Redis DB 5；仅合成数据和合成 Web 身份，不读取凭据或真实业务数据。",
+      "checked_at": "2026-10-28",
+      "result": "pass_with_declared_limits",
+      "exit_code": null,
+      "summary": "修正 Core 用户重载的基础设施异常吞没；旧格式 Session 缺失截止时间拒绝，Access 到期后撤销及数据库回滚窗口拒绝旧凭证；OA/Workflow 审计记录存在且脱敏、公共排序边界及 Web 合成消费通过。定点命令退出 0；完整 Maven verify 日志成功，shell 退出码未直接观测。",
+      "artifacts": [
+        "docs/开发指南/工程治理/2026-10-27-B02三组公共影响复核.md",
+        "spectra-admin/.temp/b02/b02-three-groups-final-verify-retry.log"
+      ],
+      "limits": "真实历史 Session 滚动部署和清理、跨主机单端故障、OA/Workflow 每个审计入口的真实 HTTP、连接后端的完整浏览器交互未运行；共享影响项其他批次未结。"
     },
     {
       "id": "EV-B02-CORE034-CLOSE-20261026",
