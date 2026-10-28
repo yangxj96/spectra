@@ -22,7 +22,6 @@
     },
     "unresolved_blockers": [
       "B00/B01/B02 retain their recorded completion. B02 has isolated PostgreSQL/Redis, double-JVM and fault-recovery evidence plus explicit unrun cross-host/production-rollout exceptions; its shared impacts remain open for other batches, and no overall cycle acceptance is inferred.",
-      "B06 已实现外部结果 unknown 不自动重发、历史密文密钥版本兼容和人工重试预算；真实双实例慢 Provider、跨节点诊断文件、真实导入重启、真实云短信与 SYSTEM-004 实例维度仍待验证/改造，B06 保持 in_progress。",
       "mise 2026.10.4 still panics with exit 101 when the faulty global config is loaded. A Git-ignored spectra-admin/.miserc.local.toml makes direct mise -E test exec -- work in the backend checkout; PostgreSQL devops00_spectra_db_test and Redis DB 5 tests ran. B02 的 Redis 重启恢复、Root/角色双 JVM 转换和正式 HTTP 已有后续定点证据；未运行的跨主机和生产历史数据部署见 B02 结项验收例外。"
     ],
     "batches": [
@@ -374,9 +373,10 @@
         "prerequisites": "Define idempotency, durable acceptance, unknown external result, old ciphertext and local/shared ownership before changes; isolated DB/Redis and two instances",
         "checks": "CHECK-CORE-011..016/021/028/030/031/035/040, BC-MODEL-006, BC-IMPACT-IMP-SYSTEM-001-1..5; slow workers, callbacks, provider failure, crash/restart, stale leases and cross-node file access",
         "done_when": "Committed work is recoverable, historical results stay monotone, side effects do not retry blindly, and shared versus local state is explicit.",
-        "state": "in_progress",
+        "state": "completed",
         "started_at": "2026-10-28",
-        "progress_summary": "2026-10-28 第一批已完成通知 Worker 租约 fence、Delivery/Task 同事务、过期/租约收敛、人工重试预算、回调当前 attempt 与终态单调、密钥版本化及旧密文兼容、HTTP_JSON 安全载荷、腾讯云 Host/嵌套响应、Provider 健康 TTL；同时收口 Quartz ABANDONED 终态谓词、导入提交后派发与终态 CAS/恢复、诊断提交后派发与恢复、缓存操作意图绑定和失败重试。B06NotificationCorePersistenceTest 5/5、通知/缓存定点单元 9/9、八模块 verify 通过。仍未完成真实双实例慢 Provider、跨节点诊断文件、真实导入重启、真实云短信和 SYSTEM-004 实例维度，故 B06 保持 in_progress。"
+        "completed_at": "2026-10-28",
+        "progress_summary": "2026-10-28 第一批完成通知 Worker 租约 fence、Delivery/Task 同事务、过期/租约收敛、人工重试预算、回调当前 attempt 与终态单调、密钥版本化及旧密文兼容、HTTP_JSON 安全载荷、腾讯云 Host/嵌套响应、Provider 健康 TTL；同时收口 Quartz ABANDONED 终态谓词、导入提交后派发与终态 CAS/恢复、诊断提交后派发与恢复、缓存操作意图绑定和失败重试。第二批为诊断任务增加生成实例归属（V10 migration），只有归属节点可执行、清理和下载，跨节点下载明确拒绝；服务监控明确为单实例语义，不提供实例维度。B06NotificationCorePersistenceTest 5/5、通知/缓存定点单元 9/9、诊断实例归属单测 5/5、八模块静态 verify 通过。真实双实例慢 Provider、跨节点诊断文件、真实导入重启和真实云短信按 EX-B06-CORE*-20261028 与 EX-B06-BC-SYSTEM*-20261028 验收例外标记完成，未宣称实测通过。"
       },
       {
         "id": "B07",
@@ -67855,7 +67855,9 @@
       "impact": "多实例慢外部调用或完成持久化失败可重复发送/过期worker覆写；必须验证fencing及未知结果恢复，不可盲目自动重发。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "in_progress",
+      "resolution": "Worker 使用 id + PROCESSING + locked_by + locked_at + attempt_count fence，旧租约不能写入新结果；租约超时收敛 UNKNOWN 不自动重发，Delivery 与 Task 状态在同一事务提交。真实双实例慢 Provider 按 EX-B06-CORE012-20261028 验收例外标记完成。",
+      "verification_record": "EV-B06-CORE-20261028、EV-B06-CLOSE-20261028；B06NotificationCorePersistenceTest 5/5。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-B06-CORE-20261028",
@@ -67981,7 +67983,9 @@
       "impact": "配置启用不等于集群可发送；需显式初始化/恢复和有效期策略，多实例故障验收。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "in_progress",
+      "resolution": "健康快照增加 TTL（默认 300 秒），配置变化、过期或重启后发送前重新检查，失败保持 fail-closed；各实例独立健康检查。真实双实例、重启和长时间 Provider 故障按 EX-B06-CORE016-20261028 验收例外标记完成。",
+      "verification_record": "EV-B06-CORE-20261028、EV-B06-CLOSE-20261028；通知/缓存定点单元 9/9。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-B06-CORE-20261028",
@@ -68148,7 +68152,9 @@
       "impact": "导入真实数据与结果状态不一致，重启/抢先执行也无持久恢复；需版本/终态CAS和受理持久领取。",
       "priority": "P1",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "in_progress",
+      "resolution": "Apply 改为事务提交后派发，任务状态迁移使用 status=APPLYING + operator_id CAS；新增 user.import.apply-recovery 每分钟按 updated_at 心跳租约恢复超时任务。真实进程崩溃/重启按 EX-B06-CORE021-20261028 验收例外标记完成。",
+      "verification_record": "EV-B06-CORE-20261028、EV-B06-CLOSE-20261028。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-B06-CORE-20261028",
@@ -68327,7 +68333,9 @@
       "impact": "诊断可永久PENDING并阻止后续创建；多实例文件与任务归属需协议化处理。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "in_progress",
+      "resolution": "诊断创建使用 PostgreSQL advisory lock 串行化全局预算并在提交后派发；执行前 PENDING→RUNNING 原子领取并绑定实例，清理作业每分钟恢复本实例遗留 PENDING、收敛超时 RUNNING。新增 instance_id 归属，只有生成节点可执行、清理和下载。真实跨节点文件场景按 EX-B06-BC-SYSTEM003-*-20261028 验收例外标记完成。",
+      "verification_record": "EV-B06-CORE-20261028、EV-B06-CLOSE-20261028；ServiceMonitorDiagnosticInstanceOwnershipTest 5/5。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-B06-CORE-20261028",
@@ -68593,7 +68601,9 @@
       "impact": "正常重试后的SENT可能被旧FAILED覆写；请求聚合、用户反馈、后台恢复和外部重复发送风险需真实并发/乱序验证。",
       "priority": "P2",
       "disposition": "集中整改并执行对应行为验证",
-      "state": "in_progress",
+      "resolution": "回调仅接受当前 attempt，旧 attempt 或违反终态单调的乱序回执返回 STALE，不再清理当前租约或覆盖新结果。真实并发/乱序回调按 EX-B06-CORE035-20261028 验收例外标记完成。",
+      "verification_record": "EV-B06-CORE-20261028、EV-B06-CLOSE-20261028；NotificationProviderCallbackServiceTest 3/3。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-B06-CORE-20261028",
@@ -68981,7 +68991,9 @@
       "impact": "同ID不同清理意图得到旧范围回执；并发同意图可覆盖affectedRegions并重复广播；广播或清理故障恢复后同ID不能继续，随机操作ID长期累积内存。多实例各自回执不能作为集群完成事实。",
       "priority": "P1",
       "disposition": "绑定规范化操作意图并原子推进状态，按失败阶段定义可恢复重试和回执/去重保留期限；明确Redis Pub/Sub仅接受不保证全部实例完成。",
-      "state": "in_progress",
+      "resolution": "操作 ID 绑定规范化区域/范围意图，成功回执复用，FAILED/PARTIAL 可在同一意图下重试；回执保留 1 小时并有容量上限，状态推进使用原子操作。Redis Pub/Sub 仍只表示发布受理，不代表全部实例完成。5 类运行场景按 EX-B06-BC-SYSTEM001-*-20261028 验收例外标记完成。",
+      "verification_record": "EV-B06-CORE-20261028、EV-B06-CLOSE-20261028；CacheInvalidationCoordinatorTest 2/2。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-B06-CORE-20261028",
@@ -69021,7 +69033,9 @@
       "impact": "非HTTP调用时规则保存已提交而事件恢复失败会保持ACTIVE且之后停用规则不再评估；在途评估可在停用后重新创建活动事件/外发。通知已受理而回执写入失败不能视为回滚，后续occurrence新幂等键可能重复通知。",
       "priority": "P1",
       "disposition": "规则启用转换和活动事件状态在明确Service事务/原子谓词下协调；在途评估校验版本和启用状态，通知受理意图与结果有可恢复边界。HTTP AuditAspect偶有外层事务不替代Service用例边界。",
-      "state": "in_progress",
+      "resolution": "告警规则修改改为 Service 事务并在同一事务内恢复活动事件；在途评估重新校验规则版本与启用状态，通知受理后回执时间写入失败只记录告警，不回滚已受理通知。4 类运行场景按 EX-B06-BC-SYSTEM002-*-20261028 验收例外标记完成。",
+      "verification_record": "EV-B06-CORE-20261028、EV-B06-CLOSE-20261028。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-B06-CORE-20261028",
@@ -69056,7 +69070,9 @@
       "impact": "文件删除失败或错实例清理后任务元数据不再被下次cleanup选中，原节点转储可永久残留且失去可恢复清理状态；堆转储潜在敏感内容的保留期无法落实。",
       "priority": "P1",
       "disposition": "删除确认成功后才完成元数据清理，失败保留重试状态及安全诊断；绑定实例/共享受控存储，使清理与生成文件位置一致。",
-      "state": "in_progress",
+      "resolution": "诊断任务新增 instance_id（V10 migration），创建时绑定生成实例；执行、领取、清理和下载仅限归属节点，其他节点跳过清理并明确拒绝跨节点下载。文件删除失败保留任务记录和错误信息，只有删除成功才移除元数据。升级前 unknown 历史任务仅在实际存在文件的节点清理。跨节点执行/下载场景按 EX-B06-BC-SYSTEM003-*-20261028 验收例外标记完成。",
+      "verification_record": "EV-B06-CLOSE-20261028；ServiceMonitorDiagnosticInstanceOwnershipTest 5/5。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-B06-CORE-20261028",
@@ -69091,7 +69107,9 @@
       "impact": "集群作业切换实例及不同节点首次overview触发采样，会把不同主机的CPU/内存/QPS串在一条历史；一台节点正常采样可恢复另一节点异常告警。全局采样job不能证明每实例监控覆盖。",
       "priority": "P1",
       "disposition": "明确实例指标与集群指标契约，为采样/历史/告警提供稳定实例或聚合维度，并验证调度归属、节点切换和每实例覆盖。",
-      "state": "pending",
+      "resolution": "2026-10-28 产品决定：服务监控仅支持单实例语义，不新增实例维度。文档明确采样、历史趋势和告警来自当前 JVM，集群部署时不同节点的 CPU/内存/QPS 可能混合，不承诺按实例区分或按实例独立告警；需要实例级监控时重新评估并改造。两节点交替采样场景按 EX-B06-BC-SYSTEM002-4-20261028 标记范围外。",
+      "verification_record": "docs/后端/10-后端模块/12-基础设施.md、docs/AI速查/05-配置清单.md；EV-B06-CLOSE-20261028。",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
         "EV-B06-CORE-20261028",
@@ -77045,7 +77063,36 @@
         ".temp/b06-core-unit3.log",
         ".temp/b06-verify.log"
       ],
-      "limits": "未执行真实双实例慢 Provider、跨节点诊断文件、真实用户导入进程重启、真实云短信服务与集群健康快照；SYSTEM-004 实例维度仍未改造。"
+      "limits": "截至第一批：未执行真实双实例慢 Provider、跨节点诊断文件、真实用户导入进程重启、真实云短信服务与集群健康快照；SYSTEM-004 实例维度当时未改造。第二批见 EV-B06-CLOSE-20261028。"
+    },
+    {
+      "id": "EV-B06-CLOSE-20261028",
+      "scope": "B06 诊断任务实例归属、单实例监控契约与批次收口",
+      "command_or_scenario": [
+        "spectra-admin: ServiceMonitorDiagnosticInstanceOwnershipTest -> 5/5（创建绑定实例、跨实例下载拒绝、非归属清理跳过、归属清理删除文件与记录、unknown 历史任务不丢元数据）",
+        "spectra-admin: NotificationPayloadProtectorTest 2/2、HttpJsonNotificationProviderTest 1/1、TencentSmsNotificationProviderTest 1/1、NotificationProviderCallbackServiceTest 3/3、CacheInvalidationCoordinatorTest 2/2、ServiceMonitorDiagnosticInstanceOwnershipTest 5/5 -> 14/14",
+        "spectra-admin: mise exec -- .\\mvnw.cmd -pl spectra-launch -am '-DskipTests' verify -> BUILD SUCCESS（八模块 Spotless/Checkstyle/PMD/SpotBugs/Enforcer）",
+        "spectra-admin: mise exec -- .\\mvnw.cmd verify（含测试）-> 在 spectra-workflow 因 surefire 缺少 JUnit 引擎前置失败，未进入 core/oa/launch 测试；该失败与本次 B06 改动无关，完整测试门禁仍按历史分段记录"
+      ],
+      "environment": "原生 Windows PowerShell 7、mise JDK 25、Maven Wrapper；本次仅运行单元与静态门禁，未连接真实 PostgreSQL/Redis/云服务，未启动第二实例。",
+      "tool_versions": {
+        "maven": "3.9.12",
+        "java": "25.0.2",
+        "pmd": "7.17.0",
+        "spotbugs": "4.10.3.0"
+      },
+      "checked_at": "2026-10-28",
+      "result": "passed",
+      "artifacts": [
+        "spectra-admin/spectra-launch/src/main/resources/db/migration/V10__service_monitor_diagnostic_instance.sql",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/system/service/impl/ServiceMonitorDiagnosticServiceImpl.java",
+        "spectra-admin/spectra-modules/spectra-core/src/main/java/com/devops00/spectra/core/system/javabean/entity/ServiceMonitorDiagnosticTask.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/system/service/impl/ServiceMonitorDiagnosticInstanceOwnershipTest.java",
+        "docs/后端/10-后端模块/12-基础设施.md",
+        "docs/后端/10-后端模块/06-系统管理.md",
+        "docs/AI速查/05-配置清单.md"
+      ],
+      "limits": "V10 尚未在隔离 PostgreSQL 上实际应用；真实双实例、进程崩溃/重启、跨节点诊断文件、真实云短信和集群监控未运行。含测试的全量 verify 在 spectra-workflow 因缺少测试引擎前置失败（既有配置问题，非本次改动），本次以 B06 定点测试和八模块静态 verify 为证据。B06 按 EX-B06-*-20261028 验收例外收口，未宣称上述场景实测通过。"
     },
     {
       "id": "EV-B04-CLOSURE-S3-20261028",
@@ -78150,12 +78197,21 @@
         "issue_ids": [
           "DIAG-CORE-012"
         ],
-        "state": "partially_executed",
+        "state": "passed",
         "scenario": "多实例慢外部调用或完成持久化失败可重复发送/过期worker覆写；必须验证fencing及未知结果恢复，不可盲目自动重发。",
-        "validation": "代码修复与定点测试已执行，真实双实例/重启/跨节点场景未运行。",
+        "acceptance_exception": {
+          "id": "EX-B06-CORE012-20261028",
+          "requirement": "真实双实例慢外部调用、完成持久化失败和租约过期后的 fencing 验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供双实例环境，要求按已执行的隔离测试与本机单实例证据标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实双实例慢 Provider、完成持久化失败和旧 Worker 跨实例覆写未运行。",
+          "risk": "多实例调度竞争、网络时序和数据库提交失败组合可能暴露单实例测试未覆盖的行为。",
+          "reevaluate_when": "具备两个可访问专用测试依赖的应用实例或实际集群部署时。"
+        },
+        "validation": "Worker 租约 fence、同事务 Delivery/Task、UNKNOWN 不自动重发和旧租约拒绝已由隔离 PostgreSQL 测试覆盖；真实双实例按例外未运行。",
         "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "隔离 PostgreSQL/Redis、双实例与故障恢复夹具。"
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "隔离 PostgreSQL/Redis 与单元回归已执行；双实例慢 Provider 和故障恢复夹具未提供。"
       },
       {
         "id": "CHECK-CORE-013",
@@ -78198,12 +78254,21 @@
         "issue_ids": [
           "DIAG-CORE-016"
         ],
-        "state": "partially_executed",
+        "state": "passed",
         "scenario": "配置启用不等于集群可发送；需显式初始化/恢复和有效期策略，多实例故障验收。",
-        "validation": "代码修复与定点测试已执行，真实双实例/重启/跨节点场景未运行。",
+        "acceptance_exception": {
+          "id": "EX-B06-CORE016-20261028",
+          "requirement": "真实双实例、重启和 Provider 长时间故障后的健康快照验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供双实例和真实云服务环境，要求按已执行的隔离测试与本机单实例证据标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实双实例健康快照、进程重启和长时间 Provider 故障恢复未运行。",
+          "risk": "不同实例的健康缓存、时钟和恢复时序可能暴露单实例测试未覆盖的行为。",
+          "reevaluate_when": "具备双实例或真实云 Provider 测试环境时。"
+        },
+        "validation": "健康快照 TTL、配置变化失效、过期重检和 fail-closed 已实现并由单元测试覆盖；真实双实例按例外未运行。",
         "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "隔离 PostgreSQL/Redis、双实例与故障恢复夹具。"
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "隔离依赖与单元回归已执行；双实例和真实 Provider 环境未提供。"
       },
       {
         "id": "CHECK-CORE-017",
@@ -78267,12 +78332,21 @@
         "issue_ids": [
           "DIAG-CORE-021"
         ],
-        "state": "partially_executed",
+        "state": "passed",
         "scenario": "导入真实数据与结果状态不一致，重启/抢先执行也无持久恢复；需版本/终态CAS和受理持久领取。",
-        "validation": "代码修复与定点测试已执行，真实双实例/重启/跨节点场景未运行。",
+        "acceptance_exception": {
+          "id": "EX-B06-CORE021-20261028",
+          "requirement": "真实用户导入进程崩溃/重启和恢复扫描验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法执行进程崩溃/重启场景，要求按已执行的代码修复与隔离测试标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实进程崩溃、重启后的心跳全量和分块任务恢复未运行。",
+          "risk": "分块处理仍按单任务执行器假设，崩溃点位于分块提交与终态 CAS 之间时可能暴露未覆盖状态。",
+          "reevaluate_when": "具备可安全重启的专用测试实例和执行器配置时。"
+        },
+        "validation": "提交后派发、APPLYING+operator_id 终态 CAS 和 apply-recovery 心跳恢复已实现并由代码审查覆盖；真实崩溃/重启按例外未运行。",
         "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "隔离 PostgreSQL/Redis、双实例与故障恢复夹具。"
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "隔离依赖与代码修复已具备；进程崩溃/重启场景未提供。"
       },
       {
         "id": "CHECK-CORE-022",
@@ -78351,12 +78425,21 @@
         "issue_ids": [
           "DIAG-CORE-028"
         ],
-        "state": "partially_executed",
+        "state": "passed",
         "scenario": "诊断可永久PENDING并阻止后续创建；多实例文件与任务归属需协议化处理。",
-        "validation": "代码修复与定点测试已执行，真实双实例/重启/跨节点场景未运行。",
+        "acceptance_exception": {
+          "id": "EX-B06-CORE028-20261028",
+          "requirement": "真实双实例诊断领取、执行恢复与跨节点文件访问验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供双实例环境，要求按实例归属实现、单元测试和本机单实例证据标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实双实例领取竞争、节点切换和跨节点文件下载未运行。",
+          "risk": "节点下线后其遗留诊断文件不会被其他节点清理，需要人工处置；依赖配置目录为节点本地目录。",
+          "reevaluate_when": "部署多实例诊断或引入共享存储时。"
+        },
+        "validation": "诊断 instance_id 归属、非归属清理跳过、跨节点下载拒绝和历史任务处理由单测覆盖；双实例按例外未运行。",
         "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "隔离 PostgreSQL/Redis、双实例与故障恢复夹具。"
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "单实例隔离目录与单元回归已执行；双实例和跨节点目录未提供。"
       },
       {
         "id": "CHECK-CORE-029",
@@ -78464,12 +78547,21 @@
         "issue_ids": [
           "DIAG-CORE-035"
         ],
-        "state": "partially_executed",
+        "state": "passed",
         "scenario": "正常重试后的SENT可能被旧FAILED覆写；请求聚合、用户反馈、后台恢复和外部重复发送风险需真实并发/乱序验证。",
-        "validation": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证",
+        "acceptance_exception": {
+          "id": "EX-B06-CORE035-20261028",
+          "requirement": "真实并发、乱序或旧 attempt Provider 回调验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供真实并发/乱序回调场景，要求按已执行的回调单元测试标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实乱序回调、旧 attempt 并发写入和外部重复发送未运行。",
+          "risk": "真实网络乱序与数据库并发可能暴露单元测试未覆盖的中间状态。",
+          "reevaluate_when": "接入真实 Provider 回调或具备并发回调夹具时。"
+        },
+        "validation": "当前 attempt 校验、STALE 返回、终态单调和租约保留由 NotificationProviderCallbackServiceTest 3/3 覆盖；真实并发乱序按例外未运行。",
         "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "仅当前静态审查；031另有无网络JDK构造复现，真实DB/Redis/HTTP/多实例/故障及恢复仍待验证"
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "回调单元回归已执行；真实并发/乱序回调环境未提供。"
       },
       {
         "id": "CHECK-CORE-036",
@@ -80175,9 +80267,18 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM001-1-20261028",
+          "requirement": "缓存操作同 ID 异意图、并发、失败恢复、节点断线和容量边界的真实运行验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供节点断线、并发和容量边界环境，要求按已执行的意图绑定单元测试标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "同 ID 并发、Redis 节点断线重连和容量上限的真实行为未运行。",
+          "risk": "多实例回执与 Redis Pub/Sub 不保证全部实例完成，节点断线时可能只得到部分结果。",
+          "reevaluate_when": "具备多实例 Redis 与故障注入环境时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "意图绑定与失败重试单元测试已执行；多实例和故障环境未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-001-2",
@@ -80188,9 +80289,18 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM001-2-20261028",
+          "requirement": "缓存操作同 ID 异意图、并发、失败恢复、节点断线和容量边界的真实运行验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供节点断线、并发和容量边界环境，要求按已执行的意图绑定单元测试标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "同 ID 并发、Redis 节点断线重连和容量上限的真实行为未运行。",
+          "risk": "多实例回执与 Redis Pub/Sub 不保证全部实例完成，节点断线时可能只得到部分结果。",
+          "reevaluate_when": "具备多实例 Redis 与故障注入环境时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "意图绑定与失败重试单元测试已执行；多实例和故障环境未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-001-3",
@@ -80201,9 +80311,18 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM001-3-20261028",
+          "requirement": "缓存操作同 ID 异意图、并发、失败恢复、节点断线和容量边界的真实运行验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供节点断线、并发和容量边界环境，要求按已执行的意图绑定单元测试标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "同 ID 并发、Redis 节点断线重连和容量上限的真实行为未运行。",
+          "risk": "多实例回执与 Redis Pub/Sub 不保证全部实例完成，节点断线时可能只得到部分结果。",
+          "reevaluate_when": "具备多实例 Redis 与故障注入环境时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "意图绑定与失败重试单元测试已执行；多实例和故障环境未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-001-4",
@@ -80214,9 +80333,18 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM001-4-20261028",
+          "requirement": "缓存操作同 ID 异意图、并发、失败恢复、节点断线和容量边界的真实运行验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供节点断线、并发和容量边界环境，要求按已执行的意图绑定单元测试标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "同 ID 并发、Redis 节点断线重连和容量上限的真实行为未运行。",
+          "risk": "多实例回执与 Redis Pub/Sub 不保证全部实例完成，节点断线时可能只得到部分结果。",
+          "reevaluate_when": "具备多实例 Redis 与故障注入环境时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "意图绑定与失败重试单元测试已执行；多实例和故障环境未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-001-5",
@@ -80227,9 +80355,18 @@
         "impact_ids": [
           "IMP-SYSTEM-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM001-5-20261028",
+          "requirement": "缓存操作同 ID 异意图、并发、失败恢复、节点断线和容量边界的真实运行验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供节点断线、并发和容量边界环境，要求按已执行的意图绑定单元测试标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "同 ID 并发、Redis 节点断线重连和容量上限的真实行为未运行。",
+          "risk": "多实例回执与 Redis Pub/Sub 不保证全部实例完成，节点断线时可能只得到部分结果。",
+          "reevaluate_when": "具备多实例 Redis 与故障注入环境时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "意图绑定与失败重试单元测试已执行；多实例和故障环境未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-002-1",
@@ -80241,9 +80378,18 @@
         "impact_ids": [
           "IMP-SYSTEM-002"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM002-1-20261028",
+          "requirement": "告警非 HTTP 停用恢复、在途评估停用、通知受理后数据库失败和双节点交替采样验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供多节点和故障注入环境，并要求服务监控仅支持单实例语义；双节点采样部分标记为范围外。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实非 HTTP 停用恢复失败、在途评估竞争、通知受理后数据库失败和双节点交替采样未运行。",
+          "risk": "集群部署时监控采样/告警可能混合不同节点，不承诺实例级恢复语义。",
+          "reevaluate_when": "需要实例级监控或具备双节点故障注入环境时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "告警事务与在途评估代码已审查；多节点和故障注入环境未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-002-2",
@@ -80255,9 +80401,18 @@
         "impact_ids": [
           "IMP-SYSTEM-002"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM002-2-20261028",
+          "requirement": "告警非 HTTP 停用恢复、在途评估停用、通知受理后数据库失败和双节点交替采样验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供多节点和故障注入环境，并要求服务监控仅支持单实例语义；双节点采样部分标记为范围外。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实非 HTTP 停用恢复失败、在途评估竞争、通知受理后数据库失败和双节点交替采样未运行。",
+          "risk": "集群部署时监控采样/告警可能混合不同节点，不承诺实例级恢复语义。",
+          "reevaluate_when": "需要实例级监控或具备双节点故障注入环境时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "告警事务与在途评估代码已审查；多节点和故障注入环境未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-002-3",
@@ -80269,9 +80424,18 @@
         "impact_ids": [
           "IMP-SYSTEM-002"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM002-3-20261028",
+          "requirement": "告警非 HTTP 停用恢复、在途评估停用、通知受理后数据库失败和双节点交替采样验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供多节点和故障注入环境，并要求服务监控仅支持单实例语义；双节点采样部分标记为范围外。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实非 HTTP 停用恢复失败、在途评估竞争、通知受理后数据库失败和双节点交替采样未运行。",
+          "risk": "集群部署时监控采样/告警可能混合不同节点，不承诺实例级恢复语义。",
+          "reevaluate_when": "需要实例级监控或具备双节点故障注入环境时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "告警事务与在途评估代码已审查；多节点和故障注入环境未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-002-4",
@@ -80283,9 +80447,18 @@
         "impact_ids": [
           "IMP-SYSTEM-002"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM002-4-20261028",
+          "requirement": "告警非 HTTP 停用恢复、在途评估停用、通知受理后数据库失败和双节点交替采样验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供多节点和故障注入环境，并要求服务监控仅支持单实例语义；双节点采样部分标记为范围外。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实非 HTTP 停用恢复失败、在途评估竞争、通知受理后数据库失败和双节点交替采样未运行。",
+          "risk": "集群部署时监控采样/告警可能混合不同节点，不承诺实例级恢复语义。",
+          "reevaluate_when": "需要实例级监控或具备双节点故障注入环境时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "告警事务与在途评估代码已审查；多节点和故障注入环境未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-003-1",
@@ -80296,9 +80469,18 @@
         "impact_ids": [
           "IMP-SYSTEM-003"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM003-1-20261028",
+          "requirement": "删除 IOException 后重试、另节点清理不丢文件定位、跨节点下载和执行中到期/退出/重启验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供跨节点文件环境，要求按实例归属实现和单测标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实删除失败重试、跨节点下载和实例退出/重启清理未运行。",
+          "risk": "已下线实例遗留的诊断文件不会被其他节点清理，需要人工处置。",
+          "reevaluate_when": "部署多实例诊断或引入共享存储时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "单实例实例归属单测已执行；跨节点文件和重启场景未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-003-2",
@@ -80309,9 +80491,18 @@
         "impact_ids": [
           "IMP-SYSTEM-003"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM003-2-20261028",
+          "requirement": "删除 IOException 后重试、另节点清理不丢文件定位、跨节点下载和执行中到期/退出/重启验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供跨节点文件环境，要求按实例归属实现和单测标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实删除失败重试、跨节点下载和实例退出/重启清理未运行。",
+          "risk": "已下线实例遗留的诊断文件不会被其他节点清理，需要人工处置。",
+          "reevaluate_when": "部署多实例诊断或引入共享存储时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "单实例实例归属单测已执行；跨节点文件和重启场景未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-003-3",
@@ -80322,9 +80513,18 @@
         "impact_ids": [
           "IMP-SYSTEM-003"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM003-3-20261028",
+          "requirement": "删除 IOException 后重试、另节点清理不丢文件定位、跨节点下载和执行中到期/退出/重启验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供跨节点文件环境，要求按实例归属实现和单测标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实删除失败重试、跨节点下载和实例退出/重启清理未运行。",
+          "risk": "已下线实例遗留的诊断文件不会被其他节点清理，需要人工处置。",
+          "reevaluate_when": "部署多实例诊断或引入共享存储时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "单实例实例归属单测已执行；跨节点文件和重启场景未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-003-4",
@@ -80335,9 +80535,18 @@
         "impact_ids": [
           "IMP-SYSTEM-003"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
-        "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
+        "state": "passed",
+        "acceptance_exception": {
+          "id": "EX-B06-BC-SYSTEM003-4-20261028",
+          "requirement": "删除 IOException 后重试、另节点清理不丢文件定位、跨节点下载和执行中到期/退出/重启验收",
+          "decision": "2026-10-28 用户在当前会话明确表示无法提供跨节点文件环境，要求按实例归属实现和单测标记完成。",
+          "substitute_evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+          "unverified": "真实删除失败重试、跨节点下载和实例退出/重启清理未运行。",
+          "risk": "已下线实例遗留的诊断文件不会被其他节点清理，需要人工处置。",
+          "reevaluate_when": "部署多实例诊断或引入共享存储时。"
+        },
+        "evidence_ids": ["EV-B06-CORE-20261028", "EV-B06-CLOSE-20261028"],
+        "required_environment": "单实例实例归属单测已执行；跨节点文件和重启场景未提供。"
       },
       {
         "id": "BC-IMPACT-IMP-SYSTEM-004-1",
