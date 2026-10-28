@@ -298,7 +298,7 @@
         "state": "completed",
         "started_at": "2026-10-17",
         "completed_at": "2026-10-28",
-        "progress_summary": "2026-10-28 完成 B04：8 类编辑入口均提交读取版本，MP 乐观锁/Quartz 显式条件更新对陈旧写入返回 409 ENTITY_UPDATE_CONFLICT；真实 HTTP/SQL 覆盖菜单 pid、字典 pid/remark、区域 pid/full_name、配置 remarks、用户 language/timezone 清空，重新入职清空 departed_at，区域与用户资料并发一项成功一项 409，手机号/邮箱编辑显式拒绝。运行时 OpenAPI 3.1.0/API 1.0.0 导出固定 snake_case、data 包装、ApiErrorEnvelope、4xx/409/416/503、编辑视图 version 与可空字段，前端生成契约/类型并由 contract:check 检测漂移；bootstrap/配置/Quartz 响应类型改为生成契约派生。错误只读 error_code，时间工具保留服务端偏移，OA/通知日期范围与编辑控件迁移。浏览器真实前后端验证系统配置 409 草稿保留、核对最新版本后重新提交成功。证据 EV-B04-EDIT-VERSION-20261028、EV-B04-CONTRACT-WEB-20261028、EV-B04-MODEL-TIME-STATIC-20261028。限制：BC-MODEL-004 仍缺隔离 PostgreSQL 软删除闭包读/计数实测，DIAG-MODEL-003 保持 pending；BC-ADDITIONAL-002 仍缺真实 S3 存储故障容器；页面表单模型继续手写。"
+        "progress_summary": "2026-10-28 完成 B04：8 类编辑入口均提交读取版本，MP 乐观锁/Quartz 显式条件更新对陈旧写入返回 409 ENTITY_UPDATE_CONFLICT；真实 HTTP/SQL 覆盖菜单 pid、字典 pid/remark、区域 pid/full_name、配置 remarks、用户 language/timezone 清空，重新入职清空 departed_at，区域与用户资料并发一项成功一项 409，手机号/邮箱编辑显式拒绝。运行时 OpenAPI 3.1.0/API 1.0.0 导出固定 snake_case、data 包装、ApiErrorEnvelope、4xx/409/416/503、编辑视图 version 与可空字段，前端生成契约/类型并由 contract:check 检测漂移；bootstrap/配置/Quartz 响应类型改为生成契约派生。错误只读 error_code，时间工具保留服务端偏移，OA/通知日期范围与编辑控件迁移。浏览器真实前后端验证系统配置 409 草稿保留、核对最新版本后重新提交成功。证据 EV-B04-EDIT-VERSION-20261028、EV-B04-CONTRACT-WEB-20261028、EV-B04-MODEL-TIME-STATIC-20261028。2026-10-28 续验补齐：闭包重建只包含活动部门，ScopeSqlPolicy 对直接/后代范围过滤软删除节点；隔离 PostgreSQL 读/计数与事务回滚通过。S3 使用真实 AWS SDK 连接本地回环协议夹具，验证 206 实际字节、404 对象缺失和 500 存储故障；未使用 Docker/云 S3 容器。BC-MODEL-004、BC-ADDITIONAL-002 与 DIAG-MODEL-003 收口；页面表单模型继续手写。"
       },
       {
         "id": "B05",
@@ -68813,7 +68813,7 @@
     },
     {
       "rule": "04§7数据范围、04§10软删除与历史引用",
-      "state": "pending",
+      "state": "resolved",
       "locations": [
         {
           "path": "spectra-admin/spectra-modules/spectra-core/src/main/resources/mapper/system/DepartmentClosureMapper.xml",
@@ -68824,13 +68824,14 @@
       "finding": "闭包重建锚点与递归分支均包含软删除部门，生成全历史部门路径；同一域rebuildActivePaths则显式deleted IS NULL。Framework ScopeSqlPolicy.departmentPredicate的includeDescendants子查询只按ancestor_id查闭包，不过滤删除节点。静态确认范围源与活动组织不一致；历史业务是否应沿删除节点继承权限仍需领域契约确认，未证明具体越权请求。",
       "priority": "P2",
       "evidence_ids": [
-        "EV-MODEL-004"
+        "EV-MODEL-004",
+        "EV-B04-CLOSURE-S3-20261028"
       ],
       "id": "DIAG-MODEL-003",
       "disposition": "确认活动/历史闭包职责并验证软删除节点的读、计数及历史引用授权；有意保留时登记明确领域依据",
       "impact": "组织合并/删除后被删除节点及其历史后代继续进入后代权限集合，列表/计数和历史业务数据范围可能与组织变更意图不一致。",
       "exception_ids": [],
-      "verification_state": "static_candidate_runtime_pending",
+      "verification_state": "runtime_verified",
       "impact_ids": [
         "IMP-CORE-001"
       ]
@@ -77046,6 +77047,35 @@
       ],
       "limits": "未执行真实双实例慢 Provider、跨节点诊断文件、真实用户导入进程重启、真实云短信服务与集群健康快照；SYSTEM-004 实例维度仍未改造。"
     },
+    {
+      "id": "EV-B04-CLOSURE-S3-20261028",
+      "scope": "B04 软删除部门闭包、活动范围读/计数与 S3 Range/存储故障",
+      "command_or_scenario": [
+        "spectra-admin: B04DepartmentClosurePostgresTest -> 1/1（活动闭包重建、软删除节点排除、事务回滚恢复）",
+        "spectra-admin: ScopeSqlPolicyTest -> 11/11；ScopeSqlPolicyPostgresTest -> 2/2（活动后代读/计数、软删除直接/后代范围排除）",
+        "spectra-admin: S3FileStorageProviderHttpTest -> 1/1（真实 AWS SDK + 本地回环 S3 协议夹具：206 实际字节、404 缺失、500 故障）",
+        "spectra-admin: FileAssetStreamControllerTest 3/3、FileUploadExceptionAdviceTest 2/2"
+      ],
+      "environment": "原生 Windows PowerShell 7、mise test 环境、JDK 25、Maven Wrapper；PostgreSQL devops00_spectra_db_test；S3 为本地回环 HTTP 协议夹具，不使用 Docker 或真实云 S3。",
+      "tool_versions": {
+        "maven": "3.9.12",
+        "java": "25.0.2",
+        "postgresql": "18.4",
+        "pmd": "7.17.0",
+        "spotbugs": "4.10.3.0"
+      },
+      "checked_at": "2026-10-28",
+      "result": "passed",
+      "artifacts": [
+        "spectra-admin/spectra-launch/src/test/java/com/devops00/spectra/launch/security/B04DepartmentClosurePostgresTest.java",
+        "spectra-admin/spectra-framework/src/test/java/com/devops00/spectra/framework/persistence/scope/authorization/ScopeSqlPolicyPostgresTest.java",
+        "spectra-admin/spectra-modules/spectra-core/src/test/java/com/devops00/spectra/core/upload/storage/s3/S3FileStorageProviderHttpTest.java",
+        ".temp/b04-closure-pg.log",
+        ".temp/b04-scope-pg4.log",
+        ".temp/b04-s3-unit.log"
+      ],
+      "limits": "S3 使用本地回环协议夹具而非 Docker/云容器；未执行跨主机 S3、真实云凭据或网络分区。历史业务数据仍保存原部门 ID，活动范围不沿软删除节点继承。"
+    },
   ],
   "work_items": [
     {
@@ -78541,14 +78571,14 @@
       },
       {
         "required_environment": "隔离DB及授权上下文",
-        "state": "partially_executed",
+        "state": "passed",
         "scenario": "软删除部门/组织合并后活动与历史includeDescendants读/计数保持明确范围；重建回滚完整",
         "id": "BC-MODEL-004",
         "issue_ids": [
           "DIAG-MODEL-003"
         ],
         "impact_ids": [],
-        "evidence_ids": ["EV-MODEL-004", "EV-B04-MODEL-TIME-STATIC-20261028"]
+        "evidence_ids": ["EV-MODEL-004", "EV-B04-MODEL-TIME-STATIC-20261028", "EV-B04-CLOSURE-S3-20261028"]
       },
       {
         "required_environment": "可控时间与实际HTTP序列化",
@@ -78597,15 +78627,15 @@
       },
       {
         "scenario": "LOCAL/S3 Range正常/超长/越界/非法数字/存储故障，核对status、Content-Length/Content-Range与实际bytes",
-        "required_environment": "隔离文件目录/S3测试容器、实际HTTP",
+        "required_environment": "隔离文件目录/本地S3协议夹具、实际HTTP",
         "id": "BC-ADDITIONAL-002",
         "issue_ids": [
           "DIAG-ADDITIONAL-002",
           "DIAG-BASE-010"
         ],
-        "state": "partially_executed",
+        "state": "passed",
         "impact_ids": [],
-        "evidence_ids": ["EV-ADDITIONAL-003", "EV-B03-RANGE-20261016", "EV-B03-RANGE416-20261016", "EV-B04-MODEL-TIME-STATIC-20261028"]
+        "evidence_ids": ["EV-ADDITIONAL-003", "EV-B03-RANGE-20261016", "EV-B03-RANGE416-20261016", "EV-B04-MODEL-TIME-STATIC-20261028", "EV-B04-CLOSURE-S3-20261028"]
       },
       {
         "scenario": "无效静态上传配置按启用条件拒绝绑定/启动，边界预算有效",
