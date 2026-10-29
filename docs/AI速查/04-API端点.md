@@ -8,7 +8,7 @@ tags:
 
 > 源码当前 55 个 `*Controller.java` 端点速查表。
 
-当前所有 REST Mapping 统一使用 API 版本 `1.0.0`，不提供旧接口兼容别名；部门、Role 和 RoleAssignment 等高风险写入必须走 Preview/Apply API。
+当前所有 REST Mapping 统一使用 API 版本 `1.0.0`，不提供旧接口兼容别名；部门、Role 和 RoleAssignment 等高风险写入必须走 Preview/Apply API。OpenAPI 运行时导出固定 3.1.0，契约统一 snake_case、成功 `data` 包装、`ApiErrorEnvelope` 和 4xx/409/416/503 错误响应；编辑入口提交读取版本，陈旧写入返回 409 `ENTITY_UPDATE_CONFLICT`。
 
 ## 认证与安全
 
@@ -158,11 +158,12 @@ Web 用户编辑器对已有用户提供多个 RoleAssignment 的新增、修改
 ```json
 {
   "code": 200,
-  "message": "success",
-  "data": {},
-  "timestamp": 1234567890
+  "msg": "OK",
+  "data": {}
 }
 ```
+
+失败响应在相同结构上增加 `error_code`，成功响应省略该字段。
 
 ## 相关
 

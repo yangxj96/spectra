@@ -11,7 +11,7 @@ tags:
 
 当前所有 REST Mapping 统一使用 API 版本 `1.0.0`，不提供兼容别名或第二套授权写入入口；高风险 Role、RoleAssignment 和组织结构写入统一使用 Preview/Apply API。
 
-分页排序仍使用 `orders[].column` 与 `orders[].asc` 请求字段；每个入口仅接受其登记字段，非法排序返回 HTTP 400，固定排序入口拒绝非空 `orders`。完整字段清单见 [[后端/30-规范/06-分页排序契约]]。Web 当前页面未发送自定义排序；本次不改变分页响应形状或 API 版本。
+分页排序使用 `orders[].column` 与 `orders[].asc` 请求字段；每个入口仅接受其登记字段，白名单拒绝未知字段、敏感列、表达式、客户端别名、空值和重复目标列，非法排序返回 HTTP 400 且不回显原字段，固定排序入口拒绝非空 `orders`。完整字段清单见 [[后端/30-规范/06-分页排序契约]]。Web 当前页面未发送自定义排序。
 
 四个内置角色的菜单、84 条前端路由和 331 个 Controller 方法级 API 门禁逐项矩阵见 [[17-内置角色接口与页面矩阵]]；角色 Permission 与默认数据范围见 [[04-用户与权限]] 和 [[05-数据权限设计]]。
 
@@ -65,7 +65,7 @@ tags:
 
 用户修改密码时，页面规则和服务端共同使用 `SecurityPasswordPolicyProvider` 的当前策略；密码策略读取对所有已认证用户开放，修改策略仍受 `security:password-policy:update` 保护。
 
-用户状态/入职编辑、角色授权变更、登录身份绑定与解绑、密码凭据更新和密码策略调整共享有效 Root 人数约束。造成有效 `ROLE_DEV_OPS` 人数低于下限或高于上限的请求返回 HTTP 409，数据库事务回滚，`error_code` 分别为 `ROOT_EFFECTIVE_MINIMUM`、`ROOT_EFFECTIVE_MAXIMUM`；Root 策略版本冲突使用 `ROOT_POLICY_VERSION_CONFLICT`。这些端点的路径及请求形状未变。密码和会话策略的过期版本请求也返回 409，仍由通用业务冲突码标识。Root 计数与锁的合成数据库验证见 [[开发指南/工程治理/2026-10-10-B02有效Root保护验证|CORE-019 专项证据]]；策略调整和首次初始化的单进程正式 HTTP 结果见 [[开发指南/工程治理/2026-10-16-B02策略与首次初始化正式HTTP验证|策略与初始化专项]]，领域错误码见 [[开发指南/工程治理/2026-10-18-B02有效Root稳定错误码验证|错误码专项]]。自然失效和故障恢复仍待验收。
+用户状态/入职编辑、角色授权变更、登录身份绑定与解绑、密码凭据更新和密码策略调整共享有效 Root 人数约束。造成有效 `ROLE_DEV_OPS` 人数低于下限或高于上限的请求返回 HTTP 409，数据库事务回滚，`error_code` 分别为 `ROOT_EFFECTIVE_MINIMUM`、`ROOT_EFFECTIVE_MAXIMUM`；Root 策略版本冲突使用 `ROOT_POLICY_VERSION_CONFLICT`。这些端点的路径及请求形状保持 `1.0.0`。密码和会话策略的过期版本请求也返回 409，由通用业务冲突码标识；原有重复角色冲突继续返回 `DATA_EXIST`。策略读取、Root 策略行锁或有效人数无法确认时拒绝变更，`null` 人数不按 0 处理。首次初始化的匿名 `start/complete` 在 PostgreSQL 状态锁下只允许一次提交，无效令牌和错误初始化 ID 被拒绝，完成后系统状态为 `INITIALIZED` 且首个有效 Root 可登录。
 
 ### 在线用户与会话
 
@@ -75,7 +75,7 @@ tags:
 | `POST` | `/cache/admin/security/session/revoke-one` | `session:revoke` | 请求体为 `session_id`、`reason`、`confirmed`；精确撤销一个 Refresh Token Family，会话句柄不作为认证凭据；拒绝撤销发起当前请求的会话，但允许撤销同账号的其他客户端会话 |
 | `POST` | `/cache/admin/security/session/revoke-all` | `session:revoke` | 按 `user_id` 撤销用户会话；目标为当前管理员账号时保留当前 Access Token 并撤销其他会话 |
 
-会话句柄由安全 Redis 为每个 Refresh Token Family 保存随机映射，Access/Refresh Token 轮换时保持不变；查询发现升级前仍有效但没有句柄的会话时会惰性补齐。列表不返回 Token、Token 摘要、Family 标识或 Redis Key。单条和全部下线均要求操作理由及显式确认，并写入审计；单条下线会校验目标 Family 与当前请求会话，禁止踢出当前会话；全部下线针对当前管理员账号时保留当前 Access Token、撤销其他会话；安全 Redis 无法确认状态时拒绝操作。
+会话句柄由安全 Redis 为每个 Refresh Token Family 保存随机映射，Access/Refresh Token 轮换时保持不变；查询发现升级前仍有效但没有句柄的会话时会惰性补齐。列表不返回 Token、Token 摘要、Family 标识或 Redis Key。单条和全部下线均要求操作理由及显式确认，并写入审计；单条下线会校验目标 Family 与当前请求会话，禁止踢出当前会话；全部下线针对当前管理员账号时保留当前 Access Token、撤销其他会话；安全 Redis 无法确认状态时拒绝操作。Refresh 重放会围栏并撤销整个 Token Family；`REJECT_NEW`、`KICK_OLD`、`ALLOW` 会话配额在安全 Redis 内原子预留并提交，租约或围栏无法确认时拒绝签发。安全 Redis 停启期间认证、刷新和会话操作返回 503；恢复后旧 Access/Refresh 失效，新登录恢复。
 
 ## 核心 — 系统管理
 
@@ -108,7 +108,7 @@ Quartz 的 12 个 Controller 方法（类型、Job、Trigger、执行历史的�
 | `permitAll` | 允许 | 允许 | 允许 | 允许 | 匿名契约仍执行验证码、签名、Refresh Cookie、频控及输入校验 |
 | 无 Permission/角色授权 | 不自动视为通配以外的许可 | 拒绝 | 拒绝 | 拒绝 | Spring Security 默认拒绝；Controller 内的自服务检查另行记录 |
 
-V8 后浏览器实测：Audit 的 `GET /audit/page`、`GET /notification/admin/providers` 与 `GET /notification/admin/templates` 成功，`GET /scheduler/quartz/jobs` 返回 403；Audit 直达 Root 专属配置路由进入 401。业务 RULES API 在未分配部门边界前不会因为菜单可见而变成可调用。DEV_OPS、Admin 的菜单和接口验收记录见四角色权限基线与当前执行计划；未登录的公共入口不纳入任何角色 Permission。
+浏览器验收中，Audit 的 `GET /audit/page`、`GET /notification/admin/providers` 与 `GET /notification/admin/templates` 成功，`GET /scheduler/quartz/jobs` 返回 403；Audit 直达 Root 专属配置路由进入 401。业务 RULES API 在未分配部门边界前不会因为菜单可见而变成可调用。DEV_OPS、Admin 的菜单和接口边界见四角色权限基线；未登录的公共入口不纳入任何角色 Permission。
 
 ### 缓存监控与系统维护
 

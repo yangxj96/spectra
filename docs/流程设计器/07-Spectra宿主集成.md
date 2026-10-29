@@ -50,6 +50,8 @@ const lf = new LogicFlow({
 
 宿主还通过 LogicFlow Control 增加“返回”和“部署”两个按钮；插件自身不创建这两个业务操作。
 
+`FlowablePlugin` 保存 DND 和属性面板句柄，`graph:rendered` 只初始化一次属性面板，`connection:not-allowed` 为具名监听。`flush()` 与 `destroy()` 统一释放面板、属性事件、`DynamicGroup`、Picker 请求和防抖定时器；面板释放后从 `WeakMap` 删除容器登记，同一容器重建可重新挂载。`createFormSync` 固定创建时的目标节点 ID，导出前通过 `Flowable.toBpmnXml(lf)` 同步表单，销毁后不产生迟到写入。
+
 ## 编辑已有流程
 
 编辑模式下调用：
@@ -77,9 +79,9 @@ Flowable.fromBpmnXml(bpmn_xml, logicFlow)
 | `javaClass` | `JavaClassPickerDialog.vue` | Java 全限定类名 |
 | `process` | `ProcessPickerDialog.vue` | 流程定义 Key |
 
-确认时调用 `payload.resolve(value, label)`；取消、关闭弹框或路由离开时调用 `payload.cancel()`。插件按面板实例、目标 ID/类型和请求序号校验，切换节点后的迟到 `resolve` 不会写入新对象。插件负责把 value 写入 BPMN 属性，宿主负责查询候选数据和展示选择界面。Spectra 不注册 `form` Picker，因此 Flowable 原生 `formKey` 在此宿主中作为普通文本编辑；插件的通用 Picker API 保持不变。
+确认时调用 `payload.resolve(value, label)`；取消、关闭弹框或路由离开时调用 `payload.cancel()`。`PickerRequestPayload` 携带 `requestId` 并提供 `cancel()`，每个属性面板实例只接受同一目标的最新请求；目标切换、节点删除、面板销毁或显式取消后丢弃旧 `resolve`。插件按面板实例、目标 ID/类型和请求标识校验，切换节点后的迟到 `resolve` 不会写入新对象。插件负责把 value 写入 BPMN 属性，宿主负责查询候选数据和展示选择界面。Spectra 不注册 `form` Picker，因此 Flowable 原生 `formKey` 在此宿主中作为普通文本编辑；插件的通用 Picker API 保持不变。
 
-用户/部门/流程定义选择器在加载时维护请求序号，关闭后旧响应不能覆盖重新打开后的数据。`WorkflowDesigner` 在 `onUnmounted` 中先 flush 待写入表单、取消未决 Picker，再调用 `lf.destroy()`；插件释放面板、事件、Picker 和定时器。
+`WorkflowDesigner` 保存完整请求对象，关闭弹框或离开路由时调用 `cancel()`。用户、部门、流程定义选择器在加载时维护请求序号和关闭失效，关闭后旧响应不能覆盖重新打开后的数据。`WorkflowDesigner` 在 `onUnmounted` 中先 flush 待写入表单、再取消未决 Picker、最后调用 `lf.destroy()`；插件释放面板、事件、Picker 和定时器。
 
 ## 部署流程
 

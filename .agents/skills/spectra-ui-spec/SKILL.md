@@ -46,7 +46,7 @@ description: 仅在修改或审查 spectra-ui Web 的 Vue、TypeScript、API、P
 
 - 示例按目标类型从 [references/examples/](references/examples/) 选择 component/api/store/hook/test/types/routes，不确定先 rg 列文件；示例需按当前契约及真实依赖采用，不代表完整业务已验收。
 - 项目说明：`docs/前端/01-前端管理后台.md`；命名：`docs/前端/02-前端命名规范.md`；请求现状及目标：`docs/前端/05-前端请求与安全通信.md`；验证：`docs/前端/08-前端开发测试与构建.md`。
-- 例外及集中治理：`docs/开发指南/05-集中治理与验收.md`、`docs/开发指南/工程治理/ledger.json`。
+- 工程标准：`docs/开发指南/04-工作区工程标准.md`；静态检查例外：`docs/后端/30-规范/07-静态检查例外.md`。
 
 ## 验证
 

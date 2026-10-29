@@ -12,7 +12,7 @@ source: https://www.devops00.com/spectra-admin/be-redis-guide
 >
 > 适用于 spectra-admin 中作为缓存层使用 Redis。不含消息队列、分布式锁等特殊用法。安全模块的 Token、Session、验证码、防重放和请求 nonce Redis 不属于本规范中的普通缓存，见下文“安全 Redis 强依赖”。
 
-> 故障、生命周期与多实例基线按 [[开发指南/04-工作区工程标准|工作区工程标准]] 于 2026-10-03 统一；本页具体配置与现有源码的治理状态见 [[开发指南/05-集中治理与验收|集中治理与验收]]。
+> 故障、生命周期与多实例基线按 [[开发指南/04-工作区工程标准|工作区工程标准]] 统一。
 
 ## 核心原则
 
@@ -56,13 +56,13 @@ source: https://www.devops00.com/spectra-admin/be-redis-guide
 
 旧 `auth:*`、`sec:v2:*` 和兼容 Key 不再由运行时读取或写入；运行时不维护双命名空间迁移逻辑。
 
-BASE-003 的会话索引与撤销规则：`sec:ut:*` 为每个 Access 摘要保留条目，直到该 Access 及其 Refresh 都失效或被撤销；不同客户端的新会话只可延长索引 TTL，不可缩短已有 Refresh 的窗口。Access Hash 到期而 Refresh 仍有效时，撤销从 Refresh Hash 确认用户、客户端及 Family，按用户、按客户端、管理句柄和踢旧均清理该 Refresh；`ALLOW` 模式按索引覆盖同端全部会话。Refresh Hash 仍存在却缺少所属用户索引时拒绝轮换，避免先前被剔除的孤儿 Refresh 重新签发会话。索引映射或归属不一致时拒绝操作，不按状态不存在处理。此项专项验证及完整门禁边界见 [[开发指南/工程治理/2026-10-09-B02会话撤销生命周期验证|BASE-003 验证]]；B02 其余 Family 并发围栏和故障场景仍按正式台账推进。
+BASE-003 的会话索引与撤销规则：`sec:ut:*` 为每个 Access 摘要保留条目，直到该 Access 及其 Refresh 都失效或被撤销；不同客户端的新会话只可延长索引 TTL，不可缩短已有 Refresh 的窗口。Access Hash 到期而 Refresh 仍有效时，撤销从 Refresh Hash 确认用户、客户端及 Family，按用户、按客户端、管理句柄和踢旧均清理该 Refresh；`ALLOW` 模式按索引覆盖同端全部会话。Refresh Hash 仍存在却缺少所属用户索引时拒绝轮换，避免先前被剔除的孤儿 Refresh 重新签发会话。索引映射或归属不一致时拒绝操作，不按状态不存在处理。Refresh 登出不误清除其他会话的在线用户标识；按客户端撤销不再只读取 `sec:uc:*` 最新指针。
 
-BASE-004 的重放围栏规则：Refresh Hash、所属用户索引、一次性 claim 与 Family 围栏在单条 Redis Lua 命令内判定；重复消费先原子立围栏，再清理整个 Family。已轮换旧 Refresh 即使不在用户索引中仍按重放处理，正常孤儿 Refresh 则拒绝。签发前后与 Reader 认证均核对围栏，因此交错写入的 Session Hash 不构成可用 Access。围栏 TTL 覆盖尚存 Family 与当前 Access/Refresh 的较长有效期；Redis 未知结果拒绝操作。隔离 Redis 的可控交错、失败与策略收缩证据及双进程、恢复边界见 [[开发指南/工程治理/2026-10-09-B02重放围栏并发验证|BASE-004 验证]]。
+BASE-004 的重放围栏规则：Refresh Hash、所属用户索引、一次性 claim 与 Family 围栏在单条 Redis Lua 命令内判定；重复消费先原子立围栏，再清理整个 Family。已轮换旧 Refresh 即使不在用户索引中仍按重放处理，正常孤儿 Refresh 则拒绝。签发前后与 Reader 认证均核对围栏，因此交错写入的 Session Hash 不构成可用 Access。围栏 TTL 覆盖尚存 Family 与当前 Access/Refresh 的较长有效期；Redis 未知结果拒绝操作。两个独立应用进程共享同一 Redis 时，跨进程重放同样撤销整个 Family；同一 Refresh 并发发往两个进程至多一个成功，任意交错下不存在可用的新 Access。
 
-BASE-007 的安全集合读取规则：`SecuritySessionStore.members` 对 Redis `members` 返回的 `null`、超时及连接/命令异常一律拒绝，只有 Redis 确认返回的空 Set 才代表索引为空。按用户撤销、Family 清理、在线查询和会话签发不得把未知集合当成空集合继续执行。当前源码、撤销调用方测试和隔离 Redis 正常空集合证据见 [[开发指南/工程治理/2026-10-09-B02安全集合事实源验证|BASE-007 验证]]。
+BASE-007 的安全集合读取规则：`SecuritySessionStore.members` 对 Redis `members` 返回的 `null`、超时及连接/命令异常一律拒绝，只有 Redis 确认返回的空 Set 才代表索引为空。按用户撤销、Family 清理、在线查询和会话签发不得把未知集合当成空集合继续执行。按用户撤销时未知索引拒绝清理，确认空索引按无会话处理并完成撤销。
 
-BASE-018 的安全计数规则：首次计数与 TTL 必须在同一条 Redis 脚本内写入；原先独立 `expire=false` 可留下无 TTL 键的路径已消除。遗留无 TTL 计数拒绝使用并需受控清理，回包丢失时不得把结果未知解释为未计数；后续递增保留首次窗口。隔离 Redis 并发、故障注入和完整门禁边界见 [[开发指南/工程治理/2026-10-09-B02安全计数TTL验证|BASE-018 验证]]。
+BASE-018 的安全计数规则：首次计数与 TTL 在同一条 Redis 脚本内写入，不存在独立 `expire=false` 的写入路径。遗留无 TTL 计数拒绝使用且不改写，受控清理后重建有 TTL 窗口；首次命令写入前超时不留下计数，写入后回包丢失时拒绝但服务器计数已保留 TTL；递增保留首次窗口，并发首次尝试不丢计数。
 
 ## Key 设计
 

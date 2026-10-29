@@ -10,8 +10,8 @@ description: 仅在修改或审查 spectra-admin 的 Java、后端接口、持�
 - 遵循最近的 `AGENTS.md` 和用户已确认的 `docs/开发指南/04-工作区工程标准.md`，按目标职责读取相关章节；已加载的内容不重复读。领域细则、旧配置和模板有冲突时按主标准处理，改变基线需与用户明确讨论。
 - 本文的 `docs/`、`spectra-admin/` 路径相对 Spectra 工作区根；`references/` 相对本 Skill，安装缓存位置不作为项目根。
 - 从目标项目使用 CodeGraph 分析定义、调用及依赖，使用 rg 核对精确代码、配置、文档与遗漏。公共变更先完整分析全工作区直接、间接、数据、协议、装配及运行影响，再确定改造和验收范围。
-- OA、Workflow 和流程业务的独立治理暂缓，受公共变更影响的区域仍需一致性改造及验证；不能预设只改直接调用方或只验证当前模块。
-- 新增或不熟悉目标类型时只读取必要示例；示例说明结构，不证明权限、事务、并发或协议已经正确。源码和治理台账区分已实施能力与目标要求，不把旧配置通过当作新标准通过。
+- 公共变更影响 OA、Workflow 和流程业务时，仍需一致性改造及验证；不能预设只改直接调用方或只验证当前模块。
+- 新增或不熟悉目标类型时只读取必要示例；示例说明结构，不证明权限、事务、并发或协议已经正确。源码事实和目标要求分开处理，不把旧配置通过当作新标准通过。
 
 ## 核心规则
 
@@ -58,10 +58,10 @@ description: 仅在修改或审查 spectra-admin 的 Java、后端接口、持�
 
 - 目标类型示例：[references/examples/](references/examples/)，按需选 `*-full.java`，异常定义/抛出分别用 `exception-full.java` / `exception-data.java`。不确定时先 rg 列文件，先核对依赖和契约再采用。
 - JSONB：[references/jsonb.md](references/jsonb.md)；认证、验证码、Token、Session、防重放：[references/security.md](references/security.md)。
-- 后端细则：`docs/后端/30-规范/01-后端开发规范.md`；治理与例外：`docs/开发指南/05-集中治理与验收.md`、`docs/开发指南/工程治理/ledger.json`；领域按 AGENTS 路由，不预加载全部笔记。
+- 后端细则：`docs/后端/30-规范/01-后端开发规范.md`；静态检查例外：`docs/后端/30-规范/07-静态检查例外.md`；领域按 AGENTS 路由，不预加载全部笔记。
 
 ## 验证
 
-- 开发中在 spectra-admin 经 mise + `.\mvnw.cmd` 做目标 compile/test；交付执行完整影响范围的 verify，集中治理使用全量格式检查。检查与 spotless:apply 分开，不跳过必要测试。
+- 开发中在 spectra-admin 经 mise + `.\mvnw.cmd` 做目标 compile/test；交付执行完整影响范围的 verify，并使用全量格式检查。检查与 spotless:apply 分开，不跳过必要测试。
 - 行为与风险决定验证；真实隔离 DB/Redis 验证事务、并发、故障恢复和多实例，实际协议及生成漂移另验，关键 Web 路径浏览器验收。不设每类每行测试或统一覆盖率要求。
 - 命令见 `docs/开发指南/01-常见命令.md`。同步受影响 API、Entity、配置、迁移、版本及领域文档，交付区分已验证、未执行及目标尚未实施的能力。
