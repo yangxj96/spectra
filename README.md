@@ -69,7 +69,7 @@ git submodule update --init --recursive
 | Spring Boot | 4.1.0 |
 | Maven | 使用 `spectra-admin/mvnw` |
 | Node.js | 24.14.0，由 `spectra-ui/mise.toml` 管理 |
-| pnpm | 11.0.9，由 `spectra-ui/mise.toml` 管理 |
+| pnpm | 12.6.0，由 `spectra-ui/mise.toml` 管理 |
 | PostgreSQL | 18 |
 | Redis | 当前后端配置要求密码认证 |
 | 流程设计器插件 | `@yangxj96/logicflow-plugin-flowable` 0.1.2 |

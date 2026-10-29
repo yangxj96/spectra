@@ -221,14 +221,21 @@ Role 授权管理：`GET /security/authorization/roles/{roleId}` 返回目标 Ro
 
 ## 响应格式
 
-所有 API 统一返回 JSON 格式：
+所有 API 统一返回 JSON 格式，字段使用 snake_case；失败响应通过 `error_code` 提供稳定错误码：
 
 ```json
 {
   "code": 200,
-  "message": "success",
-  "data": {},
-  "timestamp": 1234567890
+  "msg": "OK",
+  "data": {}
+}
+```
+
+```json
+{
+  "code": 409,
+  "msg": "拒绝移除最后一个有效 DEV_OPS",
+  "error_code": "ROOT_EFFECTIVE_MINIMUM"
 }
 ```
 
