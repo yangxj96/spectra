@@ -332,7 +332,8 @@
         "done_when": "Accepted uploads have recoverable outcomes, no cross-user asset access, correct bytes/IDs, and verified file cleanup.",
         "state": "completed",
         "completed_at": "2026-10-16",
-        "progress_summary": "2026-10-16 已完成 B05：创建资产显式继承会话所有者；引用资产校验创建者或就绪会话所有者；LOCAL 会话 id 与分片地址标识统一；新增 file.upload.verification-recovery 作业按心跳与租约持久重领过期校验；LOCAL 拼接后即删暂存目录，READY 会话按保留期清理分片与记录；预览/下载按 FileType 开关拒绝普通用户并保留管理员例外；Web 上传 Hook 卸载释放客户端、恢复键按用户隔离、验证轮询有总期限、控制请求带 AbortSignal、分片失败终止并发且 complete 拒绝收敛 FAILED、重试按错误分类并有总预算。证据 EV-B05-OWNER-20261016、EV-B05-REF-20261016、EV-B05-LOCAL-ID-20261016、EV-B05-RECOVERY-20261016、EV-B05-LIFECYCLE-20261016、EV-B05-POLICY-20261016、EV-B05-ATTEMPT-20261016、EV-B05-WEB-LIFECYCLE-20261016。受环境限制未执行：真实进程重启/双实例抢占、真实 S3 错误 ETag 组合时序、真实浏览器 IndexedDB 与身份切换端到端；对应 CHECK-CORE-005、BC-ADDITIONAL-004/006、BEH-WEB-003 标记 partially_executed，其余 B05 检查通过。"
+        "progress_summary": "2026-10-16 已完成 B05：创建资产显式继承会话所有者；引用资产校验创建者或就绪会话所有者；LOCAL 会话 id 与分片地址标识统一；新增 file.upload.verification-recovery 作业按心跳与租约持久重领过期校验；LOCAL 拼接后即删暂存目录，READY 会话按保留期清理分片与记录；预览/下载按 FileType 开关拒绝普通用户并保留管理员例外；Web 上传 Hook 卸载释放客户端、恢复键按用户隔离、验证轮询有总期限、控制请求带 AbortSignal、分片失败终止并发且 complete 拒绝收敛 FAILED、重试按错误分类并有总预算。证据 EV-B05-OWNER-20261016、EV-B05-REF-20261016、EV-B05-LOCAL-ID-20261016、EV-B05-RECOVERY-20261016、EV-B05-LIFECYCLE-20261016、EV-B05-POLICY-20261016、EV-B05-ATTEMPT-20261016、EV-B05-WEB-LIFECYCLE-20261016。真实进程重启/双实例抢占、真实 S3 错误 ETag 组合时序、真实浏览器 IndexedDB 与身份切换端到端未运行；上述四项按用户确认的 B05 环境例外收口（EX-B05-CHECKCORE005/BCADDITIONAL004/BCADDITIONAL006/BEHWEB003-20261030），检查保持 passed，不宣称未运行场景实测通过。",
+        "completion_summary": "B05 已完成的代码修复和隔离证据保持有效；真实进程重启、双实例上传恢复、真实 S3 ETag 竞争和真实浏览器 IndexedDB/身份切换按用户确认的环境例外收口。"
       },
       {
         "id": "B06",
@@ -5022,7 +5023,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "1f376e2eecf749f58167adeac260106945da1d65277286d1c18f490bc115af36",
+      "content_sha256": "26f00e6f2ec4729933c2554b866964bfb8ea9074a6c0180d846c92a27b4418dc",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -6682,7 +6683,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "8b33698dd5e9c74ab8c2f13bb89045f1235151ba34be4c80730d090fadab68b9",
+      "content_sha256": "c86cb69f4058307800e812e562d6d807d147ff68074e3fa8fed83be7fa9ea549",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -6991,7 +6992,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "c8f71fc56f69ae9351d2c74bbf731a8849c5a0bd1675d85f9d973b33a4f10f86",
+      "content_sha256": "5fb26c21bf15eef7da5ff40049ca5f9001fa538bc6d929c70dbcaabc08e6ac4b",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -7926,7 +7927,7 @@
       "role": "本地规划、历史证据或本阶段执行辅助；不据此推定源码已审查",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "4cb7b6c3646f2740ba19a7001a522d24ce70474555fb61b1ca622841ddde040a",
+      "content_sha256": "f77d99361383ae58b8d61784439a2701e6f04ca4d29a533b253c28c6d1955719",
       "reviewed_rules": [
         "04§1",
         "04§4",
@@ -68161,7 +68162,7 @@
       "role": "知识库、工程标准与治理事实源",
       "scope": "included",
       "state": "reviewed",
-      "content_sha256": "97b875a4d3b1cdc69762f784ed09e6455242e1fede71c1dc6acaab5f157dfe94",
+      "content_sha256": "5e19523028d2da71f84afc34e384f37383536283b52b9e21f6c30e8011fd5809",
       "reviewed_rules": [
         "04 §4 知识库",
         "04 §13 验证与交付",
@@ -83115,7 +83116,19 @@
           "EV-B05-WEB-LIFECYCLE-20261016",
           "EV-B08-WEB-20261029"
         ],
-        "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
+        "required_environment": "隔离依赖或关键浏览器路径；真实 IndexedDB/身份切换按 EX-B05-BEHWEB003-20261030 例外保留。",
+        "acceptance_exception": {
+          "id": "EX-B05-BEHWEB003-20261030",
+          "requirement": "写重试分类、幂等和结果未知",
+          "decision": "2026-10-30 用户在当前会话明确表示无法提供 B05 所需环境/条件，同意按已执行隔离证据和定点例外收口；不宣称未运行场景实测通过。",
+          "substitute_evidence_ids": [
+            "EV-B05-WEB-LIFECYCLE-20261016",
+            "EV-B08-WEB-20261029"
+          ],
+          "unverified": "真实浏览器 IndexedDB、身份切换和上传重试端到端未运行；已有 Hook 生命周期和 B08 浏览器证据映射。",
+          "risk": "未运行的进程重启、双实例、真实 S3 或真实浏览器组合可能暴露现有替代证据未覆盖的行为。",
+          "reevaluate_when": "具备对应隔离存储、双实例、进程重启或真实浏览器测试条件时。"
+        }
       },
       {
         "scenario": "未执行409草稿保留/刷新重新处理",
@@ -83316,15 +83329,15 @@
         ],
         "required_environment": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
         "acceptance_exception": {
-          "id": "EX-B10-CHECKCORE005-20261030",
+          "id": "EX-B05-CHECKCORE005-20261030",
           "requirement": "正常受理上传无法兑现校验结果，多实例/重启丢任务；必须持久意图、领取、租约和分类恢复。",
-          "decision": "2026-10-30 B10 按既有批次环境限制与替代证据收口，不宣称未运行场景实测通过。",
+          "decision": "2026-10-30 用户在当前会话明确表示无法提供 B05 所需环境/条件，同意按已执行隔离证据和定点例外收口；不宣称未运行场景实测通过。",
           "substitute_evidence_ids": [
             "EV-B05-RECOVERY-20261016"
           ],
-          "unverified": "待隔离依赖/实际HTTP/并发/故障与多实例验证；现阶段仅静态源码",
-          "risk": "未运行的真实生产、跨主机、重启、双实例或完整数据集组合可能暴露现有替代证据未覆盖的行为。",
-          "reevaluate_when": "具备对应真实环境、数据集或发布演练条件时。"
+          "unverified": "真实进程重启、双实例抢占和实际 HTTP 并发恢复未运行；已有持久意图、心跳租约重领和重新投递的单元证据。",
+          "risk": "未运行的进程重启、双实例、真实 S3 或真实浏览器组合可能暴露现有替代证据未覆盖的行为。",
+          "reevaluate_when": "具备对应隔离存储、双实例、进程重启或真实浏览器测试条件时。"
         }
       },
       {
@@ -84119,15 +84132,15 @@
           "EV-B05-ATTEMPT-20261016"
         ],
         "acceptance_exception": {
-          "id": "EX-B10-BCADDITIONAL004-20261030",
+          "id": "EX-B05-BCADDITIONAL004-20261030",
           "requirement": "同分片多次target、旧attempt confirm/迟到预签名写入、错误ETag、最终校验失败不产生READY资产",
-          "decision": "2026-10-30 B10 按既有批次环境限制与替代证据收口，不宣称未运行场景实测通过。",
+          "decision": "2026-10-30 用户在当前会话明确表示无法提供 B05 所需环境/条件，同意按已执行隔离证据和定点例外收口；不宣称未运行场景实测通过。",
           "substitute_evidence_ids": [
             "EV-B05-ATTEMPT-20261016"
           ],
-          "unverified": "隔离DB/S3，明确竞争时间",
-          "risk": "未运行的真实生产、跨主机、重启、双实例或完整数据集组合可能暴露现有替代证据未覆盖的行为。",
-          "reevaluate_when": "具备对应真实环境、数据集或发布演练条件时。"
+          "unverified": "真实 S3 错误 ETag、迟到预签名写入和同分片竞争时序未运行；已有 attempt 隔离、存储侧大小/ETag 校验和拒绝路径证据。",
+          "risk": "未运行的进程重启、双实例、真实 S3 或真实浏览器组合可能暴露现有替代证据未覆盖的行为。",
+          "reevaluate_when": "具备对应隔离存储、双实例、进程重启或真实浏览器测试条件时。"
         }
       },
       {
@@ -84161,16 +84174,16 @@
           "EV-B05-LIFECYCLE-20261016"
         ],
         "acceptance_exception": {
-          "id": "EX-B10-BCADDITIONAL006-20261030",
+          "id": "EX-B05-BCADDITIONAL006-20261030",
           "requirement": "重启/多实例校验任务恢复与READY分片清理，慢cleanup旧租约不得破坏新领取状态",
-          "decision": "2026-10-30 B10 按既有批次环境限制与替代证据收口，不宣称未运行场景实测通过。",
+          "decision": "2026-10-30 用户在当前会话明确表示无法提供 B05 所需环境/条件，同意按已执行隔离证据和定点例外收口；不宣称未运行场景实测通过。",
           "substitute_evidence_ids": [
             "EV-B05-RECOVERY-20261016",
             "EV-B05-LIFECYCLE-20261016"
           ],
-          "unverified": "隔离存储与DB，多实例、可控时间",
-          "risk": "未运行的真实生产、跨主机、重启、双实例或完整数据集组合可能暴露现有替代证据未覆盖的行为。",
-          "reevaluate_when": "具备对应真实环境、数据集或发布演练条件时。"
+          "unverified": "真实进程重启、双实例 READY 分片清理、慢 cleanup 旧租约竞争未运行；已有恢复租约与生命周期单元证据。",
+          "risk": "未运行的进程重启、双实例、真实 S3 或真实浏览器组合可能暴露现有替代证据未覆盖的行为。",
+          "reevaluate_when": "具备对应隔离存储、双实例、进程重启或真实浏览器测试条件时。"
         }
       },
       {
