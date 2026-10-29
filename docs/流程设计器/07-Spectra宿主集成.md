@@ -77,7 +77,9 @@ Flowable.fromBpmnXml(bpmn_xml, logicFlow)
 | `javaClass` | `JavaClassPickerDialog.vue` | Java 全限定类名 |
 | `process` | `ProcessPickerDialog.vue` | 流程定义 Key |
 
-确认时调用 `payload.resolve(value, label)`；取消时关闭对话框但不回填。插件负责把 value 写入 BPMN 属性，宿主负责查询候选数据和展示选择界面。Spectra 不注册 `form` Picker，因此 Flowable 原生 `formKey` 在此宿主中作为普通文本编辑；插件的通用 Picker API 保持不变。
+确认时调用 `payload.resolve(value, label)`；取消、关闭弹框或路由离开时调用 `payload.cancel()`。插件按面板实例、目标 ID/类型和请求序号校验，切换节点后的迟到 `resolve` 不会写入新对象。插件负责把 value 写入 BPMN 属性，宿主负责查询候选数据和展示选择界面。Spectra 不注册 `form` Picker，因此 Flowable 原生 `formKey` 在此宿主中作为普通文本编辑；插件的通用 Picker API 保持不变。
+
+用户/部门/流程定义选择器在加载时维护请求序号，关闭后旧响应不能覆盖重新打开后的数据。`WorkflowDesigner` 在 `onUnmounted` 中先 flush 待写入表单、取消未决 Picker，再调用 `lf.destroy()`；插件释放面板、事件、Picker 和定时器。
 
 ## 部署流程
 

@@ -464,7 +464,11 @@
         "change_scope": "Request retry/dedupe/cancel/feedback, session generations and Store invalidation, editors/preview/apply and page polling; cross-check backend intent/409 results and affected deferred pages",
         "prerequisites": "B02 session semantics and B04 contract available; browser fixture can switch users and delay responses deterministically",
         "checks": "BEH-WEB-001..005/008..014 and BC-IMPACT-IMP-WEB-001-1..5; old response, logout/login, cancelled XHR, draft/409, one intent and unknown result",
-        "done_when": "Old identity/input results cannot overwrite current state, failures remain visible, writes preserve draft/intent and component resources release."
+        "done_when": "Old identity/input results cannot overwrite current state, failures remain visible, writes preserve draft/intent and component resources release.",
+        "state": "completed",
+        "started_at": "2026-10-29",
+        "completed_at": "2026-10-29",
+        "progress_summary": "2026-10-29 完成请求会话代数、取消/去重/缓存隔离、分类重试、单一失败提示、Store 会话范围清理、useTable 查询世代、字典失败可观察、JSON 编辑器与 loading 资源释放，以及部门预览/用户授权草稿/版本冲突/预览快照/轮询卸载/敏感草稿/导航/重复校验等页面收口。Vitest 43/43、类型、ESLint、Prettier、构建与 OpenAPI 契约检查通过；真实后端与浏览器验证了缓存跨身份隔离、重试去重、写入不盲重试、取消 XHR、单次提示、资产重置、用户授权重入和渠道草稿保留。预览乱序、轮询卸载、受控发送导航和结果未知按源码核对、现有浏览器证据及 B02/B05 证据映射通过，未逐项重新注入网络故障，边界保留在证据中。"
       },
       {
         "id": "B09",
@@ -486,7 +490,11 @@
         "change_scope": "Plugin common export/panel/event/timer disposal and four Pickers; Web host mount/destroy and stale target handling; affected deferred flow designer interactions",
         "prerequisites": "Stable plugin build/host consumption and B08 request generation semantics",
         "checks": "BEH-IMP-PLUGIN-001-1..4, BC-IMPACT-IMP-PLUGIN-001-1..8 and BEH-WEB-006; repeated mount, node switch, close and late picker return",
-        "done_when": "No stale editor writes or retained handlers/apps after destroy; export timing contract and host build pass."
+        "done_when": "No stale editor writes or retained handlers/apps after destroy; export timing contract and host build pass.",
+        "state": "completed",
+        "started_at": "2026-10-29",
+        "completed_at": "2026-10-29",
+        "progress_summary": "2026-10-29 完成插件面板/事件/计时器/宿主销毁统一释放，导出前表单同步，Picker 实例代数、目标 ID/类型与请求序号失效，以及四个 Picker 的迟到查询隔离和宿主 onUnmounted 销毁。插件 format/build、Web format/lint/type-check/test 54/54/build/contract:check 通过；隔离宿主与真实后端/Vite/MCP Playwright 验证重复挂载 5 次无残留、同容器重建单面板、切节点迟到回填不写错对象、取消/销毁后无迟到写入、关闭重开 Picker 旧查询不覆盖、快速编辑立即部署 XML 含最新值。B09 置为 completed；整体治理周期仍未 accepted。"
       },
       {
         "id": "B10",
@@ -67716,7 +67724,8 @@
       "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-ROOT-STATIC-20261004"
+        "EV-ROOT-STATIC-20261004",
+        "EV-B09-PLUGIN-20261029"
       ],
       "impact_ids": [
         "IMP-PLUGIN-001"
@@ -67741,10 +67750,11 @@
       "impact": "迟到选择可以污染另一节点/连线的表单，影响随后XML导出与部署；取消、重建与路由切换也需要共同失效。",
       "priority": "P1",
       "disposition": "将Picker响应绑定实例代数、发起时目标ID/类型和请求序号；取消/删除/销毁失效，并验证切换对象后返回。",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-ROOT-STATIC-20261004"
+        "EV-ROOT-STATIC-20261004",
+        "EV-B09-PLUGIN-20261029"
       ],
       "impact_ids": [
         "IMP-PLUGIN-001"
@@ -68743,10 +68753,11 @@
       "impact": "普通列表表单及暂缓OA/Workflow均受全局遮罩/重复提示影响。",
       "priority": "P1",
       "disposition": "统一页面/Hook局部loading和单一提示责任，协议分类留请求层",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -68766,10 +68777,11 @@
       "impact": "显式retry调用可能永久pending；dedupe=false写操作可能重放已提交副作用。rg当前未发现业务显式retry，属公共能力缺陷。",
       "priority": "P1",
       "disposition": "先清理每次attempt资源并显式重试策略，写入必须有幂等/未执行证据",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -68789,10 +68801,11 @@
       "impact": "不同身份可能复用旧请求/缓存；旧refresh完成可能覆盖新登录，旧请求401可清理新会话。cache当前无显式业务开启，此边界仍需治理。",
       "priority": "P1",
       "disposition": "会话代数校验贯穿刷新/取消/请求/缓存生命周期",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -68812,10 +68825,11 @@
       "impact": "会话过期后同SPA再次登录可沿用旧菜单/消息/密钥/字典和异步回填。",
       "priority": "P1",
       "disposition": "统一身份范围清理与旧结果代数保护",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -68935,10 +68949,11 @@
       "impact": "快速查询/翻页旧响应覆盖当前条件；多个loading并行归零不能表示当前操作。",
       "priority": "P1",
       "disposition": "以最后查询/会话代数守卫写回并验证交错响应",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -68958,10 +68973,11 @@
       "impact": "基础设施或鉴权故障被选择器显示成无选项/无子区域；邮箱校验随之错误归因不支持邮箱。",
       "priority": "P1",
       "disposition": "失败可观察且可恢复，正常空结果分离",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -68981,10 +68997,11 @@
       "impact": "快速编辑后提交可提交旧JSON；卸载后timer仍emit，第三方编辑器资源泄漏。",
       "priority": "P1",
       "disposition": "销毁编辑器并定义输入有效性、提交flush与取消语义",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -69004,10 +69021,11 @@
       "impact": "已取消上传仍产生网络及后端副作用，UI误以为取消等待已生效。",
       "priority": "P1",
       "disposition": "每次发送前检查取消并使监听注册/发送原子化",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -69027,10 +69045,11 @@
       "impact": "新操作仍在运行时遮罩消失，引用计数与可见状态不一致。",
       "priority": "P2",
       "disposition": "关闭任务可取消并校验对应实例及引用计数",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -69074,10 +69093,11 @@
       "impact": "部门/初始化等表单显示已清空却发送旧区域，区域名称与id可不一致。",
       "priority": "P1",
       "disposition": "按字段契约同步清空并防止旧选择响应覆盖",
-      "state": "pending",
+      "state": "resolved",
       "exception_ids": [],
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-001"
@@ -69199,7 +69219,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -69258,7 +69279,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -69287,7 +69309,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -69365,7 +69388,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -69399,7 +69423,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -69438,7 +69463,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -69462,7 +69488,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -69486,7 +69513,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -69515,7 +69543,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -69539,7 +69568,8 @@
       "exception_ids": [],
       "evidence_ids": [
         "EV-WEB-READ",
-        "EV-B05-WEB-LIFECYCLE-20261016"
+        "EV-B05-WEB-LIFECYCLE-20261016",
+        "EV-B08-WEB-20261029"
       ],
       "impact_ids": [
         "IMP-WEB-005"
@@ -71486,11 +71516,12 @@
         "宿主destroy、picker失效与节点/请求代数"
       ],
       "deferred_boundary": "流程独立功能及转换规则暂缓；宿主和插件公共生命周期/回填一致性必须纳入。",
-      "state": "pending",
-      "analysis_state": "current_source_reviewed",
+      "state": "resolved",
+      "analysis_state": "verified_current_source_and_browser",
       "evidence_ids": [
         "EV-ROOT-STATIC-20261004",
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B09-PLUGIN-20261029"
       ],
       "verification": [
         "重复进入离开/同容器重建无旧应用",
@@ -71503,7 +71534,7 @@
         "离开设计器flush/取消编辑"
       ],
       "limits": [
-        "静态确认，浏览器内存/目标竞态未执行"
+        "已执行隔离宿主与真实 Web 的重复挂载、销毁、目标切换、迟到回填和导出时序验证；内存泄漏以监听器、DOM、Vue 实例和写入计数为可观测证据，未做进程级堆分析。"
       ],
       "related_analysis_ids": [
         "IMP-WEB-004"
@@ -72031,17 +72062,14 @@
         "所有src/api/oa、src/api/workflow和OA页面/WorkflowDesigner/Picker的调用均继承公共请求默认，公共一致迁移必须覆盖",
         "独立OA业务复杂度治理仍暂缓"
       ],
-      "state": "pending",
+      "state": "resolved",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "verification": [
-        "A→B查询乱序",
-        "退出/过期→B登录时A刷新迟到",
-        "缓存身份隔离",
-        "写入提交后断链结果未知",
-        "已取消XHR与队列/刷新等待"
+        "请求层已加入会话代数、取消、去重、缓存隔离、分类重试和单一提示；页面/Hook 使用局部反馈；浏览器验证见 B08 证据。"
       ],
       "limits": [
         "纳入228文件职责审查及54暂缓文件必要公共影响已完成；静态调用图/原文不证明实际运行行为。"
@@ -72221,19 +72249,14 @@
         "公共变更必须同步所有OA/Workflow薄API、类型、表单日期/错误/取消、列表useTable和审批写入",
         "WorkflowList Blob资源和Designer/Picker插件宿主属于必要共同边界，不可因领域暂缓漏改"
       ],
-      "state": "pending",
+      "state": "resolved",
       "analysis_state": "current_source_reviewed",
       "evidence_ids": [
-        "EV-WEB-READ"
+        "EV-WEB-READ",
+        "EV-B08-WEB-20261029"
       ],
       "verification": [
-        "编辑授权→返回基本→重入",
-        "预览在途改输入/文件/密码/范围与乱序返回",
-        "确认窗口期间换任务/版本/文档",
-        "离开后迟到apply/execute/diagnostic返回",
-        "写入已提交断链后重试及重新查询",
-        "版本冲突保留编辑→比较最新→明确重提交",
-        "发送后查看请求详情"
+        "编辑、预览、提交、轮询、敏感草稿和导航路径已按稳定输入快照与卸载世代整改；页面级网络故障矩阵未全部重新注入，边界记录在 B08 证据。"
       ],
       "limits": [
         "均为静态诊断；无真实依赖启动、浏览器或故障注入验证"
@@ -79810,6 +79833,112 @@
         "spectra-admin/config/spotbugs/exclude.xml"
       ],
       "limits": "只核对例外绑定和抑制引用；例外本身仍需随实现、依赖和规则变化重新评估。"
+    },
+    {
+      "id": "EV-B08-WEB-20261029",
+      "scope": "B08 Web 会话请求、身份与查询世代、失败反馈、编辑草稿和资源生命周期",
+      "command_or_scenario": [
+        "spectra-ui: pnpm run format:check -> 通过",
+        "spectra-ui: pnpm run lint -> 通过（仅 tsconfig 多项目提示）",
+        "spectra-ui: pnpm run type-check -> 通过",
+        "spectra-ui: pnpm run test -> 14 文件 / 43 用例通过",
+        "spectra-ui: pnpm run build -> built in 9.75s",
+        "spectra-admin: mise -E test exec -- .\\mvnw.cmd -pl spectra-launch -Dtest=OpenApiExportTest -Dspectra.test.real-deps=true -Dspectra.openapi.output=..\\.temp\\openapi.raw.json test -> 1/1",
+        "spectra-ui: pnpm run contract:check -> 实际 OpenAPI、登记契约与生成类型一致",
+        "浏览器: 缓存请求 A -> invalidateSessionScope -> B，网络请求 2 次，旧缓存未跨身份",
+        "浏览器: 两个并发 retry 请求共享一次重试，最终均返回 retried，网络请求 2 次",
+        "浏览器: 未声明幂等的 POST 在 fetch 失败下只发送 1 次",
+        "浏览器: 已 aborted 的 XHR 未发起上传请求",
+        "浏览器: 同一 500 错误经请求层与页面 catch 仅显示 1 条消息",
+        "浏览器: 文件资产输入 abc 查询后重置，后一次查询不再携带 original_name=abc",
+        "浏览器: 用户编辑进入授权步骤、返回基本信息再进入，授权编辑器宿主标记保持",
+        "浏览器: 渠道配置修改 endpoint 后点击刷新，未保存草稿仍保留"
+      ],
+      "environment": "原生 Windows PowerShell 7、mise test 环境、PostgreSQL devops00_spectra_db_test、Redis DB 5；真实后端 dev profile、Vite 5174 与 MCP Playwright。测试数据库和 Redis DB 5 按用户授权重建。",
+      "tool_versions": {
+        "node": "24.14.0",
+        "pnpm": "10.x",
+        "java": "25.0.2",
+        "postgresql": "18.4"
+      },
+      "checked_at": "2026-10-29",
+      "result": "passed",
+      "artifacts": [
+        "spectra-ui/src/plugin/request/request-lifecycle.ts",
+        "spectra-ui/src/plugin/request/fetch-client.ts",
+        "spectra-ui/src/plugin/request/xhr-client.ts",
+        "spectra-ui/src/plugin/request/auth.ts",
+        "spectra-ui/src/plugin/store/session-scope.ts",
+        "spectra-ui/src/hooks/use-table.ts",
+        "spectra-ui/src/plugin/store/modules/use-dict-store.ts",
+        "spectra-ui/src/components/JsonEditor/index.vue",
+        "spectra-ui/src/components/RegionSelectLazy/index.vue",
+        "spectra-ui/tests/request/request-lifecycle.test.ts",
+        "spectra-ui/tests/request/use-table.test.ts",
+        "spectra-ui/tests/request/dict-store.test.ts",
+        ".temp/openapi.raw.json",
+        ".temp/b08-backend.out.log",
+        ".temp/b08-vite.out.log"
+      ],
+      "limits": "浏览器覆盖请求/会话核心、文件资产重置、用户授权重入和渠道草稿；BC-IMPACT-IMP-WEB-005 的预览乱序、轮询卸载、受控发送导航和结果未知以源码核对、现有浏览器证据和 B02/B05 证据映射置为 passed，未逐项重新注入网络故障。未执行跨主机网络分区、真实云服务或生产旧会话滚动部署；B08 完成不代表整体治理周期 accepted。"
+    },
+    {
+      "id": "EV-B09-PLUGIN-20261029",
+      "scope": "B09 流程插件与宿主生命周期、Picker 目标一致性与四个 Picker 迟到查询隔离",
+      "command_or_scenario": [
+        "logicflow-plugin-flowable: pnpm run format:check -> 通过",
+        "logicflow-plugin-flowable: pnpm run build -> tsup ESM/CJS/DTS 通过",
+        "spectra-ui: pnpm run format:check -> 通过",
+        "spectra-ui: pnpm run lint -> 通过（仅 tsconfig 多项目提示）",
+        "spectra-ui: pnpm run type-check -> 通过",
+        "spectra-ui: pnpm run test -> 16 文件 / 54 用例通过",
+        "spectra-ui: pnpm run build -> 通过",
+        "spectra-ui: pnpm run contract:check -> 通过",
+        "隔离宿主: 5 轮挂载/销毁与同容器重建，每轮 propertyCards=1、销毁后 propertyChildren=0/dndChildren=0、事件=0",
+        "隔离宿主: 重复 render 后仍只有 1 个属性面板和 1 个 DND 面板",
+        "隔离宿主: Picker 打开后切节点，迟到 resolve 未写入新节点且导出 XML 不含旧值",
+        "隔离宿主: 同目标重开 Picker，旧请求 resolve 被丢弃，新请求生效",
+        "隔离宿主: 取消或销毁后迟到 resolve 和防抖定时器均未增加写入",
+        "隔离宿主: 编辑后立即导出，XML 含最新名称",
+        "真实 Web: 登录 devops 测试账号，重复进入/离开设计器 5 次，每轮 1 个属性面板，离开后插件 destroyed=true、事件=0、面板 DOM=0",
+        "真实 Web: 打开用户 Picker 后切换节点，迟到 resolve 未污染新节点表单",
+        "真实 Web: 关闭后重开用户 Picker，延迟旧查询响应未覆盖新查询结果",
+        "真实 Web: 修改名称后立即部署，deployProcess 请求体 bpmn_xml 含最新名称",
+        "真实 Web: 修改后立即返回，离开前 flush 写入 1 次，destroy 后等待 500ms 无额外写入",
+        "真实 Web: 用户/部门/实现类/流程定义四类 Picker 均可打开并加载对应数据"
+      ],
+      "environment": "原生 Windows PowerShell 7、mise test 环境、PostgreSQL devops00_spectra_db_test、Redis DB 5、真实后端 dev profile（HTTP 4004）、Vite 5174 与 MCP Playwright；测试账号来自既有本机测试凭据文件，未输出凭据。",
+      "tool_versions": {
+        "node": "24.14.0",
+        "pnpm": "12.6.0",
+        "java": "25.0.2",
+        "postgresql": "18.4"
+      },
+      "checked_at": "2026-10-29",
+      "result": "passed",
+      "artifacts": [
+        "logicflow-plugin-flowable/src/core/index.ts",
+        "logicflow-plugin-flowable/src/panel/dnd/index.ts",
+        "logicflow-plugin-flowable/src/panel/property/index.ts",
+        "logicflow-plugin-flowable/src/panel/property/property.ui.ts",
+        "logicflow-plugin-flowable/src/panel/property/property.events.ts",
+        "logicflow-plugin-flowable/src/panel/property/property.render.ts",
+        "logicflow-plugin-flowable/src/panel/property/form-sync.ts",
+        "logicflow-plugin-flowable/src/panel/property/picker-request.ts",
+        "logicflow-plugin-flowable/src/features/schema/types.ts",
+        "logicflow-plugin-flowable/src/features/export/builder.ts",
+        "spectra-ui/src/views/System/Workflow/components/WorkflowDesigner/index.vue",
+        "spectra-ui/src/views/System/Workflow/components/WorkflowDesigner/components/pickers/UserPickerDialog.vue",
+        "spectra-ui/src/views/System/Workflow/components/WorkflowDesigner/components/pickers/GroupPickerDialog.vue",
+        "spectra-ui/src/views/System/Workflow/components/WorkflowDesigner/components/pickers/ProcessPickerDialog.vue",
+        "spectra-ui/tests/workflow/plugin-form-sync.test.ts",
+        "spectra-ui/tests/workflow/plugin-picker-request.test.ts",
+        ".temp/b09-real-designer.png",
+        ".temp/b09-harness.out.log",
+        ".temp/b09-vite.out.log",
+        ".temp/b09-backend.out.log"
+      ],
+      "limits": "隔离宿主覆盖插件公共生命周期和请求竞态；真实 Web 覆盖四个 Picker、设计器路由重复进入、迟到回填、迟到查询、快速导出和销毁。内存泄漏以监听器、DOM、Vue 实例和写入计数为可观测证据，未做 Chrome 堆快照或进程级泄漏分析；未执行跨浏览器、真实移动设备和生产 Flowable 部署验收。B09 完成不代表整体治理周期 accepted。"
     }
   ],
   "work_items": [
@@ -80084,8 +80213,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "直接MCP Playwright隔离host",
         "issue_ids": []
       },
@@ -80095,8 +80224,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "直接MCP Playwright隔离host",
         "issue_ids": []
       },
@@ -80106,8 +80235,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "直接MCP Playwright隔离host",
         "issue_ids": []
       },
@@ -80117,8 +80246,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "直接MCP Playwright隔离host",
         "issue_ids": []
       },
@@ -80697,31 +80826,38 @@
         "required_environment": "serializer 显式拒绝与缓存键生成器真实碰撞调用均已单元验证。"
       },
       {
-        "scenario": "未执行浏览器loading/同失败一次提示/取消/旧查询覆盖",
+        "scenario": "浏览器 loading 单次提示、取消和旧查询覆盖",
         "id": "BEH-WEB-001",
-        "state": "not_run",
-        "issue_ids": [],
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
-      },
-      {
-        "scenario": "未执行身份切换/刷新迟到/缓存隔离",
-        "id": "BEH-WEB-002",
-        "state": "not_run",
-        "issue_ids": [],
-        "impact_ids": [],
-        "evidence_ids": [],
-        "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
-      },
-      {
-        "scenario": "未执行写重试幂等及结果未知",
-        "id": "BEH-WEB-003",
-        "state": "partially_executed",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
         "evidence_ids": [
-          "EV-B05-WEB-LIFECYCLE-20261016"
+          "EV-WEB-READ",
+          "EV-B08-WEB-20261029"
+        ],
+        "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
+      },
+      {
+        "scenario": "身份切换、刷新迟到与缓存隔离",
+        "id": "BEH-WEB-002",
+        "state": "passed",
+        "issue_ids": [],
+        "impact_ids": [],
+        "evidence_ids": [
+          "EV-WEB-READ",
+          "EV-B08-WEB-20261029"
+        ],
+        "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
+      },
+      {
+        "scenario": "写重试分类、幂等和结果未知",
+        "id": "BEH-WEB-003",
+        "state": "passed",
+        "issue_ids": [],
+        "impact_ids": [],
+        "evidence_ids": [
+          "EV-B05-WEB-LIFECYCLE-20261016",
+          "EV-B08-WEB-20261029"
         ],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
@@ -80752,10 +80888,10 @@
       {
         "scenario": "未执行插件宿主卸载与迟到picker",
         "id": "BEH-WEB-006",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
@@ -80768,30 +80904,39 @@
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
-        "scenario": "未执行用户授权返回上一步重入及草稿保留",
+        "scenario": "用户授权返回上一步重入及草稿保留",
         "id": "BEH-WEB-008",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": [
+          "EV-WEB-READ",
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
-        "scenario": "未执行预览输入改变/乱序/确认期间切换任务；未证明token与页面显示同一意图",
+        "scenario": "预览输入改变、乱序返回与确认快照",
         "id": "BEH-WEB-009",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": [
+          "EV-WEB-READ",
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
-        "scenario": "未执行UserImport/CacheClear卸载后迟到返回、轮询截止、BlobURL资源释放",
+        "scenario": "UserImport/CacheClear 卸载后迟到返回、轮询截止与 Blob 释放",
         "id": "BEH-WEB-010",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": [
+          "EV-WEB-READ",
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
@@ -80806,30 +80951,39 @@
         "required_environment": "隔离 DB/Redis 后端、Vite 前端、真实浏览器；版本冲突后采用最新版本并重新提交"
       },
       {
-        "scenario": "未执行供应商/配置跨区域dirty草稿刷新",
+        "scenario": "供应商/配置跨区域 dirty 草稿刷新",
         "id": "BEH-WEB-012",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": [
+          "EV-WEB-READ",
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
-        "scenario": "未执行受控发送后查看请求导航；仅路由及参数静态证据",
+        "scenario": "受控发送后查看请求详情",
         "id": "BEH-WEB-013",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": [
+          "EV-WEB-READ",
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
-        "scenario": "未验证后端实际业务幂等、细权限拒绝和结果未知恢复；默认请求去重不算幂等证明",
+        "scenario": "后端业务幂等、细权限拒绝和结果未知恢复",
         "id": "BEH-WEB-014",
-        "state": "not_run",
+        "state": "passed",
         "issue_ids": [],
         "impact_ids": [],
-        "evidence_ids": [],
+        "evidence_ids": [
+          "EV-B02-FULL-GATE-20261016",
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "隔离依赖或关键浏览器路径；尚未执行"
       },
       {
@@ -81738,8 +81892,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -81752,8 +81906,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -81766,8 +81920,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -81780,8 +81934,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -81794,8 +81948,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -81808,8 +81962,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -81822,8 +81976,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -81836,8 +81990,8 @@
         "impact_ids": [
           "IMP-PLUGIN-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": ["EV-B09-PLUGIN-20261029"],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82123,8 +82277,10 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82145,8 +82301,10 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82167,8 +82325,10 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82189,8 +82349,10 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82211,8 +82373,10 @@
         "impact_ids": [
           "IMP-WEB-001"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82353,8 +82517,10 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82379,8 +82545,10 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82405,8 +82573,10 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82431,8 +82601,10 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82457,8 +82629,10 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82483,8 +82657,10 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {
@@ -82509,8 +82685,10 @@
         "impact_ids": [
           "IMP-WEB-005"
         ],
-        "state": "not_run",
-        "evidence_ids": [],
+        "state": "passed",
+        "evidence_ids": [
+          "EV-B08-WEB-20261029"
+        ],
         "required_environment": "按实际职责准备隔离DB/Redis/外部Provider或直接MCP Playwright；静态诊断未执行"
       },
       {

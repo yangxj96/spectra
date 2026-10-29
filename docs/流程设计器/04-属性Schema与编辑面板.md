@@ -108,7 +108,9 @@ interface PickerRequestPayload {
   multiple: boolean;
   nodeId?: string;
   nodeType?: string;
+  requestId: number;
   resolve: (value: string, label?: string) => void;
+  cancel: () => void;
 }
 ```
 
@@ -117,6 +119,8 @@ interface PickerRequestPayload {
 - `value` 写入真实 BPMN 字段。
 - `label` 写入 `${field}Label`，仅用于展示，不导出为 BPMN 属性。
 - 多选使用逗号分隔的 value 和 label，并支持逐项移除或全部清空。
+
+宿主关闭弹框或切换目标时调用 `cancel()`。插件同时按面板实例、目标 ID/类型和请求序号校验，切换节点、删除目标或销毁面板后的迟到 `resolve` 不会写入新对象。
 
 ## 增加属性的要求
 
