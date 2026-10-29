@@ -7,7 +7,7 @@ Spectra 是一个由 Spring Boot 后端、Vue Web 管理后台和 LogicFlow BPMN
 ## 主要组成
 
 ```text
-spectra-docs/
+spectra/
 ├── spectra-admin/                 # Spring Boot 后端 API，多模块 Maven 项目
 ├── spectra-ui/                    # Vue 3 Web 管理后台
 ├── logicflow-plugin-flowable/     # LogicFlow / Flowable BPMN 2.0 流程设计器插件
@@ -47,7 +47,7 @@ spectra-docs/
 首次拉取需要同时初始化子模块：
 
 ```bash
-git clone --recurse-submodules https://github.com/yangxj96/spectra-docs.git spectra
+git clone --recurse-submodules https://github.com/yangxj96/spectra.git spectra
 cd spectra
 ```
 
