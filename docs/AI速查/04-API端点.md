@@ -91,12 +91,10 @@ Web 用户编辑器对已有用户提供多个 RoleAssignment 的新增、修改
 | Controller | 路径 | 说明 |
 |---|---|---|
 | NotificationController | `/notification/**` | 当前用户消息列表/详情/未读数/已读/删除/批量删除 |
-| NotificationPreferenceController | `/notification-center/preferences/**` | 当前用户用途 × 渠道偏好查询与保存 |
-| NotificationAdminController | `/notification/admin/**` | 运行概览（`GET /overview?hours=1..168`）、Request/Task/Delivery 脱敏分页与详情、渠道状态、任务重试和取消 |
-| NotificationTemplateAdminController | `/notification/admin/templates/**` | 模板行级分页/详情、按模板组聚合分页、草稿创建/编辑、发布/禁用/启用/归档、版本历史和安全预览；按 `notification:template:*` 权限保护 |
-| NotificationProviderAdminController | `/notification/admin/providers/**` | SMS/EMAIL/IN_APP Provider 脱敏配置查询、SMS/EMAIL 配置保存、`POST /{channel}/health` 单渠道配置校验/发送前置门禁和 `POST /{channel}/test` 受确认保护的测试发送；该校验不替代系统级统一健康聚合；Secret/测试地址只在服务端短暂使用，不回显原文 |
-| NotificationProviderCallbackController | `/notification/provider/callback/{channel}` | 外部 SMS/EMAIL Provider 回执；必须带 `X-Notification-Signature: sha256=<HMAC-SHA256(raw body)>`，重复正文返回 `DUPLICATE`，不创建新 Delivery |
-| NotificationControlledSendController | `/notification/admin/send/**` | `POST /preview` 和 `POST /apply`；绑定当前受众、已发布模板、渠道状态、请求摘要和短时令牌，Apply 只通过统一 Gateway 创建通知请求；权限为 `notification:send:preview/apply` |
+| NotificationHistoryAdminController | `/notification/admin/messages/**` | 发送历史分页与详情；受 `notification:admin:read` 保护 |
+| NotificationTemplateAdminController | `/notification/admin/templates/**` | 模板分页、详情、创建、修改、删除和启停；受 `notification:template:read/write` 保护 |
+| NotificationSmsConfigController | `/notification/admin/sms-configs/**` | 短信配置列表、详情、创建、修改、删除和激活；受 `notification:provider:read/configure` 保护 |
+| NotificationEmailConfigController | `/notification/admin/email-configs/**` | 邮件配置列表、详情、创建、修改、删除和激活；受 `notification:provider:read/configure` 保护 |
 
 `POST /notification/batch-delete` 使用 `NotificationBatchDeleteFrom` 请求体：`{"ids":["消息ID"]}`。
 

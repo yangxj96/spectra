@@ -135,12 +135,10 @@ Quartz 的 12 个 Controller 方法（类型、Job、Trigger、执行历史的�
 | Controller | 模块 | 基础路径 | 说明 |
 |---|---|---|---|
 | `NotificationController` | spectra-core（core.notification） | `/notification/**` | 当前用户消息分页、详情、未读数、已读、删除与批量删除；不接收 `userId` |
-| `NotificationPreferenceController` | spectra-core（core.notification） | `/notification-center/preferences/**` | 当前用户用途 × 渠道偏好矩阵 |
-| `NotificationAdminController` | spectra-core（core.notification） | `/notification/admin/**` | `notification:admin:*` 权限保护的运行概览、Request/Task/Delivery 脱敏查询与详情、渠道状态、重试和取消；运行概览支持 `hours=1..168` |
-| `NotificationTemplateAdminController` | spectra-core（core.notification） | `/notification/admin/templates/**` | 模板行级分页/详情、按模板组聚合分页、草稿创建/编辑、发布、禁用/启用、归档、版本历史和安全预览；按 `notification:template:*` 权限保护 |
-| `NotificationProviderAdminController` | spectra-core（core.notification） | `/notification/admin/providers/**` | SMS/EMAIL/IN_APP Provider 脱敏配置查询、SMS/EMAIL 配置保存、单渠道配置校验和明确测试地址的测试发送；单渠道校验用于发送前置门禁，不替代系统级统一健康聚合；按 `notification:provider:read/configure` 权限保护，Secret 和测试地址不回显 |
-| `NotificationProviderCallbackController` | spectra-core（core.notification） | `/notification/provider/callback/{channel}` | 外部 SMS/EMAIL Provider 回执入口；匿名但必须使用当前渠道 Secret 的 HMAC 签名，重复回执幂等更新既有 Delivery/Task，不创建孤立投递记录 |
-| `NotificationControlledSendController` | spectra-core（core.notification） | `/notification/admin/send/**` | 受控发送 Preview/Apply；Preview 按当前受众、模板版本、用户偏好和渠道状态返回脱敏结果，Apply 绑定短时令牌并通过统一 Gateway 创建通知请求；分别受 `notification:send:preview/apply` 保护 |
+| `NotificationHistoryAdminController` | spectra-core（core.notification） | `/notification/admin/messages/**` | 发送历史分页与详情；按 `notification:admin:read` 保护 |
+| `NotificationTemplateAdminController` | spectra-core（core.notification） | `/notification/admin/templates/**` | 模板分页、详情、创建、修改、删除和启停；按 `notification:template:read/write` 保护 |
+| `NotificationSmsConfigController` | spectra-core（core.notification） | `/notification/admin/sms-configs/**` | 短信配置列表、详情、创建、修改、删除和激活；按 `notification:provider:read/configure` 保护 |
+| `NotificationEmailConfigController` | spectra-core（core.notification） | `/notification/admin/email-configs/**` | 邮件配置列表、详情、创建、修改、删除和激活；按 `notification:provider:read/configure` 保护 |
 
 消息中心 Self API 强制使用认证上下文中的当前用户，并在 Service 层附加收件人条件；全局或部门权限不能扩大私人收件箱范围。
 
